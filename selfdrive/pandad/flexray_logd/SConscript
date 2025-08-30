@@ -1,0 +1,17 @@
+Import('env')
+
+current_dir = str(Dir('.').abspath)
+libftdi_dir = str(Dir('libftdi').abspath)
+
+local_env = env.Clone()
+local_env.Append(CPPPATH=[current_dir, libftdi_dir])
+
+libftdi = local_env.StaticLibrary('libftdi/ftdi', ['libftdi/ftdi.c'])
+libftdispi = local_env.StaticLibrary('libftdi/ftdispi', ['libftdi/ftdispi.c', libftdi])
+
+local_env.Program(
+    'flexray_logd',
+    ['flexray_logd.c', 'flexray_reader.c', 'flexray_decoder.c', libftdispi, libftdi],
+    LIBS=['usb-1.0'],
+    LIBPATH=['libftdi']
+)

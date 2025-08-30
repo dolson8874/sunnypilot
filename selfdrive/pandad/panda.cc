@@ -13,6 +13,22 @@
 const bool PANDAD_MAXOUT = getenv("PANDAD_MAXOUT") != nullptr;
 
 Panda::Panda(std::string serial, uint32_t bus_offset) : bus_offset(bus_offset) {
+#ifdef _USE_FLEXRAY_HARNESS_
+  // try USB first, then FTDI, then SPI
+  try {
+      handle = std::make_unique<PandaUsbHandle>(serial);
+  } catch (std::exception &e) {
+
+      #ifndef __APPLE__
+      if(serial.compare(0, 3, "FLX") == 0)
+        handle = std::make_unique<PandaFtdiHandle>(serial);
+      else
+        handle = std::make_unique<PandaSpiHandle>(serial);
+      #endif
+  }
+
+#else //_USE_FLEXRAY_HARNESS_
+
   // try USB first, then SPI
   try {
     handle = std::make_unique<PandaUsbHandle>(serial);
@@ -25,6 +41,8 @@ Panda::Panda(std::string serial, uint32_t bus_offset) : bus_offset(bus_offset) {
     throw e;
 #endif
   }
+
+#endif //_USE_FLEXRAY_HARNESS
 
   hw_type = get_hw_type();
   can_reset_communications();
@@ -44,6 +62,17 @@ std::string Panda::hw_serial() {
 
 std::vector<std::string> Panda::list(bool usb_only) {
   std::vector<std::string> serials = PandaUsbHandle::list();
+
+#ifdef _USE_FLEXRAY_HARNESS_
+  if (!usb_only) {
+    for (auto s : PandaFtdiHandle::list()) {
+      if (std::find(serials.begin(), serials.end(), s) == serials.end()) {
+        serials.push_back(s);
+      }
+    }
+  }
+#endif // _USE_FLEXRAY_HARNESS_
+
 
 #ifndef __APPLE__
   if (!usb_only) {
@@ -136,6 +165,14 @@ std::optional<std::string> Panda::get_serial() {
 }
 
 bool Panda::up_to_date() {
+
+#if defined(_USE_FLEXRAY_HARNESS_)
+  // skip ftdi panda for flexray log
+  if(hw_type == cereal::PandaState::PandaType::FLEXRAY_PANDA) {
+    return true;
+  }
+#endif
+
   if (auto fw_sig = get_firmware_version()) {
     for (auto fn : { "panda.bin.signed", "panda_h7.bin.signed" }) {
       auto content = util::read_file(std::string("../../panda/board/obj/") + fn);
@@ -264,6 +301,61 @@ void Panda::can_reset_communications() {
 bool Panda::unpack_can_buffer(uint8_t *data, uint32_t &size, std::vector<can_frame> &out_vec) {
   int pos = 0;
 
+#if defined(_USE_FLEXRAY_HARNESS_)
+  while (pos <= size - sizeof(can_header)) {
+    can_header header;
+
+    uint16_t data_len;
+
+    if(hw_type == cereal::PandaState::PandaType::FLEXRAY_PANDA) {
+
+      memcpy(&header, &data[pos], sizeof(can_header));
+
+      // flags(1) + counter (1) + data (len) + CRC (3)
+      // use flexray data length
+      data_len =  header.checksum * 2 + 5;
+
+    } else {
+      memcpy(&header, &data[pos], sizeof(can_header));
+      data_len = dlc_to_len[header.data_len_code];
+    }
+
+
+    if (pos + sizeof(can_header) + data_len > size) {
+      // we don't have all the data for this message yet
+      break;
+    }
+
+    can_frame &canData = out_vec.emplace_back();
+
+    canData.address = header.addr;
+
+    canData.src = header.bus + bus_offset;
+    if (header.rejected) {
+      canData.src += CAN_REJECTED_BUS_OFFSET;
+    }
+    if (header.returned) {
+      canData.src += CAN_RETURNED_BUS_OFFSET;
+    }
+
+    if(hw_type == cereal::PandaState::PandaType::FLEXRAY_PANDA) {
+      // skip
+    } else {
+      if (calculate_checksum(&data[pos], sizeof(can_header) + data_len) != 0) {
+        LOGE("Panda CAN checksum failed");
+        size = 0;
+        return false;
+      }
+    }
+
+    canData.dat.assign((char *)&data[pos + sizeof(can_header)], data_len);
+
+    pos += sizeof(can_header) + data_len;
+  }
+
+#else  // FLEXRAY_HARNESS
+
+
   while (pos <= size - sizeof(can_header)) {
     can_header header;
     memcpy(&header, &data[pos], sizeof(can_header));
@@ -295,6 +387,8 @@ bool Panda::unpack_can_buffer(uint8_t *data, uint32_t &size, std::vector<can_fra
 
     pos += sizeof(can_header) + data_len;
   }
+
+#endif  // FLEXRAY_HARNESS
 
   // move the overflowing data to the beginning of the buffer for the next round
   memmove(data, &data[pos], size - pos);

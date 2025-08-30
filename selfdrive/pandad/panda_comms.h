@@ -90,4 +90,29 @@ private:
   spi_header header;
   uint32_t xfer_count = 0;
 };
+
+#ifdef  _USE_FLEXRAY_HARNESS_
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+class PandaFtdiHandle : public PandaCommsHandle {
+public:
+  PandaFtdiHandle(std::string serial);
+  ~PandaFtdiHandle();
+  int control_write(uint8_t request, uint16_t param1, uint16_t param2, unsigned int timeout=TIMEOUT);
+  int control_read(uint8_t request, uint16_t param1, uint16_t param2, unsigned char *data, uint16_t length, unsigned int timeout=TIMEOUT);
+  int bulk_write(unsigned char endpoint, unsigned char* data, int length, unsigned int timeout=TIMEOUT);
+  int bulk_read(unsigned char endpoint, unsigned char* data, int length, unsigned int timeout=TIMEOUT);
+  void cleanup();
+
+  static std::vector<std::string> list();
+
+private:
+  inline static std::recursive_mutex hw_lock;
+  int sockfd;
+  struct sockaddr_un sock_addr;
+
+};
+#endif
+
 #endif
