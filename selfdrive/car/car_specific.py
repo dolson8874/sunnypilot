@@ -124,6 +124,16 @@ class CarSpecificEvents:
       events = self.create_common_events(CS, CS_prev, extra_gears=(GearShifter.sport, GearShifter.manumatic),
                                          pcm_enable=self.CP.pcmCruise, allow_button_cancel=False)
 
+    elif self.CP.brand == 'landrover':
+      events = self.create_common_events(CS, CS_prev, extra_gears=(GearShifter.sport, GearShifter.manumatic),
+                                         pcm_enable=self.CP.pcmCruise)
+
+      if CS.vEgo < (self.CP.minSteerSpeed + 2.) and self.CP.minSteerSpeed > 10.:        self.low_speed_alert = True
+      if CS.vEgo > (self.CP.minSteerSpeed + 4.):
+        self.low_speed_alert = False
+      if self.low_speed_alert:
+        events.add(EventName.belowSteerSpeed)
+
     else:
       events = self.create_common_events(CS, CS_prev)
 

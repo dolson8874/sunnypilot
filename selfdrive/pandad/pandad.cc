@@ -512,6 +512,15 @@ void pandad_run(std::vector<Panda *> &pandas) {
 }
 
 void pandad_main_thread(std::vector<std::string> serials) {
+#if defined(_USE_FLEXRAY_HARNESS_)  // dolson
+  std::vector<std::string> flex_serial;
+
+  for (auto s : PandaFtdiHandle::list()) {
+    if (std::find(serials.begin(), serials.end(), s) == serials.end()) {
+      serials.push_back(s);
+    }
+  }
+#else
   if (serials.size() == 0) {
     serials = Panda::list();
 
@@ -520,6 +529,7 @@ void pandad_main_thread(std::vector<std::string> serials) {
       return;
     }
   }
+#endif
 
   std::string serials_str;
   for (int i = 0; i < serials.size(); i++) {
