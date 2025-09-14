@@ -1,9 +1,11 @@
 [submodule "panda"]
   path = panda
   url = https://github.com/dolson8874/panda.git
+  branch = lrmaster-SP-tici
 [submodule "opendbc"]
   path = opendbc_repo
 	url = https://github.com/dolson8874/opendbc.git
+  branch = lrmaster-SP-tici
 [submodule "msgq"]
   path = msgq_repo
   url = https://github.com/sunnypilot/msgq.git

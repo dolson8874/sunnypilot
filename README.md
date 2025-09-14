@@ -1,3 +1,24 @@
+# 🔐 Safety & Legal Disclaimer
+ This repository is for research and development only.
+ Use in live vehicles must comply with local laws and safety standards.
+ Any damage or consequences are at the user’s responsibility.
+
+<br><br>
+# 🚘 This repository adds LAND ROVER vehicles to Sunnypilot.
+ lrmaster-SP is for C3X branch.
+ lrmaster-SP-tici is for C3 branch.
+
+```
+ cd /data
+ mv openpilot openpilot.bak
+ git clone -b lrmaster-SP --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot
+ cd /data/openpilot
+ scons -j8
+ sudo reboot
+```
+<br><br><br><br>
+
+
 ![](https://user-images.githubusercontent.com/47793918/233812617-beab2e71-57b9-479e-8bff-c3931347ca40.png)
 
 ## 🌞 What is sunnypilot?
