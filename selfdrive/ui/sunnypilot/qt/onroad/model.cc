@@ -6,6 +6,7 @@
  */
 
 #include "selfdrive/ui/sunnypilot/qt/onroad/model.h"
+#include "selfdrive/ui/qt/util.h" // dolson
 
 
 void ModelRendererSP::update_model(const cereal::ModelDataV2::Reader &model, const cereal::RadarState::LeadData::Reader &lead) {
@@ -87,4 +88,37 @@ void ModelRendererSP::drawPath(QPainter &painter, const cereal::ModelDataV2::Rea
     // Normal path rendering
     ModelRenderer::drawPath(painter, model, surface_rect.height());
   }
+
+#if 1
+  // dolson draw angle
+  {
+  int x = 30;
+  int y = 540;
+
+  auto car_state = sm["carState"].getCarState();
+  auto car_control = sm["carControl"].getCarControl();
+
+  float steer_angle = car_state.getSteeringAngleDeg();
+  float desire_angle = car_control.getActuators().getSteeringAngleDeg();
+  //float desire_angle =0;
+
+  painter.setFont(InterFont(50, QFont::Bold));
+
+  QString str;
+  int width = 192;
+
+  str.sprintf("%.1f°", steer_angle);
+  QRect rcText = QRect(x, y, width, width);
+
+  painter.setPen(QColor(255, 255, 255, 200));
+  painter.drawText(rcText, Qt::AlignCenter, str);
+
+  str.sprintf("%.1f°", desire_angle);
+  rcText.setRect(x, y + 80, width, width);
+
+  painter.setPen(QColor(155, 255, 155, 200));
+  painter.drawText(rcText, Qt::AlignCenter, str);
+  }
+ #endif 
 }
+
