@@ -4,7 +4,7 @@
  Any damage or consequences are at the user’s responsibility.
 
 <br><br>
-# 🚘 This repository adds LAND ROVER vehicles to Sunnypilot.
+# 🚘 This branch adds LAND ROVER vehicles to Sunnypilot.
  lrmaster-SP-tici is for C3 branch.
  lrmaster-SP is for C3X branch.
 
