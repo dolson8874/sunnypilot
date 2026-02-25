@@ -137,7 +137,7 @@ size_t decode_flexray_buffer(char *data, size_t *psize, char *out, size_t out_si
 
 
 		// find frame start
-    if(data[pos] != 0xCA || data[pos+1] != 0xA0) {
+    if((uint8_t)data[pos] != 0xCA || (uint8_t)data[pos+1] != 0xA0) {
       pos++;
       continue;
     }
