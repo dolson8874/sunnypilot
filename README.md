@@ -11,7 +11,7 @@
 ```
  cd /data
  mv openpilot openpilot.bak
- git clone -b lrmaster-SP --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot
+ git clone -b lrmaster-SP-v2026.001.000 --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot
  cd /data/openpilot
  scons -j8
  sudo reboot
