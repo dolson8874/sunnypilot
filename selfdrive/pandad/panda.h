@@ -1,7 +1,5 @@
 #pragma once
 
-#define _USE_FLEXRAY_HARNESS_   // dolson for Flexray logging
-
 #include <cstdint>
 #include <ctime>
 #include <functional>
@@ -89,11 +87,7 @@ public:
 
 protected:
   // for unit tests
-  #if defined(_USE_FLEXRAY_HARNESS_)
-  uint8_t receive_buffer[RECV_SIZE + sizeof(can_header) + 266];
-  #else
   uint8_t receive_buffer[RECV_SIZE + sizeof(can_header) + 64];
-  #endif
   uint32_t receive_buffer_size = 0;
 
   Panda() {}

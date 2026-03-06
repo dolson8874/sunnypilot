@@ -115,13 +115,6 @@ std::optional<std::string> Panda::get_serial() {
 
 bool Panda::up_to_date() {
 
-#if defined(_USE_FLEXRAY_HARNESS_)
-  // skip ftdi panda for flexray log
-  if(hw_type == cereal::PandaState::PandaType::FLEXRAY_PANDA) {
-    return true;
-  }
-#endif
-
   if (auto fw_sig = get_firmware_version()) {
     for (auto fn : { "panda.bin.signed", "panda_h7.bin.signed" }) {
       auto content = util::read_file(std::string("../../panda/board/obj/") + fn);
@@ -250,61 +243,6 @@ void Panda::can_reset_communications() {
 bool Panda::unpack_can_buffer(uint8_t *data, uint32_t &size, std::vector<can_frame> &out_vec) {
   int pos = 0;
 
-#if defined(_USE_FLEXRAY_HARNESS_)
-  while (pos <= size - sizeof(can_header)) {
-    can_header header;
-
-    uint16_t data_len;
-
-    if(hw_type == cereal::PandaState::PandaType::FLEXRAY_PANDA) {
-
-      memcpy(&header, &data[pos], sizeof(can_header));
-
-      // flags(1) + counter (1) + data (len) + CRC (3)
-      // use flexray data length
-      data_len =  header.checksum * 2 + 5;
-
-    } else {
-      memcpy(&header, &data[pos], sizeof(can_header));
-      data_len = dlc_to_len[header.data_len_code];
-    }
-
-
-    if (pos + sizeof(can_header) + data_len > size) {
-      // we don't have all the data for this message yet
-      break;
-    }
-
-    can_frame &canData = out_vec.emplace_back();
-
-    canData.address = header.addr;
-
-    canData.src = header.bus + bus_offset;
-    if (header.rejected) {
-      canData.src += CAN_REJECTED_BUS_OFFSET;
-    }
-    if (header.returned) {
-      canData.src += CAN_RETURNED_BUS_OFFSET;
-    }
-
-    if(hw_type == cereal::PandaState::PandaType::FLEXRAY_PANDA) {
-      // skip
-    } else {
-      if (calculate_checksum(&data[pos], sizeof(can_header) + data_len) != 0) {
-        LOGE("Panda CAN checksum failed");
-        size = 0;
-        return false;
-      }
-    }
-
-    canData.dat.assign((char *)&data[pos + sizeof(can_header)], data_len);
-
-    pos += sizeof(can_header) + data_len;
-  }
-
-#else  // FLEXRAY_HARNESS
-
-
   while (pos <= size - sizeof(can_header)) {
     can_header header;
     memcpy(&header, &data[pos], sizeof(can_header));
@@ -336,8 +274,6 @@ bool Panda::unpack_can_buffer(uint8_t *data, uint32_t &size, std::vector<can_fra
 
     pos += sizeof(can_header) + data_len;
   }
-
-#endif  // FLEXRAY_HARNESS
 
   // move the overflowing data to the beginning of the buffer for the next round
   memmove(data, &data[pos], size - pos);
