@@ -4,6 +4,7 @@ Copyright (c) 2021-, Haibin Wen, sunnypilot, and a number of other contributors.
 This file is part of sunnypilot and is licensed under the MIT License.
 See the LICENSE.md file in the root directory for more details.
 """
+
 from cereal import car
 from enum import IntEnum
 
@@ -37,8 +38,7 @@ class SteeringLayout(Widget):
     self._scroller = Scroller(items, line_separator=False, spacing=0)
 
   def _initialize_items(self):
-    self._mads_base_desc = tr("Enable the beloved MADS feature. " +
-                              "Disable toggle to revert back to stock sunnypilot engagement/disengagement.")
+    self._mads_base_desc = tr("Enable the beloved MADS feature. " + "Disable toggle to revert back to stock sunnypilot engagement/disengagement.")
     self._mads_limited_desc = tr("This platform supports limited MADS settings.")
     self._mads_full_desc = tr("This platform supports all MADS settings.")
     self._mads_check_compat_desc = tr("Start the vehicle to check vehicle compatibility.")
@@ -49,14 +49,10 @@ class SteeringLayout(Widget):
       description=self._mads_base_desc,
     )
     self._mads_settings_button = simple_button_item_sp(
-      button_text=lambda: tr("Customize MADS"),
-      button_width=800,
-      callback=lambda: self._set_current_panel(PanelType.MADS)
+      button_text=lambda: tr("Customize MADS"), button_width=800, callback=lambda: self._set_current_panel(PanelType.MADS)
     )
     self._lane_change_settings_button = simple_button_item_sp(
-      button_text=lambda: tr("Customize Lane Change"),
-      button_width=800,
-      callback=lambda: self._set_current_panel(PanelType.LANE_CHANGE)
+      button_text=lambda: tr("Customize Lane Change"), button_width=800, callback=lambda: self._set_current_panel(PanelType.LANE_CHANGE)
     )
     self._blinker_control_toggle = toggle_item_sp(
       param="BlinkerPauseLateralControl",
@@ -79,7 +75,34 @@ class SteeringLayout(Widget):
       max_value=10,
       value_change_step=1,
       description=lambda: tr("Delay before lateral control resumes after the turn signal ends."),
-      label_callback=lambda delay: f'{delay} {"s"}'
+      label_callback=lambda delay: f'{delay} {"s"}',
+    )
+    self._lane_mode_speed = option_item_sp(
+      param="UseLaneLineSpeed",
+      title=lambda: tr("Lane Mode Speed"),
+      min_value=0,
+      max_value=200,
+      value_change_step=1,
+      description=lambda: tr("Switch to lane-line mode when speed exceeds this value."),
+      label_callback=lambda speed: f'{speed} {"km/h" if ui_state.is_metric else "mph"}',
+    )
+    self._lane_mode_curve_speed = option_item_sp(
+      param="UseLaneLineCurveSpeed",
+      title=lambda: tr("Lane Mode Minimum Speed"),
+      min_value=0,
+      max_value=200,
+      value_change_step=1,
+      description=lambda: tr("Disable lane-line mode below this speed."),
+      label_callback=lambda speed: f'{speed} {"km/h" if ui_state.is_metric else "mph"}',
+    )
+    self._adjust_lane_offset = option_item_sp(
+      param="AdjustLaneOffset",
+      title=lambda: tr("Lane Mode Offset"),
+      min_value=0,
+      max_value=500,
+      value_change_step=10,
+      description=lambda: tr("Adjust path toward edge/inside curve while in lane-line mode."),
+      label_callback=lambda v: f'{v * 0.01:.2f} m',
     )
     self._torque_control_toggle = toggle_item_sp(
       param="EnforceTorqueControl",
@@ -87,15 +110,9 @@ class SteeringLayout(Widget):
       description=lambda: tr("Enable this to enforce sunnypilot to steer with Torque lateral control."),
     )
     self._torque_customization_button = simple_button_item_sp(
-      button_text=lambda: tr("Customize Torque Params"),
-      button_width=850,
-      callback=lambda: self._set_current_panel(PanelType.TORQUE_CONTROL)
+      button_text=lambda: tr("Customize Torque Params"), button_width=850, callback=lambda: self._set_current_panel(PanelType.TORQUE_CONTROL)
     )
-    self._nnlc_toggle = toggle_item_sp(
-      param="NeuralNetworkLateralControl",
-      title=lambda: tr("Neural Network Lateral Control (NNLC)"),
-      description=""
-    )
+    self._nnlc_toggle = toggle_item_sp(param="NeuralNetworkLateralControl", title=lambda: tr("Neural Network Lateral Control (NNLC)"), description="")
 
     items = [
       self._mads_toggle,
@@ -106,6 +123,10 @@ class SteeringLayout(Widget):
       self._blinker_control_toggle,
       self._blinker_control_options,
       self._blinker_reengage_delay,
+      LineSeparatorSP(40),
+      self._lane_mode_speed,
+      self._lane_mode_curve_speed,
+      self._adjust_lane_offset,
       LineSeparatorSP(40),
       self._torque_control_toggle,
       self._torque_customization_button,

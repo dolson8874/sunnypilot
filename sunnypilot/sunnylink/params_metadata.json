@@ -536,6 +536,27 @@
     "max": 20,
     "step": 1
   },
+  "UseLaneLineSpeed": {
+    "title": "Lane Mode Speed",
+    "description": "Switch to lane-line mode when speed exceeds this value",
+    "min": 0,
+    "max": 200,
+    "step": 1
+  },
+  "UseLaneLineCurveSpeed": {
+    "title": "Lane Mode Minimum Speed",
+    "description": "Disable lane-line mode below this speed",
+    "min": 0,
+    "max": 200,
+    "step": 1
+  },
+  "AdjustLaneOffset": {
+    "title": "Lane Mode Offset",
+    "description": "Path offset used during lane-line mode",
+    "min": 0,
+    "max": 500,
+    "step": 10
+  },
   "LanguageSetting": {
     "title": "Language",
     "description": ""

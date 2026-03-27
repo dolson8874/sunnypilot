@@ -4,6 +4,7 @@ from openpilot.common.gps import get_gps_location_service
 from openpilot.common.params import Params
 from openpilot.common.realtime import Priority, config_realtime_process
 from openpilot.common.swaglog import cloudlog
+from openpilot.selfdrive.controls.lib.lateral_planner import LateralPlanner
 from openpilot.selfdrive.controls.lib.ldw import LaneDepartureWarning
 from openpilot.selfdrive.controls.lib.longitudinal_planner import LongitudinalPlanner
 import cereal.messaging as messaging
@@ -24,16 +25,32 @@ def main():
   gps_location_service = get_gps_location_service(params)
 
   ldw = LaneDepartureWarning()
+  lateral_planner = LateralPlanner(CP, debug=False)
   longitudinal_planner = LongitudinalPlanner(CP, CP_SP)
-  pm = messaging.PubMaster(['longitudinalPlan', 'driverAssistance', 'longitudinalPlanSP'])
-  sm = messaging.SubMaster(['carControl', 'carState', 'controlsState', 'liveParameters', 'radarState', 'modelV2', 'selfdriveState',
-                            'liveMapDataSP', 'carStateSP', gps_location_service],
-                           poll='carState')
+  pm = messaging.PubMaster(['longitudinalPlan', 'driverAssistance', 'longitudinalPlanSP', 'lateralPlan'])
+  sm = messaging.SubMaster(
+    [
+      'carControl',
+      'carState',
+      'controlsState',
+      'liveParameters',
+      'radarState',
+      'modelV2',
+      'selfdriveState',
+      'liveMapDataSP',
+      'carStateSP',
+      gps_location_service,
+    ],
+    poll='carState',
+  )
 
   while True:
     sm.update()
     longitudinal_planner.sla.update_car_state(sm['carState'])
     if sm.updated['modelV2']:
+      lateral_planner.update(sm)
+      lateral_planner.publish(sm, pm)
+
       longitudinal_planner.update(sm)
       longitudinal_planner.publish(sm, pm)
 
