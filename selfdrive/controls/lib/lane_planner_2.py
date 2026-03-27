@@ -121,7 +121,7 @@ class LanePlanner:
     if self.lane_width_right > 0:
       self.lane_width_right_filtered.update(self.lane_width_right)
 
-    adjust_lane_offset = float(self.params.get_int("AdjustLaneOffset")) * 0.01
+    adjust_lane_offset = float(self.params.get("AdjustLaneOffset", return_default=True)) * 0.01
     adjust_curve_offset = adjust_lane_offset
     adjust_limit = 0.4
 

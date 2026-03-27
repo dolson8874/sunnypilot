@@ -157,7 +157,7 @@ class Controls(ControlsExt):
 
     # Steering PID loop and lateral MPC
     speed_kph = CS.vEgo * CV.MS_TO_KPH
-    min_lane_mode_speed = self.params.get_int("UseLaneLineCurveSpeed")
+    min_lane_mode_speed = self.params.get("UseLaneLineCurveSpeed", return_default=True)
     self.lanefull_mode_enabled = bool(lat_plan.useLaneLines and speed_kph > min_lane_mode_speed)
 
     if not CC.latActive:

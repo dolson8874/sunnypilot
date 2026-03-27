@@ -42,7 +42,7 @@ class LateralPlanner:
     self.read_params_countdown = 0
     self.lanelines_active = False
 
-    self.use_lane_line_speed_apply = self.params.get_int("UseLaneLineSpeed")
+    self.use_lane_line_speed_apply = self.params.get("UseLaneLineSpeed", return_default=True)
     self.use_lane_line_mode = False
 
     self.plan_yaw = np.zeros((TRAJECTORY_SIZE,))
@@ -67,7 +67,7 @@ class LateralPlanner:
     self.read_params_countdown -= 1
     if self.read_params_countdown <= 0:
       self.read_params_countdown = 100
-      self.use_lane_line_speed_apply = self.params.get_int("UseLaneLineSpeed")
+      self.use_lane_line_speed_apply = self.params.get("UseLaneLineSpeed", return_default=True)
 
     measured_curvature = sm['controlsState'].curvature
     v_ego_car = max(sm['carState'].vEgo, MIN_SPEED)
