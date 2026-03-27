@@ -40,6 +40,7 @@ class UIState(UIStateSP):
     self.sm = messaging.SubMaster(
       [
         "modelV2",
+        "lateralPlan",
         "controlsState",
         "onroadEvents",
         "liveCalibration",
@@ -60,7 +61,8 @@ class UIState(UIStateSP):
         "carControl",
         "liveParameters",
         "rawAudioData",
-      ] + self.sm_services_ext
+      ]
+      + self.sm_services_ext
     )
 
     self.prime_state = PrimeState()
