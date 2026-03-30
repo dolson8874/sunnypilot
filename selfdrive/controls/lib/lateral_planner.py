@@ -105,7 +105,7 @@ class LateralPlanner:
     elif speed_kph < self.use_lane_line_speed_apply - 2:
       self.use_lane_line_mode = False
 
-    if md.meta.desire != log.Desire.none:
+    if md.meta.laneChangeState != log.LateralPlan.LaneChangeState.off:
       self.LP.lane_change_multiplier = 0.0
     else:
       self.LP.lane_change_multiplier = 1.0
@@ -187,7 +187,7 @@ class LateralPlanner:
       lateral_plan.solverState.u = self.lat_mpc.u_sol.flatten().tolist()
 
     lateral_plan.useLaneLines = self.lanelines_active
-    lateral_plan.desire = sm['modelV2'].meta.desire
+    lateral_plan.desire = log.LateralPlan.Desire.none
     lateral_plan.laneChangeState = sm['modelV2'].meta.laneChangeState
     lateral_plan.laneChangeDirection = sm['modelV2'].meta.laneChangeDirection
 
