@@ -185,5 +185,9 @@ class HudRenderer(Widget):
     mode_color = COLORS.ENGAGED if self.is_lane_mode else COLORS.WHITE_TRANSLUCENT
 
     mode_text_size = measure_text_cached(self._font_semi_bold, mode_text, 38)
-    mode_pos = rl.Vector2(rect.x + rect.width - mode_text_size.x - 54, rect.y + 236)
+    button_x = rect.x + rect.width - UI_CONFIG.border_size - UI_CONFIG.button_size
+    button_y = rect.y + UI_CONFIG.border_size
+    mode_x = button_x - mode_text_size.x - 22
+    mode_y = button_y + (UI_CONFIG.button_size - mode_text_size.y) / 2
+    mode_pos = rl.Vector2(mode_x, mode_y)
     rl.draw_text_ex(self._font_semi_bold, mode_text, mode_pos, 38, 0, mode_color)

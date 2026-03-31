@@ -184,8 +184,8 @@ class HudRenderer(Widget):
     mode_text = "LANE" if self.is_lane_mode else "LSS"
     mode_color = COLORS.ENGAGED if self.is_lane_mode else COLORS.WHITE_TRANSLUCENT
     text_size = measure_text_cached(self._font_semi_bold, mode_text, 34)
-    x = rect.x + rect.width - text_size.x - 36
-    y = rect.y + 34
+    x = rect.x + 21 + self._txt_wheel.width + 18
+    y = rect.y + rect.height - self._txt_wheel.height - text_size.y - 20
     rl.draw_text_ex(self._font_semi_bold, mode_text, rl.Vector2(x, y), 34, 0, mode_color)
 
   def _draw_steering_wheel(self, rect: rl.Rectangle) -> None:
