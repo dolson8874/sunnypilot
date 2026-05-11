@@ -1,3 +1,19 @@
+sunnypilot Version 2026.001.004 (2026-05-10)
+========================
+* What's Changed (sunnypilot/sunnypilot)
+  * sunnylink: switch athena domain by @DevTekVE
+  * sunnylink: fix max time offroad values by @nayan8teen
+
+sunnypilot Version 2026.001.003 (2026-05-08)
+========================
+* What's Changed (sunnypilot/sunnypilot)
+  * manager: disable DEVELOPMENT_ONLY reset by @jason-wen
+
+sunnypilot Version 2026.001.002 (2026-05-07)
+========================
+* What's Changed (sunnypilot/sunnypilot)
+  * release: ignore upstream IsReleaseBranch by @sunnyhaibin
+
 sunnypilot Version 2026.001.001 (2026-05-06)
 ========================
 * What's Changed (sunnypilot/sunnypilot)
