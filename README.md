@@ -4,18 +4,38 @@
  Any damage or consequences are at the user’s responsibility.
 
 <br><br>
-# 🚘 This repository adds LAND ROVER vehicles to Sunnypilot.
- lrmaster-SP is for C3X branch.
- lrmaster-SP-tici is for C3 branch.
+# 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
+This README describes **`lrmaster-SP`**, the Land Rover base branch for C3X.
+`lrmaster-SP-tici` is the separate C3 branch.
+
+| Branch | Purpose |
+| --- | --- |
+| `lrmaster-SP` | Land Rover base branch for C3X; clone command below |
+| `lrmaster-SP-tici` | Land Rover branch for C3 |
+| `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
+| `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture development branch |
+
+### Clone this branch
+
+Back up any existing `/data/openpilot` installation before cloning into that path.
+
+```bash
+cd /data
+git clone --recurse-submodules --branch lrmaster-SP https://github.com/dolson8874/sunnypilot.git openpilot
+cd /data/openpilot
+scons -j8
 ```
- cd /data
- mv openpilot openpilot.bak
- git clone -b lrmaster-SP --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot
- cd /data/openpilot
- scons -j8
- sudo reboot
-```
+
+This base branch does not contain the FlexRay collector. For FlexRay v2 testing, select
+`lrmaster-SP-flexraylog-v2` and follow the README on that branch.
+
+`--recurse-submodules` checks out the exact submodule commits recorded by this branch.
+Do not use `git submodule update --remote` to prepare a matching device checkout.
+When integrating an upstream release, merge and publish the forked `panda` and `opendbc_repo`
+commits first, then record their new pointers here. The commits must be reachable from the URLs in `.gitmodules`.
+The proposed `v2026.002.002` integration has not been applied to this branch yet.
+
 <br><br><br><br>
 
 
