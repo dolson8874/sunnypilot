@@ -454,9 +454,14 @@ void MainWindow::updateLoadSaveMenus() {
   manage_dbcs_menu->clear();
 
   for (int source : can->sources) {
-    if (source >= 64) continue; // Sent and blocked buses are handled implicitly
+    bool flexray = cabana::isFlexraySource(source);
+    if (source >= 64 && !flexray) continue; // Sent and blocked CAN buses are handled implicitly.
 
-    SourceSet ss = {source, uint8_t(source + 128), uint8_t(source + 192)};
+    SourceSet ss = {source};
+    if (!flexray) {
+      ss.insert(uint8_t(source + 128));
+      ss.insert(uint8_t(source + 192));
+    }
 
     QMenu *bus_menu = new QMenu(this);
     bus_menu->addAction(tr("New DBC File..."), [=]() { newFile(ss); });
@@ -474,7 +479,9 @@ void MainWindow::updateLoadSaveMenus() {
       bus_menu->addAction(tr("Remove from this bus..."), [=]() { closeFile(ss); });
       bus_menu->addAction(tr("Remove from all buses..."), [=]() { closeFile(dbc_file); });
     }
-    bus_menu->setTitle(tr("Bus %1 (%2)").arg(source).arg(dbc_file ? QString::fromStdString(dbc_file->name()) : "No DBCs loaded"));
+    QString name = dbc_file ? QString::fromStdString(dbc_file->name()) : "No DBCs loaded";
+    bus_menu->setTitle(flexray ? tr("FlexRay bus %1 / source %2 (%3)").arg(source - cabana::FLEXRAY_SOURCE_OFFSET).arg(source).arg(name)
+                             : tr("Bus %1 (%2)").arg(source).arg(name));
 
     manage_dbcs_menu->addMenu(bus_menu);
   }

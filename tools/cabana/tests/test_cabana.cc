@@ -1,6 +1,7 @@
 
 #undef INFO
 #include <QDir>
+#include <QCoreApplication>
 
 #include "catch2/catch.hpp"
 #include "tools/cabana/dbc/dbcmanager.h"
@@ -9,12 +10,83 @@
 namespace {
 class PayloadTestStream : public AbstractStream {
 public:
-  explicit PayloadTestStream(QObject *parent) : AbstractStream(parent) {}
+  explicit PayloadTestStream(QObject *parent) : AbstractStream(parent), previous_(::can) { ::can = this; }
+  ~PayloadTestStream() override { ::can = previous_; }
   void start() override {}
   std::string routeName() const override { return ""; }
   using AbstractStream::newEvent;
   using AbstractStream::updateEvent;
+  using AbstractStream::mergeEvents;
+private:
+  AbstractStream *previous_;
 };
+}
+
+TEST_CASE("FlexRay events preserve payloads and use a separate source namespace") {
+  QObject parent;
+  PayloadTestStream stream(&parent);
+  MessageBuilder msg;
+  auto frame = msg.initEvent().initCan(1)[0];
+  std::vector<uint8_t> data(259, 0x55);
+  data[0] = 3;
+  data[1] = 7;
+  data[256] = 0x12;
+  data[257] = 0x34;
+  data[258] = 0x56;
+  frame.setAddress(15);
+  frame.setSrc(6);
+  frame.setDat(kj::arrayPtr(data.data(), data.size()));
+  const auto *event = stream.newEvent(100, frame.asReader());
+  REQUIRE(event->src == 6);
+  REQUIRE(event->address == 15);
+  REQUIRE(event->size == 259);
+  REQUIRE(std::equal(data.begin(), data.end(), event->dat));
+  REQUIRE(cabana::isFlexraySource(event->src));
+  REQUIRE_FALSE(cabana::isFlexraySource(2));
+  REQUIRE_FALSE(cabana::isFlexraySource(12));
+}
+
+TEST_CASE("FlexRay CAN events retain cycle multiplexing") {
+  DBCFile dbc("tools/cabana/dbc/examples/flexray_cycle.dbc");
+  auto *even = dbc.signal(15, "EVEN_PAYLOAD_BYTE");
+  auto *odd = dbc.signal(15, "ODD_PAYLOAD_BYTE");
+  REQUIRE(even != nullptr);
+  REQUIRE(odd != nullptr);
+  QObject parent;
+  PayloadTestStream stream(&parent);
+  MessageBuilder message;
+  auto frame = message.initEvent().initCan(1)[0];
+  frame.setAddress(15);
+  frame.setSrc(6);
+  for (int cycle = 0; cycle < 64; ++cycle) {
+    std::vector<uint8_t> data = {3, uint8_t(cycle), 0x55, 0, 0, 0, 0x12, 0x34, 0x56};
+    frame.setDat(kj::arrayPtr(data.data(), data.size()));
+    const auto *event = stream.newEvent(cycle, frame.asReader());
+    double value = 0;
+    REQUIRE(even->getValue(event->dat, event->size, &value) == (cycle % 2 == 0));
+    REQUIRE(odd->getValue(event->dat, event->size, &value) == (cycle % 2 == 1));
+    REQUIRE(value == 0x55);
+  }
+}
+
+TEST_CASE("Overlapping event batches retain chronological order") {
+  QObject parent;
+  PayloadTestStream stream(&parent);
+  MessageBuilder msg;
+  auto c = msg.initEvent().initCan(1)[0];
+  c.setSrc(2);
+  c.setAddress(15);
+  stream.mergeEvents({stream.newEvent(10, c.asReader()), stream.newEvent(30, c.asReader())});
+  c.setSrc(6);
+  const auto *flexray = stream.newEvent(20, c.asReader());
+  c.setSrc(2);
+  stream.mergeEvents({flexray, stream.newEvent(25, c.asReader()), stream.newEvent(40, c.asReader())});
+  std::vector<uint64_t> times;
+  for (const auto *event : stream.allEvents()) times.push_back(event->mono_time);
+  REQUIRE(times == std::vector<uint64_t>{10, 20, 25, 30, 40});
+  times.clear();
+  for (const auto *event : stream.events({.source = 2, .address = 15})) times.push_back(event->mono_time);
+  REQUIRE(times == std::vector<uint64_t>{10, 25, 30, 40});
 }
 
 TEST_CASE("AbstractStream preserves payloads longer than 255 bytes") {
@@ -34,6 +106,8 @@ TEST_CASE("AbstractStream preserves payloads longer than 255 bytes") {
     REQUIRE(std::equal(payload.begin(), payload.end(), event->dat));
     MessageId id = {.source = event->src, .address = event->address};
     stream.updateEvent(id, 1.0, event->dat, event->size);
+    stream.privateUpdateLastMsgsSignal();
+    QCoreApplication::processEvents();
     REQUIRE(stream.lastMessage(id).dat == payload);
   }
 }

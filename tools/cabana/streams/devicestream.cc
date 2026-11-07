@@ -34,7 +34,7 @@ void DeviceStream::start() {
   if (!zmq_address.isEmpty()) {
     bridge_process = new QProcess(this);
     QString bridge_path = QCoreApplication::applicationDirPath() + "/../../cereal/messaging/bridge";
-    bridge_process->start(QFileInfo(bridge_path).absoluteFilePath(), QStringList { zmq_address, "/\"can/\"" });
+    bridge_process->start(QFileInfo(bridge_path).absoluteFilePath(), QStringList { zmq_address, "can,flexray" });
 
     if (!bridge_process->waitForStarted()) {
       QMessageBox::warning(nullptr, tr("Error"), tr("Failed to start bridge: %1").arg(bridge_process->errorString()));
@@ -49,16 +49,18 @@ void DeviceStream::streamThread() {
   zmq_address.isEmpty() ? unsetenv("ZMQ") : setenv("ZMQ", "1", 1);
 
   std::unique_ptr<Context> context(Context::create());
-  std::unique_ptr<SubSocket> sock(SubSocket::create(context.get(), "can", "127.0.0.1", false, true, services.at("can").queue_size));
-  assert(sock != NULL);
-  // run as fast as messages come in
+  std::unique_ptr<Poller> poller(Poller::create());
+  std::vector<std::unique_ptr<SubSocket>> sockets;
+  for (const auto *name : {"can", "flexray"}) {
+    sockets.emplace_back(SubSocket::create(context.get(), name, "127.0.0.1", false, true, services.at(name).queue_size));
+    assert(sockets.back() != nullptr);
+    poller->registerSocket(sockets.back().get());
+  }
   while (!QThread::currentThread()->isInterruptionRequested()) {
-    std::unique_ptr<Message> msg(sock->receive(true));
-    if (!msg) {
-      QThread::msleep(50);
-      continue;
+    for (auto *socket : poller->poll(50)) {
+      std::unique_ptr<Message> msg(socket->receive(true));
+      if (msg) handleEvent(kj::ArrayPtr<capnp::word>((capnp::word*)msg->getData(), msg->getSize() / sizeof(capnp::word)));
     }
-    handleEvent(kj::ArrayPtr<capnp::word>((capnp::word*)msg->getData(), msg->getSize() / sizeof(capnp::word)));
   }
 }
 

@@ -9,13 +9,13 @@ all: flexray_logd flexray_dump
 flexray_logd: flexray_logd.o $(COMMON)
 flexray_dump: flexray_dump.o $(COMMON)
 tests/test_decoder: tests/test_decoder.c flexray_decoder.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $^
+	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $(filter %.c %.o,$^)
 tests/test_spi_timeout: tests/test_spi_timeout.c libftdi/ftdispi.o libftdi/ftdi.o
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=ftdi_read_data -Wl,--wrap=ftdi_write_data -o $@ $^ $(LDLIBS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=ftdi_read_data -Wl,--wrap=ftdi_write_data -o $@ $(filter %.c %.o,$^) $(LDLIBS)
 tests/test_output: tests/test_output.c flexray_output.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=send -Wl,--wrap=write -o $@ $^ -pthread
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=send -Wl,--wrap=write -o $@ $(filter %.c %.o,$^) -pthread
 tests/test_reader: tests/test_reader.c flexray_reader.c libftdi/ftdispi.o libftdi/ftdi.o
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=ftdi_usb_open -Wl,--wrap=ftdi_set_bitmode -Wl,--wrap=ftdi_set_latency_timer -Wl,--wrap=ftdi_read_data -Wl,--wrap=ftdispi_read_stream -o $@ $^ $(LDLIBS)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=ftdi_usb_open -Wl,--wrap=ftdi_set_bitmode -Wl,--wrap=ftdi_set_latency_timer -Wl,--wrap=ftdi_read_data -Wl,--wrap=ftdispi_read_stream -o $@ $(filter %.c %.o,$^) $(LDLIBS)
 test: all tests/test_decoder tests/test_spi_timeout tests/test_output tests/test_reader
 	./tests/test_decoder
 	./tests/test_spi_timeout

@@ -31,6 +31,7 @@ _services: dict[str, tuple] = {
   "deviceState": (True, 2., 1),
   "touch": (True, 20., 1),
   "can": (True, 100., 2053, QueueSize.BIG),  # decimation gives ~3 msgs in a full segment
+  "flexray": (True, 100., None, QueueSize.BIG),  # Logging-only transport carrying Event.can; raw subscribers only (not SubMaster). No qlog.
   "controlsState": (True, 100., 10, QueueSize.MEDIUM),
   "selfdriveState": (True, 100., 10),
   "pandaStates": (True, 10., 1),

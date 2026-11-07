@@ -208,15 +208,19 @@ void AbstractStream::mergeEvents(const std::vector<const CanEvent *> &events) {
   }
 
   if (!events.empty()) {
-    for (const auto &[id, new_e] : msg_events) {
-      if (!new_e.empty()) {
-        auto &e = events_[id];
-        auto pos = std::upper_bound(e.cbegin(), e.cend(), new_e.front()->mono_time, CompareCanEvent());
-        e.insert(pos, new_e.cbegin(), new_e.cend());
+    const auto by_time = [](const CanEvent *a, const CanEvent *b) { return a->mono_time < b->mono_time; };
+    const auto merge_sorted = [&by_time](auto &destination, const auto &incoming) {
+      size_t old_size = destination.size();
+      destination.insert(destination.end(), incoming.begin(), incoming.end());
+      // Different services can deliver overlapping time ranges in successive polls.
+      if (old_size && incoming.front()->mono_time < destination[old_size - 1]->mono_time) {
+        std::inplace_merge(destination.begin(), destination.begin() + old_size, destination.end(), by_time);
       }
+    };
+    for (const auto &[id, new_e] : msg_events) {
+      if (!new_e.empty()) merge_sorted(events_[id], new_e);
     }
-    auto pos = std::upper_bound(all_events_.cbegin(), all_events_.cend(), events.front()->mono_time, CompareCanEvent());
-    all_events_.insert(pos, events.cbegin(), events.cend());
+    merge_sorted(all_events_, events);
     emit eventsMerged(msg_events);
   }
 }

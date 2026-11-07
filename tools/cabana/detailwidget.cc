@@ -232,7 +232,7 @@ EditMessageDialog::EditMessageDialog(const MessageId &msg_id, const QString &tit
   name_edit->setValidator(new NameValidator(name_edit));
 
   form_layout->addRow(tr("Size"), size_spin = new QSpinBox(this));
-  size_spin->setRange(1, CAN_MAX_DATA_BYTES);
+  size_spin->setRange(1, cabana::isFlexraySource(msg_id.source) ? cabana::FLEXRAY_MAX_DATA_BYTES : CAN_MAX_DATA_BYTES);
   size_spin->setValue(size);
 
   form_layout->addRow(tr("Node"), node = new QLineEdit(this));

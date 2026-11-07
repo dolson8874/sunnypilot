@@ -15,6 +15,15 @@ const std::string UNTITLED = "untitled";
 const std::string DEFAULT_NODE_NAME = "XXX";
 constexpr int CAN_MAX_DATA_BYTES = 64;
 
+namespace cabana {
+// FlexRay follows the single Panda source block (PANDA_BUS_OFFSET = 4).
+constexpr uint8_t FLEXRAY_SOURCE_OFFSET = 4;
+constexpr int FLEXRAY_MAX_DATA_BYTES = 259;
+inline bool isFlexraySource(int source) {
+  return source >= FLEXRAY_SOURCE_OFFSET && source < FLEXRAY_SOURCE_OFFSET + 8;
+}
+}
+
 struct MessageId {
   uint8_t source = 0;
   uint32_t address = 0;

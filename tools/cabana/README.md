@@ -102,11 +102,15 @@ cabana
 Keep the original frame ID in the capture and classify signals with Cabana's existing DBC Multiplexor.
 
 `system/flexray_logd` retains its old ID/counter classification code but does not execute it.
-Its decoded socket data keeps the existing `flags (1 byte) + counter (1 byte) + payload + CRC (3 bytes)` layout.
-Raw dump files remain unchanged. The dedicated FlexRay service and rlog connection are still deferred;
-this DBC applies when decoded frames are supplied to Cabana's CAN event input.
+The dedicated `flexray` channel carries standard `Event.can` messages into the driving route's rlog.
+Route replay uses the existing CAN event reader; device streaming subscribes to both `can` and `flexray`.
+Full FlexRay frames are not included in qlog. Stored frames use sources 4–11 (4 + received bus),
+so the current board's bus 2 appears as source 6 without colliding with car CAN bus 2.
+The stored and displayed bytes retain `flags (1 byte) + counter (1 byte) + payload + CRC (3 bytes)`.
+Raw dump files remain separate from routes and cannot be opened directly as a Cabana route.
 
-Open [the example DBC](dbc/examples/flexray_cycle.dbc) for frame ID `0x000F` on its captured bus.
+Open [the example DBC](dbc/examples/flexray_cycle.dbc) for frame ID `0x000F` on its FlexRay source
+(use **Manage DBCs → FlexRay bus 2 / source 6** for the current board).
 It illustrates a four-byte payload; adjust the message length and payload signals to your data.
 In Cabana's signal editor:
 
