@@ -68,6 +68,9 @@ if GetOption('extras'):
   cabana_core_test_env['CXXFLAGS'] += [opendbc_path]
   cabana_core_test_objects = [
     cabana_core_test_env.Object('tests/cabana_core_tests', 'tests/test_cabana.cc'),
+    cabana_core_test_env.Object('tests/cabana_flexray_tests', 'tests/test_flexray_cycle.cc'),
+    cabana_core_test_env.Object('tests/cabana_core_stream', 'streams/abstractstream.cc'),
+    cabana_core_test_env.Object('tests/cabana_core_settings', 'settings.cc'),
     cabana_core_test_env.Object('tests/cabana_core_model', 'dbc/dbc.cc'),
     cabana_core_test_env.Object('tests/cabana_core_file', 'dbc/dbcfile.cc'),
     cabana_core_test_env.Object('tests/cabana_core_manager', 'dbc/dbcmanager.cc'),
@@ -77,7 +80,7 @@ if GetOption('extras'):
     cabana_core_test_env.Object('tests/cabana_core_routes', 'routes.cc'),
     cabana_core_test_env.Object('tests/cabana_core_qtstate', 'ui/qtstate.cc'),
   ]
-  cabana_core_test = cabana_core_test_env.Program('tests/test_cabana', cabana_core_test_objects, LIBS=[replay_lib, common])
+  cabana_core_test = cabana_core_test_env.Program('tests/test_cabana', cabana_core_test_objects, LIBS=[replay_lib, common, messaging, cereal])
   cabana_core_test_env.Requires(cabana_core_test, generated_dbcs)
 
 output_json_file = 'openpilot/tools/cabana/dbc/car_fingerprint_to_dbc.json'

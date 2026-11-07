@@ -15,6 +15,19 @@ const std::string UNTITLED = "untitled";
 const std::string DEFAULT_NODE_NAME = "XXX";
 constexpr int CAN_MAX_DATA_BYTES = 64;
 
+namespace cabana {
+// The capture board follows the single Panda source block (PANDA_BUS_OFFSET = 4).
+constexpr uint8_t FLEXRAY_SOURCE_OFFSET = 4;
+constexpr int FLEXRAY_MAX_DATA_BYTES = 259;
+inline bool isFlexraySource(int source) {
+  return source >= FLEXRAY_SOURCE_OFFSET && source < FLEXRAY_SOURCE_OFFSET + 8;
+}
+inline int maxMessageSize(int source) {
+  return isFlexraySource(source) ? FLEXRAY_MAX_DATA_BYTES : CAN_MAX_DATA_BYTES;
+}
+}
+
+
 typedef std::vector<std::pair<double, std::string>> ValueDescription;
 
 namespace cabana {

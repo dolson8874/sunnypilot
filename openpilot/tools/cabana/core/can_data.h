@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <cstddef>
 #include <unordered_map>
 #include <vector>
 
@@ -33,7 +34,7 @@ struct CanEvent {
   uint8_t src;
   uint32_t address;
   uint64_t mono_time;
-  uint8_t size;
+  size_t size;
   uint8_t dat[];
 };
 

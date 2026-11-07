@@ -134,7 +134,7 @@ void AbstractStream::setTimeRange(const std::optional<std::pair<double, double>>
   timeRangeChanged(time_range_);
 }
 
-void AbstractStream::updateEvent(const MessageId &id, double sec, const uint8_t *data, uint8_t size) {
+void AbstractStream::updateEvent(const MessageId &id, double sec, const uint8_t *data, size_t size) {
   std::lock_guard lk(mutex_);
   messages_[id].compute(id, data, size, sec, getSpeed(), masks_[id]);
   new_msgs_.insert(id);
@@ -237,15 +237,18 @@ void AbstractStream::mergeEvents(const std::vector<const CanEvent *> &events) {
 
 void AbstractStream::insertEvents(const std::vector<const CanEvent *> &events, const MessageEventsMap &msg_events) {
   if (!events.empty()) {
-    for (const auto &[id, new_e] : msg_events) {
-      if (!new_e.empty()) {
-        auto &e = events_[id];
-        auto pos = std::upper_bound(e.cbegin(), e.cend(), new_e.front()->mono_time, CompareCanEvent());
-        e.insert(pos, new_e.cbegin(), new_e.cend());
+    const auto by_time = [](const CanEvent *a, const CanEvent *b) { return a->mono_time < b->mono_time; };
+    const auto merge_sorted = [&by_time](auto &destination, const auto &incoming) {
+      size_t old_size = destination.size();
+      destination.insert(destination.end(), incoming.begin(), incoming.end());
+      if (old_size && incoming.front()->mono_time < destination[old_size - 1]->mono_time) {
+        std::inplace_merge(destination.begin(), destination.begin() + old_size, destination.end(), by_time);
       }
+    };
+    for (const auto &[id, incoming] : msg_events) {
+      if (!incoming.empty()) merge_sorted(events_[id], incoming);
     }
-    auto pos = std::upper_bound(all_events_.cbegin(), all_events_.cend(), events.front()->mono_time, CompareCanEvent());
-    all_events_.insert(pos, events.cbegin(), events.cend());
+    merge_sorted(all_events_, events);
     eventsMerged(msg_events);
   }
 }

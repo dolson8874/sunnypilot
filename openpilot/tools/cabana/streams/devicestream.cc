@@ -49,7 +49,7 @@ void DeviceStream::start() {
   if (!zmq_address.empty()) {
     stopBridge();
     const std::string path = (executableDir() / "../../cereal/messaging/bridge").lexically_normal().string();
-    const char *can_filter = "/\"can/\"";
+    const char *can_filter = "can,flexray";
 
     // Self-pipe: write end is CLOEXEC so it closes on successful exec. If exec
     // fails, the child writes errno and the parent aborts stream start.
@@ -97,15 +97,17 @@ void DeviceStream::streamThread() {
   zmq_address.empty() ? unsetenv("ZMQ") : setenv("ZMQ", "1", 1);
 
   std::unique_ptr<Context> context(Context::create());
-  std::unique_ptr<SubSocket> sock(SubSocket::create(context.get(), "can", "127.0.0.1", false, true, services.at("can").queue_size));
-  assert(sock != NULL);
-  // run as fast as messages come in
+  std::unique_ptr<Poller> poller(Poller::create());
+  std::vector<std::unique_ptr<SubSocket>> sockets;
+  for (const auto *name : {"can", "flexray"}) {
+    sockets.emplace_back(SubSocket::create(context.get(), name, "127.0.0.1", false, true, services.at(name).queue_size));
+    assert(sockets.back() != nullptr);
+    poller->registerSocket(sockets.back().get());
+  }
   while (!exit_) {
-    std::unique_ptr<Message> msg(sock->receive(true));
-    if (!msg) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      continue;
+    for (auto *socket : poller->poll(50)) {
+      std::unique_ptr<Message> msg(socket->receive(true));
+      if (msg) handleEvent(kj::ArrayPtr<capnp::word>((capnp::word*)msg->getData(), msg->getSize() / sizeof(capnp::word)));
     }
-    handleEvent(kj::ArrayPtr<capnp::word>((capnp::word*)msg->getData(), msg->getSize() / sizeof(capnp::word)));
   }
 }

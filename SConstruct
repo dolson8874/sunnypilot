@@ -279,6 +279,7 @@ SConscript(['rednose_repo/rednose/SConscript'])
 # Build system services
 SConscript([
   'openpilot/system/loggerd/SConscript',
+  'openpilot/system/flexray_logd/SConscript',
 ])
 
 if arch == "comma_arm64":

@@ -29,6 +29,9 @@ def logging(started: bool, params: Params, CP: car.CarParams) -> bool:
   run = (not CP.notCar) or not params.get_bool("DisableLogging")
   return started and run
 
+def flexray_logging(started: bool, params: Params, CP: car.CarParams) -> bool:
+  return logging(started, params, CP) and params.get_bool("FlexrayLoggingEnabled")
+
 def ublox_available() -> bool:
   return os.path.exists('/dev/ttyHS0') and not os.path.exists('/persist/comma/use-quectel-gps')
 
@@ -109,9 +112,18 @@ def or_(*fns):
 def and_(*fns):
   return lambda *args: operator.and_(*(fn(*args) for fn in fns))
 
+class FlexrayProcess(PythonProcess):
+  def start(self) -> None:
+    if self.proc is not None and self.proc.exitcode is not None:
+      self.stop()
+    super().start()
+
+
 procs = [
   DaemonProcess("manage_athenad", "openpilot.system.athena.manage_athenad", "AthenadPid"),
 
+  FlexrayProcess("flexray_logd", "openpilot.system.flexray_logd.flexrayd", flexray_logging,
+                enabled=not PC),
   NativeProcess("loggerd", "openpilot/system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "openpilot/system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "openpilot/system/loggerd", ["./encoderd", "--stream"], or_(livestream, notcar)),

@@ -95,4 +95,31 @@ cabana
 
 ## Additional Information
 
+### FlexRay cycle classification
+
+Keep the original frame ID in the capture and classify signals with Cabana's existing DBC Multiplexor.
+
+`openpilot/system/flexray_logd` retains its old ID/counter classification code but does not execute it.
+The dedicated `flexray` channel carries standard `Event.can` messages into the driving route's rlog.
+Route replay uses the existing CAN event reader; device streaming subscribes to both `can` and `flexray`.
+Full FlexRay frames are not included in qlog. Stored frames use sources 4–11 (4 + received bus),
+so the current board's bus 2 appears as source 6 without colliding with car CAN bus 2.
+The stored and displayed bytes retain `flags (1 byte) + counter (1 byte) + payload + CRC (3 bytes)`.
+Raw dump files remain separate from routes and cannot be opened directly as a Cabana route.
+
+Open [the example DBC](dbc/examples/flexray_cycle.dbc) for frame ID `0x000F` on its FlexRay source
+(use **Manage DBCs → FlexRay bus 2 / source 6** for the current board).
+It illustrates a four-byte payload; adjust the message length and payload signals to your data.
+In Cabana's signal editor:
+
+1. Set a little-endian signal at start bit **8** as **Multiplexor Signal**.
+2. Use size **1**, **2**, **3**, **4**, or **6** bits for counter modulo **2**, **4**, **8**, **16**, or **64**.
+3. Set each conditional payload signal to **Multiplexed Signal** and select its **Multiplex Value**.
+   Payload starts at bit **16**; normal signals apply to every cycle.
+
+The example uses `m0` for even cycles and `m1` for odd cycles at the same payload position.
+Select either signal to plot only its matching cycles; the message list retains one row per bus/frame ID.
+This does not reproduce vehicle-specific exceptions from the old classification table automatically.
+Existing captures with already transformed IDs are not converted back by loading this DBC.
+
 For more information, see the [openpilot wiki](https://github.com/commaai/openpilot/wiki/Cabana)

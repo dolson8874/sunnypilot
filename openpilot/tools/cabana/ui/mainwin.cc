@@ -497,12 +497,19 @@ void MainWindow::copyToClipboard(const std::string &text) {
 
 void MainWindow::drawManageDBCsMenu() {
   for (int source : can->sources) {
-    if (source >= 64) continue; // Sent and blocked buses are handled implicitly
+    const bool flexray = cabana::isFlexraySource(source);
+    if (source >= 64 && !flexray) continue; // Sent and blocked CAN buses are handled implicitly.
 
-    SourceSet ss = {source, uint8_t(source + 128), uint8_t(source + 192)};
+    SourceSet ss = {source};
+    if (!flexray) {
+      ss.insert(uint8_t(source + 128));
+      ss.insert(uint8_t(source + 192));
+    }
 
     auto dbc_file = dbc()->findDBCFile(source);
-    const std::string title = "Bus " + std::to_string(source) + " (" + (dbc_file ? dbc_file->name() : "No DBCs loaded") + ")";
+    const std::string label = flexray ? "FlexRay bus " + std::to_string(source - cabana::FLEXRAY_SOURCE_OFFSET) +
+                                          " / source " + std::to_string(source) : "Bus " + std::to_string(source);
+    const std::string title = label + " (" + (dbc_file ? dbc_file->name() : "No DBCs loaded") + ")";
     ImGui::PushID(source);
     if (dropdown::BeginMenu(title.c_str())) {
       if (dropdown::Item("New DBC File")) newFile(ss);

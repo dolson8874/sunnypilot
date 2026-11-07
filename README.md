@@ -6,21 +6,21 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes the Land Rover upstream-master integration for C3X.
-`lrmaster-SP-master-test` is the validation branch; `lrmaster-SP` receives the validated integration.
+This README describes **`lrmaster-SP-flexraylog-v2`**, standalone FlexRay capture on the Land Rover upstream-master integration for C3X.
+`lrmaster-SP` supplies the master integration; the release-based FlexRay branch remains separate.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
 `lrmaster-SP-tici` is the separate C3 branch.
 
 | Branch | Purpose |
 | --- | --- |
-| `lrmaster-SP-master-test` | Pinned upstream-master integration and validation; clone command below |
+| `lrmaster-SP-master-test` | Pinned upstream-master vehicle integration and validation |
 | `lrmaster-SP` | Land Rover base branch for C3X |
 | `lrmaster-SP-v2026.002.002` | Preserved release integration |
 | `lrmaster-SP-v2026.002.002-flexrylog-v2` | Preserved release-based FlexRay v2 integration |
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
-| `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture development branch |
+| `lrmaster-SP-flexraylog-v2` | Master-based FlexRay capture; clone command below |
 
 ### Clone this branch
 
@@ -28,13 +28,12 @@ Back up any existing `/data/openpilot` installation before cloning into that pat
 
 ```bash
 cd /data
-git clone --recurse-submodules --branch lrmaster-SP-master-test https://github.com/dolson8874/sunnypilot.git openpilot
+git clone --recurse-submodules --branch lrmaster-SP-flexraylog-v2 https://github.com/dolson8874/sunnypilot.git openpilot
 cd /data/openpilot
 scons -j8
 ```
 
-This base branch does not contain the FlexRay collector. For FlexRay v2 testing, select
-`lrmaster-SP-flexraylog-v2` and follow the README on that branch.
+This branch includes the standalone FlexRay collector and records its frames in normal driving logs.
 
 `--recurse-submodules` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.
@@ -53,6 +52,49 @@ The existing Land Rover disabled-angle and real-time safety test failures remain
 This integration preserves the current steering limits and adapts the upstream schema/model APIs;
 it does not apply the separately recorded functional improvements.
 The release integration branches remain separate comparison and rollback references.
+
+### FlexRay capture
+
+FlexRay logging is **enabled by default**. In **Settings → Toggles → Record FlexRay Data**, switch capture on or off.
+The choice is saved across reboots and takes effect without restarting sunnypilot.
+Capture runs with loggerd while the device is onroad, including dashcam mode; engagement is not required.
+A connected FTDI/FPGA capture board is required. If unavailable, capture retries every five seconds.
+
+The managed publisher owns the capture subprocess and sends standard `Event.can` messages on a separate `flexray` logging channel.
+Loggerd records full frames in the normal driving route's **rlog**; qlog does not contain these frames.
+**No `FLEXRAY_LOG_DIR` setting is needed for normal logging.**
+Car CAN traffic remains on the existing `can` service, owned by pandad; FlexRay never publishes on that channel.
+The `flexray` channel is a logging-only transport: its channel name intentionally differs from its `can` event type.
+Consumers must use raw socket subscriptions, not `SubMaster(["flexray"])`.
+The source offset is 4 (`PANDA_BUS_OFFSET`) because this branch's pandad handles one Panda.
+Revisit the offset before adding support for multiple Pandas.
+
+Cabana reads the saved frames through its existing CAN event path and subscribes to both channels for device streaming. To distinguish FlexRay from car CAN,
+FlexRay frames are stored with source **4 + received bus** (sources **4–11**); the current board's bus 2 appears as source **6**.
+Frame IDs remain unchanged. The old ID/counter classification is retained but disabled;
+use Cabana's DBC Multiplexor to classify cycles.
+See [Cabana's FlexRay instructions](openpilot/tools/cabana/README.md#flexray-cycle-classification).
+
+#### Optional raw dump
+
+`FLEXRAY_LOG_DIR` is only for an additional raw byte dump alongside rlog. If used, set it to an existing writable directory
+in the launcher's environment before the manager starts. Raw files are separate from sunnypilot routes and are not directly loadable as Cabana routes.
+
+For standalone diagnostics, turn off **Record FlexRay Data** in the menu before starting another collector:
+
+```bash
+cd /data/openpilot
+mkdir -p /data/flexray_logs
+./openpilot/system/flexray_logd/flexray_logd -o /data/flexray_logs
+```
+
+This standalone command writes raw files and exposes the legacy socket; the manager's publisher is needed for rlog recording.
+Use one collector per FTDI interface. Raw files use unique names and rotate at 64 MiB by default; `-m BYTES` changes the limit.
+File replay runs once with `-f FILE`; add `-l` to loop. Run `-h` for the available options.
+
+- Raw recording queue overflow drops the incoming batch and reports the lost bytes while capture continues.
+- Raw file write failures disable that recording and report the cause to stderr; capture and rlog publication continue. Raw recording does not automatically restart.
+- Input errors end the native capture subprocess; the managed publisher reports the error and retries.
 
 <br><br><br><br>
 
@@ -87,6 +129,7 @@ By default, sunnypilot uploads the driving data to comma servers. You can also a
 sunnypilot is open source software. The user is free to disable data collection if they wish to do so.
 
 sunnypilot logs the road-facing camera, CAN, GPS, IMU, magnetometer, thermal sensors, crashes, and operating system logs.
+This branch also records FlexRay frames when **Record FlexRay Data** is enabled.
 The driver-facing camera and microphone are only logged if you explicitly opt-in in settings.
 
 By using this software, you understand that use of this software or its related services will generate certain types of user data, which may be logged and stored at the sole discretion of comma. By accepting this agreement, you grant an irrevocable, perpetual, worldwide right to comma for the use of this data.

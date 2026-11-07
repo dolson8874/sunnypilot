@@ -92,6 +92,9 @@ void LiveStream::updateLastMessages() {
   {
     // merge events received from live stream thread.
     std::lock_guard lk(lock);
+    std::stable_sort(received_events_.begin(), received_events_.end(), [](const CanEvent *a, const CanEvent *b) {
+      return a->mono_time < b->mono_time;
+    });
     mergeEvents(received_events_);
     uint64_t last_received_ts = !received_events_.empty() ? received_events_.back()->mono_time : 0;
     lastest_event_ts = std::max(lastest_event_ts, last_received_ts);

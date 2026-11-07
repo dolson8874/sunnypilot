@@ -436,7 +436,12 @@ void test_heatmap_counts() {
   REQUIRE(HeatmapCounts(0).bits.empty());
 }
 
+void test_flexray_cycle();
+void test_flexray_stream();
+
 void test_cabana_core() {
+  test_flexray_cycle();
+  test_flexray_stream();
   test_heatmap_counts();
   test_pixel_envelope();
   test_format_seconds();

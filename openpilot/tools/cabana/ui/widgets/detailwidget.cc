@@ -344,7 +344,7 @@ bool EditMessageDialog::draw() {
     }
 
     row("Size");
-    if (inputInt("##size", &size_spin_)) size_spin_ = std::clamp(size_spin_, 1, CAN_MAX_DATA_BYTES);
+    if (inputInt("##size", &size_spin_)) size_spin_ = std::clamp(size_spin_, 1, cabana::maxMessageSize(msg_id_.source));
 
     row("Node");
     validatedInput("##node", &node_, nameValidator);

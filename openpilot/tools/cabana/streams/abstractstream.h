@@ -76,7 +76,7 @@ protected:
   void mergeEvents(const std::vector<const CanEvent *> &events);
   void insertEvents(const std::vector<const CanEvent *> &events, const MessageEventsMap &msg_events);
   const CanEvent *newEvent(uint64_t mono_time, const cereal::CanData::Reader &c);
-  void updateEvent(const MessageId &id, double sec, const uint8_t *data, uint8_t size);
+  void updateEvent(const MessageId &id, double sec, const uint8_t *data, size_t size);
   void waitForSeekFinshed();
   virtual void updateLastMessages();
   std::vector<const CanEvent *> all_events_;

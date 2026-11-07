@@ -1,0 +1,13 @@
+import libusb
+
+Import('env', 'arch')
+
+if arch != 'Darwin':
+  local_env = env.Clone()
+  local_env.Append(CPPPATH=[Dir('.').abspath, Dir('libftdi').abspath, libusb.INCLUDE_DIR],
+                   LIBPATH=[libusb.LIB_DIR])
+  ftdi = local_env.StaticLibrary('libftdi/ftdi', ['libftdi/ftdi.c'])
+  spi = local_env.StaticLibrary('libftdi/ftdispi', ['libftdi/ftdispi.c'])
+  for target in ['flexray_logd', 'flexray_dump']:
+    local_env.Program(target, [target + '.c', 'flexray_capture.c', 'flexray_output.c', 'flexray_reader.c', 'flexray_decoder.c', spi, ftdi],
+                      LIBS=['usb-1.0', 'pthread'])

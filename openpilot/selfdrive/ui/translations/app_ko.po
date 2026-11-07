@@ -878,3 +878,11 @@ msgstr "✓ 구독됨"
 msgid "🔥 Firehose Mode 🔥"
 msgstr "🔥 파이어호스 모드 🔥"
 
+
+#: selfdrive/ui/layouts/settings/toggles.py
+msgid "Record FlexRay Data"
+msgstr "FlexRay 데이터 기록"
+
+#: selfdrive/ui/layouts/settings/toggles.py
+msgid "Record FlexRay data with the driving logs when the vehicle is on, including dashcam mode. A connected FlexRay capture board is required. Changes take effect without restarting sunnypilot."
+msgstr "차량이 켜져 있을 때 대시캠 모드를 포함해 FlexRay 데이터를 주행 로그와 함께 기록합니다. FlexRay 수집 보드가 연결되어 있어야 합니다. 변경 사항은 sunnypilot을 재시작하지 않고 적용됩니다."

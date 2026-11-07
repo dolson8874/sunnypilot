@@ -33,6 +33,9 @@ class TogglesLayoutMici(NavScroller):
                                  toggle_callback=restart_needed_callback,
                                  description="Record microphone audio while driving.\n" +
                                              "Audio is included in dashcam videos in sunnylink.")
+    record_flexray = BigParamControl("record FlexRay data", "FlexrayLoggingEnabled",
+                                     description="Record FlexRay data with driving logs, including dashcam mode.\n" +
+                                                 "A connected capture board is required. Changes apply without restarting.")
     enable_openpilot = BigParamControl("enable sunnypilot", "OpenpilotEnabledToggle", toggle_callback=restart_needed_callback,
                                        description="Enable to use sunnypilot driver assistance.\n" +
                                                    "Disable to use your car's stock driver assistance.")
@@ -46,6 +49,7 @@ class TogglesLayoutMici(NavScroller):
       always_on_dm_toggle,
       record_front,
       record_mic,
+      record_flexray,
       enable_openpilot,
     ])
 
@@ -56,6 +60,7 @@ class TogglesLayoutMici(NavScroller):
       ("AlwaysOnDM", always_on_dm_toggle),
       ("RecordFront", record_front),
       ("RecordAudio", record_mic),
+      ("FlexrayLoggingEnabled", record_flexray),
       ("OpenpilotEnabledToggle", enable_openpilot),
     )
 
