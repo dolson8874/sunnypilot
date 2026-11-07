@@ -1,14 +1,14 @@
 [submodule "panda"]
   path = panda
   url = https://github.com/dolson8874/panda.git
-  branch = lrmaster-SP-tici
+  branch = lrmaster-SP-master-test
 [submodule "opendbc"]
   path = opendbc_repo
 	url = https://github.com/dolson8874/opendbc.git
-  branch = lrmaster-SP-tici
+  branch = lrmaster-SP-master-test
 [submodule "msgq"]
   path = msgq_repo
-  url = https://github.com/commaai/msgq.git
+  url = https://github.com/sunnypilot/msgq.git
 [submodule "rednose_repo"]
   path = rednose_repo
   url = https://github.com/commaai/rednose.git
@@ -19,5 +19,5 @@
   path = tinygrad_repo
   url = https://github.com/sunnypilot/tinygrad.git
 [submodule "sunnypilot/neural_network_data"]
-  path = sunnypilot/neural_network_data
+	path = openpilot/sunnypilot/neural_network_data
   url = https://github.com/sunnypilot/neural-network-data.git

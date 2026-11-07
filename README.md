@@ -6,12 +6,18 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`lrmaster-SP`**, the Land Rover base branch for C3X.
+This README describes the Land Rover upstream-master integration for C3X.
+`lrmaster-SP-master-test` is the validation branch; `lrmaster-SP` receives the validated integration.
+The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
+(sunnypilot **2026.003.000**, openpilot **0.11.3**).
 `lrmaster-SP-tici` is the separate C3 branch.
 
 | Branch | Purpose |
 | --- | --- |
-| `lrmaster-SP` | Land Rover base branch for C3X; clone command below |
+| `lrmaster-SP-master-test` | Pinned upstream-master integration and validation; clone command below |
+| `lrmaster-SP` | Land Rover base branch for C3X |
+| `lrmaster-SP-v2026.002.002` | Preserved release integration |
+| `lrmaster-SP-v2026.002.002-flexrylog-v2` | Preserved release-based FlexRay v2 integration |
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture development branch |
@@ -22,7 +28,7 @@ Back up any existing `/data/openpilot` installation before cloning into that pat
 
 ```bash
 cd /data
-git clone --recurse-submodules --branch lrmaster-SP https://github.com/dolson8874/sunnypilot.git openpilot
+git clone --recurse-submodules --branch lrmaster-SP-master-test https://github.com/dolson8874/sunnypilot.git openpilot
 cd /data/openpilot
 scons -j8
 ```
@@ -34,7 +40,19 @@ This base branch does not contain the FlexRay collector. For FlexRay v2 testing,
 Do not use `git submodule update --remote` to prepare a matching device checkout.
 When integrating an upstream release, merge and publish the forked `panda` and `opendbc_repo`
 commits first, then record their new pointers here. The commits must be reachable from the URLs in `.gitmodules`.
-The proposed `v2026.002.002` integration has not been applied to this branch yet.
+This branch integrates upstream master directly; it does not merge the release stabilization history first.
+Source packages now live under `openpilot/`; use the repository root for SCons and dependency setup.
+The upstream default AGNOS version is **19.9**. Actual comma-device and vehicle validation remains required.
+
+Land Rover uses safety model **39** because upstream uses **35 for BYD**, **36 for Volvo**,
+**37 for BMW**, and **38 for MG**. Upgrade the application and Panda firmware together.
+Regenerate CarParams using the normal startup/fingerprinting process; do not reuse legacy Land Rover safety ID 35.
+Pandad rejects a legacy Land Rover configuration that would otherwise select BYD safety.
+
+The existing Land Rover disabled-angle and real-time safety test failures remain deferred.
+This integration preserves the current steering limits and adapts the upstream schema/model APIs;
+it does not apply the separately recorded functional improvements.
+The release integration branches remain separate comparison and rollback references.
 
 <br><br><br><br>
 
