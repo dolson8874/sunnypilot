@@ -1,0 +1,15 @@
+VERSION "FlexRay cycle multiplexing example; signal names and values are illustrative"
+
+NS_ :
+BS_:
+BU_: FPGA Viewer
+
+BO_ 15 FlexRay_000F: 9 FPGA
+ SG_ FLAGS : 0|8@1+ (1,0) [0|255] "" Viewer
+ SG_ CYCLE_COUNTER : 8|6@1+ (1,0) [0|63] "" Viewer
+ SG_ CYCLE_CLASS M : 8|1@1+ (1,0) [0|1] "" Viewer
+ SG_ EVEN_PAYLOAD_BYTE m0 : 16|8@1+ (1,0) [0|255] "" Viewer
+ SG_ ODD_PAYLOAD_BYTE m1 : 16|8@1+ (1,0) [0|255] "" Viewer
+
+CM_ BO_ 15 "Raw frame ID 0x000F. Example for a 4-byte payload: flags + counter + payload + CRC = 9 bytes. Adjust size and signal definitions to the actual capture.";
+CM_ SG_ 15 CYCLE_CLASS "Low counter bit selects counter modulo 2; use 2/3/4/6 bits for modulo 4/8/16/64.";

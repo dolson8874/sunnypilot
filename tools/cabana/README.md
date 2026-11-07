@@ -97,4 +97,27 @@ cabana
 
 ## Additional Information
 
+### FlexRay cycle classification
+
+Keep the original frame ID in the capture and classify signals with Cabana's existing DBC Multiplexor.
+
+`system/flexray_logd` retains its old ID/counter classification code but does not execute it.
+Its decoded socket data keeps the existing `flags (1 byte) + counter (1 byte) + payload + CRC (3 bytes)` layout.
+Raw dump files remain unchanged. The dedicated FlexRay service and rlog connection are still deferred;
+this DBC applies when decoded frames are supplied to Cabana's CAN event input.
+
+Open [the example DBC](dbc/examples/flexray_cycle.dbc) for frame ID `0x000F` on its captured bus.
+It illustrates a four-byte payload; adjust the message length and payload signals to your data.
+In Cabana's signal editor:
+
+1. Set a little-endian signal at start bit **8** as **Multiplexor Signal**.
+2. Use size **1**, **2**, **3**, **4**, or **6** bits for counter modulo **2**, **4**, **8**, **16**, or **64**.
+3. Set each conditional payload signal to **Multiplexed Signal** and select its **Multiplex Value**.
+   Payload starts at bit **16**; normal signals apply to every cycle.
+
+The example uses `m0` for even cycles and `m1` for odd cycles at the same payload position.
+Select either signal to plot only its matching cycles; the message list retains one row per bus/frame ID.
+This does not reproduce vehicle-specific exceptions from the old classification table automatically.
+Existing captures with already transformed IDs are not converted back by loading this DBC.
+
 For more information, see the [openpilot wiki](https://github.com/commaai/openpilot/wiki/Cabana)

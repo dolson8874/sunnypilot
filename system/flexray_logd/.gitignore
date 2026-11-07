@@ -1,0 +1,10 @@
+/flexray_logd
+/flexray_dump
+/tests/test_decoder
+*.o
+*.a
+*.log
+*.d
+/tests/test_spi_timeout
+/tests/test_output
+/tests/test_reader

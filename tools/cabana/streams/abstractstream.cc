@@ -109,7 +109,7 @@ void AbstractStream::setTimeRange(const std::optional<std::pair<double, double>>
   emit timeRangeChanged(time_range_);
 }
 
-void AbstractStream::updateEvent(const MessageId &id, double sec, const uint8_t *data, uint8_t size) {
+void AbstractStream::updateEvent(const MessageId &id, double sec, const uint8_t *data, size_t size) {
   std::lock_guard lk(mutex_);
   messages_[id].compute(id, data, size, sec, getSpeed(), masks_[id]);
   new_msgs_.insert(id);

@@ -237,6 +237,7 @@ SConscript(['rednose/SConscript'])
 # Build system services
 SConscript([
   'system/loggerd/SConscript',
+  'system/flexray_logd/SConscript',
 ])
 
 if arch == "larch64":

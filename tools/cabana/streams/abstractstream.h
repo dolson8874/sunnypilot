@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <condition_variable>
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -44,7 +45,7 @@ struct CanEvent {
   uint8_t src;
   uint32_t address;
   uint64_t mono_time;
-  uint8_t size;
+  size_t size;
   uint8_t dat[];
 };
 
@@ -111,7 +112,7 @@ public:
 protected:
   void mergeEvents(const std::vector<const CanEvent *> &events);
   const CanEvent *newEvent(uint64_t mono_time, const cereal::CanData::Reader &c);
-  void updateEvent(const MessageId &id, double sec, const uint8_t *data, uint8_t size);
+  void updateEvent(const MessageId &id, double sec, const uint8_t *data, size_t size);
   void waitForSeekFinshed();
   std::vector<const CanEvent *> all_events_;
   double current_sec_ = 0;

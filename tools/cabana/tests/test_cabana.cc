@@ -4,6 +4,39 @@
 
 #include "catch2/catch.hpp"
 #include "tools/cabana/dbc/dbcmanager.h"
+#include "tools/cabana/streams/abstractstream.h"
+
+namespace {
+class PayloadTestStream : public AbstractStream {
+public:
+  explicit PayloadTestStream(QObject *parent) : AbstractStream(parent) {}
+  void start() override {}
+  std::string routeName() const override { return ""; }
+  using AbstractStream::newEvent;
+  using AbstractStream::updateEvent;
+};
+}
+
+TEST_CASE("AbstractStream preserves payloads longer than 255 bytes") {
+  QObject parent;
+  PayloadTestStream stream(&parent);
+  for (size_t size : {8, 64, 254, 255, 256, 259, 512}) {
+    CAPTURE(size);
+    std::vector<uint8_t> payload(size);
+    for (size_t i = 0; i < size; ++i) payload[i] = i;
+    MessageBuilder msg;
+    auto c = msg.initEvent().initCan(1)[0];
+    c.setAddress(0x7f00);
+    c.setSrc(2);
+    c.setDat(kj::arrayPtr(payload.data(), payload.size()));
+    const auto *event = stream.newEvent(1000000000, c.asReader());
+    REQUIRE(event->size == size);
+    REQUIRE(std::equal(payload.begin(), payload.end(), event->dat));
+    MessageId id = {.source = event->src, .address = event->address};
+    stream.updateEvent(id, 1.0, event->dat, event->size);
+    REQUIRE(stream.lastMessage(id).dat == payload);
+  }
+}
 
 const std::string TEST_RLOG_URL = "https://commadataci.blob.core.windows.net/openpilotci/0c94aa1e1296d7c6/2021-05-05--19-48-37/0/rlog.bz2";
 

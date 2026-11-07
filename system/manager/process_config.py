@@ -109,7 +109,9 @@ def and_(*fns):
 procs = [
   DaemonProcess("manage_athenad", "system.athena.manage_athenad", "AthenadPid"),
 
-  # dolson for flexray_log
+  # Standalone capture; enable explicitly until the FlexRay messaging service is connected.
+  NativeProcess("flexray_logd", "system/flexray_logd", ["./flexray_logd"], always_run,
+                enabled=os.getenv("FLEXRAY_LOGGING") == "1"),
   NativeProcess("loggerd", "system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "system/loggerd", ["./encoderd", "--stream"], notcar),
