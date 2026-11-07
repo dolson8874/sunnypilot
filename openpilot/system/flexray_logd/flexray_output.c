@@ -127,7 +127,7 @@ static void serve_client(struct flexray_output *out, int client) {
     pthread_mutex_unlock(&q->mutex);
     size_t sent = 0;
     while (sent < 2) {
-      ssize_t n = send_some(out, client, "OK" + sent, 2 - sent);
+      ssize_t n = send_some(out, client, &"OK"[sent], 2 - sent);
       if (n <= 0) break;
       sent += n;
     }
