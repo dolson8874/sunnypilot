@@ -4,18 +4,64 @@
  Any damage or consequences are at the user’s responsibility.
 
 <br><br>
-# 🚘 This repository adds LAND ROVER vehicles to Sunnypilot.
- lrmaster-SP is for C3X branch.
- lrmaster-SP-tici is for C3 branch.
+# 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
+This README describes **`lrmaster-SP-flexraylog-v2`**, the standalone FlexRay capture branch based on `lrmaster-SP`.
+Device validation is still pending. The proposed `v2026.002.002` integration has not been applied to this branch yet.
+
+| Branch | Purpose |
+| --- | --- |
+| `lrmaster-SP` | Land Rover base branch for C3X |
+| `lrmaster-SP-tici` | Land Rover branch for C3 |
+| `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
+| `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture with the current Panda architecture |
+
+### Clone this branch
+
+Back up any existing `/data/openpilot` installation before cloning into that path.
+
+```bash
+cd /data
+git clone --recurse-submodules --branch lrmaster-SP-flexraylog-v2 https://github.com/dolson8874/sunnypilot.git openpilot
+cd /data/openpilot
+scons -j8
 ```
- cd /data
- mv openpilot openpilot.bak
- git clone -b lrmaster-SP --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot
- cd /data/openpilot
- scons -j8
- sudo reboot
+
+`--recurse-submodules` checks out the exact submodule commits recorded by this branch.
+Do not use `git submodule update --remote` to prepare a matching device checkout.
+
+### FlexRay capture
+
+The manager starts `system/flexray_logd` when `FLEXRAY_LOGGING=1` is set in the launcher's environment **before the manager starts**.
+It is disabled by default. Setting this variable in a separate terminal does not change an already running manager.
+For optional raw recording, also set `FLEXRAY_LOG_DIR` to an existing writable directory.
+
+Alternatively, run the standalone collector while the manager's FlexRay process is disabled:
+
+```bash
+cd /data/openpilot
+mkdir -p /data/flexray_logs
+./system/flexray_logd/flexray_logd -o /data/flexray_logs
 ```
+
+Use one collector per FTDI interface. Raw files use unique names and rotate at 64 MiB by default; `-m BYTES` changes the limit.
+File replay runs once with `-f FILE`; add `-l` to loop. Run `-h` for the available options.
+
+- Recording queue overflow drops the incoming batch and reports the lost bytes while capture continues.
+- File write failures disable recording and report the cause to stderr; capture and socket output continue. Recording does not automatically restart.
+- Input device errors and SPI read timeouts still end the process with an error.
+
+Captured frame IDs remain unchanged. The old ID/counter classification is retained but disabled; use Cabana's DBC Multiplexor for classification.
+See [Cabana's FlexRay instructions](tools/cabana/README.md#flexray-cycle-classification).
+The dedicated FlexRay messaging service and rlog integration are deferred: raw `.log` files are separate from sunnypilot routes and are not directly loadable as Cabana routes.
+
+### Publishing an integrated build
+
+When merging an upstream release, merge the forked `panda` and `opendbc_repo` histories and publish their new commits first.
+Then update the parent repository's submodule pointers. Each recorded commit must be reachable from the corresponding URL in `.gitmodules`.
+Merge the updated `lrmaster-SP` into this branch, resolve build dependency changes, and verify the build before publishing it.
+The parent repository can publish only `lrmaster-SP-flexraylog-v2`; its referenced submodule commits must already be available for recursive cloning.
+
 <br><br><br><br>
 
 
