@@ -13,9 +13,13 @@ struct flexray_reader {
   struct ftdi_context usb;
   struct ftdispi_context spi;
   bool initialized, spi_owned, loop;
+  struct timespec report_at;
+  uint64_t report_bytes;
 };
 int flexray_reader_open(struct flexray_reader *reader, const char *file, bool loop);
-// File EOF returns zero; device errors return -1, including incomplete SPI transfers.
+// Zero means file EOF or transient empty USB data; partial SPI bytes are returned.
 ssize_t flexray_reader_read(struct flexray_reader *reader, void *data, size_t capacity);
-void flexray_reader_close(struct flexray_reader *reader);
+int flexray_reader_close(struct flexray_reader *reader);
+void flexray_reader_finish(struct flexray_reader *reader);
+bool flexray_reader_pending(const struct flexray_reader *reader);
 #endif

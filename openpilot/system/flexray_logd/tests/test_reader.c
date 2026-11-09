@@ -24,7 +24,7 @@ int __wrap_ftdi_read_data(struct ftdi_context *context, unsigned char *data, int
   if (n > 0) memset(data, 0x55, n);
   return n;
 }
-int __wrap_ftdispi_read_stream(struct ftdispi_context *context, void *data, uint16_t count, uint8_t gpo) {
+int __wrap_ftdispi_stream_read_some(struct ftdispi_context *context, void *data, uint16_t count, uint8_t gpo) {
   (void)context; (void)data; (void)count; (void)gpo;
   return FTDISPI_ERROR_TO;
 }

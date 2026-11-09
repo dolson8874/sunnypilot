@@ -124,60 +124,42 @@ size_t decode_flexray_buffer_stats(char *data, size_t *psize, char *out, size_t 
   size_t o_size = 0;
   size_t  size = *psize;
 
-  while (size - pos >= 1 + 6) {
-    uint8_t *header = (uint8_t *)data + pos + 1;
-
-    size_t data_len;
-
-    uint16_t frame_id;
-
-
-		// find frame start
-    if((uint8_t)data[pos] != 0xCA || (uint8_t)data[pos+1] != 0xA0) {
-      if (stats) stats->noise_bytes++;
+  while (pos < size) {
+    const uint8_t *wire = (const uint8_t *)data + pos;
+    if (wire[0] != 0xCA || (size - pos >= 2 && wire[1] != 0xA0 && wire[1] != 0x80)) {
+      if (stats) {
+        if (wire[0] == 0) stats->padding_bytes++;
+        else { stats->noise_bytes++; stats->recovering = true; }
+      }
       pos++;
       continue;
     }
-
-    pos++;
-
-
-
-    // flags(1) + counter (1) + data (len) + CRC (3)
-    data_len = (header[3] >> 1) * 2 + 5;
-
-    frame_id = header[2] | ((header[1] & 7U) << 8);
-
-    //printf("id=%x cycle=%d\n", frame_id, fheader->counter);
-
+    // Preserve a partial marker/header and a CRC-valid candidate spanning bulk reads.
+    if (size - pos < 7) break;
+    uint8_t *header = (uint8_t *)data + pos + 1;
+    uint16_t frame_id = header[2] | ((header[1] & 7U) << 8);
+    size_t data_len = (header[3] >> 1) * 2 + 5;
     if (calculate_flexray_checksum(header, frame_id)) {
-      if (stats) stats->header_crc_errors++;
+      if (stats) { stats->header_crc_errors++; stats->noise_bytes++; stats->recovering = true; }
+      pos++;  // Retry one byte after the original CA, never after an assumed frame.
       continue;
     }
-
-   if (pos + 6 + data_len > size) {
-      // we don't have all the data for this message yet
-      pos--;  // Preserve the sync byte with the partial frame.
-      break;
-    }
-
-    if (out_size - o_size < 6 + data_len) {
-      pos--;
-      break;
-    }
-
-    size_t payload_size = data_len - 5;
+    if (size - pos < 7 + data_len) break;
     const uint8_t *body = header + 6;
+    if (body[0] != (header[1] >> 3) || body[1] != (header[5] & 0x3f)) {
+      if (stats) { stats->metadata_errors++; stats->noise_bytes++; stats->recovering = true; }
+      pos++;
+      continue;
+    }
+    size_t payload_size = data_len - 5;
     const uint8_t *trailer = body + 2 + payload_size;
     uint32_t stored_crc = ((uint32_t)trailer[0] << 16) | ((uint32_t)trailer[1] << 8) | trailer[2];
-    if (body[0] != (header[1] >> 3) || body[1] != (header[5] & 0x3f)) {
-      if (stats) stats->metadata_errors++;
-      continue;  // Resume scanning at the header's first byte.
-    }
     if (payload_crc(header + 1, body + 2, payload_size) != stored_crc) {
-      if (stats) stats->payload_crc_errors++;
+      if (stats) { stats->payload_crc_errors++; stats->noise_bytes++; stats->recovering = true; }
+      pos++;
       continue;
     }
+    if (out_size - o_size < 6 + data_len) break;
 
 #if 0
     // Legacy ID/counter classification retained for reference only.
@@ -319,7 +301,14 @@ size_t decode_flexray_buffer_stats(char *data, size_t *psize, char *out, size_t 
     for (unsigned i = 0; i < 4; ++i) encoded[1 + i] = address >> (8 * i);
     encoded[5] = header[3] >> 1;
     memcpy(encoded + 6, body, data_len);
-    if (stats) stats->frames++;
+    if (stats) {
+      unsigned direction = header[0] == 0xA0;
+      stats->frames++;
+      stats->direction_frames[direction]++;
+      stats->direction_wire_bytes[direction] += 7 + data_len;
+      if (stats->recovering) stats->resyncs++;
+      stats->recovering = false;
+    }
 
     #if 0
     static unsigned long dcount = 0;
@@ -337,7 +326,7 @@ size_t decode_flexray_buffer_stats(char *data, size_t *psize, char *out, size_t 
     }
     #endif
 
-    pos += 6 + data_len;
+    pos += 7 + data_len;
     o_size += 6 + data_len;
   }
 

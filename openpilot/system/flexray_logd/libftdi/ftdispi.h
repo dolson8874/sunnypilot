@@ -43,6 +43,8 @@
 # include <unistd.h>
 # include <string.h>
 # include <stdint.h>
+# include <time.h>
+# include <signal.h>
 
 
 # ifdef WIN32
@@ -97,6 +99,16 @@ struct ftdispi_context {
                                   * functions */
     size_t              memsize; /**< @brief size of the memory region for write
                                   * and read functions */
+    uint32_t actual_clock_hz, stream_pending;
+    uint16_t stream_chunk;
+    uint8_t stream_gpo;
+    int stream_error, stream_draining;
+    struct timespec stream_progress, stream_returned, stream_drain_until;
+    uint64_t stream_bytes, stream_commands, stream_idle_reads, stream_timeouts;
+    uint64_t stream_gap_ns, stream_read_ns, stream_calls;
+    uint64_t stream_usb_payload_bytes, stream_usb_calls, stream_usb_read_ns, stream_interrupts;
+    uint32_t stream_pending_peak;
+    volatile sig_atomic_t *stream_stop;
 };
 
 
@@ -195,6 +207,18 @@ ftdispi_setloopback(struct ftdispi_context * fsc,
 __dll int
 ftdispi_read_stream(struct ftdispi_context *fsc,
                     void *rbuf, uint16_t rcount, uint8_t gpo);
+
+/* Two-command pipeline; return available bytes, zero for transient empty data,
+ * or negative FTDISPI error. First capacity sets the command chunk size.
+ * Never mix other MPSSE commands into an active stream. */
+__dll int ftdispi_stream_read_some(struct ftdispi_context *fsc, void *rbuf,
+                                uint16_t capacity, uint8_t gpo);
+/* Stop refilling, then drain with read_some (fixed one-second finish bound). */
+__dll void ftdispi_stream_finish(struct ftdispi_context *fsc);
+__dll int ftdispi_cs_deassert(struct ftdispi_context *fsc);
+/* One USB transfer; status removal and partial data/error reported separately. */
+int ftdispi_read_usb_partial(struct ftdi_context *fc, unsigned char *data,
+                           int capacity, int *usb_error);
 
 /**
  * @brief Set general purpose output and then write from wbuf to spi and read

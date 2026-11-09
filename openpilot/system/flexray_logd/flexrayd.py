@@ -5,6 +5,7 @@ Use raw socket subscribers (loggerd/Cabana), not SubMaster(['flexray']), which
 expects channel names to match Event union members. Never publish on 'can':
 pandad owns that channel.
 """
+import json
 import signal
 import socket
 import subprocess
@@ -14,6 +15,8 @@ from pathlib import Path
 
 from openpilot.cereal import messaging
 from openpilot.common.basedir import BASEDIR
+from openpilot.common.params import Params
+from openpilot.system.flexray_logd.diagnostics import DiagnosticReceiver
 from openpilot.common.swaglog import cloudlog
 
 # Match PANDA_BUS_OFFSET: pandad currently owns one Panda (sources 0–3).
@@ -78,7 +81,7 @@ def stop_capture(process: subprocess.Popen) -> None:
       process.wait()
 
 
-def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, capture_args: tuple[str, ...] = ()) -> None:
+def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, capture_args: tuple[str, ...] = (), observe=None) -> None:
   pending = bytearray()
   process = subprocess.Popen([str(binary), *capture_args, '-p', socket_path])
   last_publish = 0.0
@@ -98,6 +101,8 @@ def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, captu
       elif time.monotonic() - last_publish >= 1:
         pm.send('flexray', frame_message([]))
         last_publish = time.monotonic()
+      if observe is not None:
+        observe()
       time.sleep(0.01)
   finally:
     try:
@@ -129,16 +134,38 @@ def main() -> None:
   signal.signal(signal.SIGINT, request_stop)
   signal.signal(signal.SIGTERM, request_stop)
   pm = messaging.PubMaster(['flexray'])
+  receiver = None
+  bus = Params().get('FlexrayDiagnosticBus', return_default=True)
+  if bus in range(4):
+    try:
+      receiver = DiagnosticReceiver(bus)
+    except Exception:
+      cloudlog.exception('FlexRay diagnostic subscriber unavailable; SPI capture continues')
+  elif bus != -1:
+    cloudlog.error(f'Invalid FlexrayDiagnosticBus={bus}; select -1 (disabled) or 0..3')
+
+  def observe():
+    nonlocal receiver
+    if receiver is not None:
+      try:
+        status = receiver.poll(time.monotonic())
+        if status is not None:
+          cloudlog.info('FPGA logging diagnostic: ' + json.dumps(status, sort_keys=True))
+      except Exception:
+        cloudlog.exception('FlexRay diagnostic subscriber failed; SPI capture continues')
+        receiver = None
+
   while not stopped:
     try:
       # Each child gets its own socket, so retries never consume a different collector's data.
       with tempfile.TemporaryDirectory(prefix='flexray-') as directory:
-        run_capture(pm, str(Path(directory) / 'capture.sock'), lambda: stopped)
+        run_capture(pm, str(Path(directory) / 'capture.sock'), lambda: stopped, observe=observe)
     except (OSError, RuntimeError, ValueError) as error:
       cloudlog.error(f"FlexRay capture unavailable: {error}; retrying in 5 seconds")
       pm.send('flexray', frame_message([]))
       deadline = time.monotonic() + 5
       while not stopped and time.monotonic() < deadline:
+        observe()
         time.sleep(0.1)
 
 

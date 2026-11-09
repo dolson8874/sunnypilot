@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include "flexray_common.h"
 #include "flexray_output.h"
+#include "flexray_journal.h"
 
 static size_t peek(struct byte_queue *q, void *data, size_t capacity) {
   size_t size = q->count < capacity ? q->count : capacity;
@@ -37,7 +38,11 @@ static int open_segment(struct flexray_output *out) {
   snprintf(name, capacity, "%s/flexray-%lld-%09ld-XXXXXX.log", out->path,
            (long long)ts.tv_sec, ts.tv_nsec);
   int fd = mkstemps(name, 4);  // Exclusive creation; existing files are never truncated.
-  if (fd >= 0) fprintf(stderr, "flexray: recording %s\n", name);
+  if (fd >= 0) {
+    fprintf(stderr, "flexray: recording %s\n", name);
+    snprintf(out->segment_name, sizeof(out->segment_name), "%s", strrchr(name, '/') + 1);
+    flexray_journal_segment(out->journal, out->segment_name, atomic_load(&out->written_bytes));
+  }
   free(name);
   return fd;
 }
@@ -55,10 +60,10 @@ static void *write_file(void *arg) {
     pthread_mutex_unlock(&q->mutex);
     if (!n && done) break;
     if (segment_bytes == out->rotate_bytes) {
-      int sync_error = fsync(out->fd);
-      int close_error = close(out->fd);
+      int sync_error = fsync(out->fd) ? errno : 0;
+      int close_error = close(out->fd) ? errno : 0;
       out->fd = -1;
-      if (sync_error || close_error) goto failed;
+      if (sync_error || close_error) { errno = sync_error ? sync_error : close_error; goto failed; }
       out->fd = open_segment(out);
       if (out->fd < 0) goto failed;
       segment_bytes = 0;
@@ -69,6 +74,7 @@ static void *write_file(void *arg) {
     while (sent < n) {
       ssize_t count = write(out->fd, buffer + sent, n - sent);
       if (count < 0 && errno == EINTR) continue;
+      if (count == 0) errno = EIO;
       if (count <= 0) goto failed;
       sent += count;
       pthread_mutex_lock(&q->mutex);
@@ -83,6 +89,12 @@ static void *write_file(void *arg) {
 failed: {
   int error = errno ? errno : EIO;
   atomic_store(&out->error, error);
+  pthread_mutex_lock(&q->mutex);
+  uint64_t unwritten = q->count;
+  pthread_mutex_unlock(&q->mutex);
+  // Previously queued bytes can contain gaps; UINT64_MAX denotes an unknown input range.
+  flexray_journal_gap(out->journal, "write_failure_queued", UINT64_MAX, unwritten,
+                      atomic_load(&out->written_bytes), error);
   fprintf(stderr, "flexray: recording failed directory=%s errno=%d (%s)\n", out->path, error, strerror(error));
   return NULL;
 }
@@ -122,7 +134,7 @@ static void serve_client(struct flexray_output *out, int client) {
   if (receive_exact(client, command, 1, out)) return;
   if (command[0] == 0x1f) {
     pthread_mutex_lock(&q->mutex);
-    out->dropped_bytes += q->count;
+    out->reset_bytes += q->count;
     consume(q, q->count);
     pthread_mutex_unlock(&q->mutex);
     size_t sent = 0;
@@ -147,6 +159,7 @@ static void serve_client(struct flexray_output *out, int client) {
     pthread_mutex_lock(&q->mutex);
     consume(q, n);
     pthread_mutex_unlock(&q->mutex);
+    out->written_bytes += n;
     sent += n;
   }
 }
@@ -200,6 +213,12 @@ int flexray_output_start(struct flexray_output *out, const char *path, bool sock
   memset(out, 0, sizeof(*out));
   atomic_init(&out->error, 0);
   atomic_init(&out->stop, false);
+  atomic_init(&out->dropped_bytes, 0);
+  atomic_init(&out->written_bytes, 0);
+  atomic_init(&out->dropped_batches, 0);
+  atomic_init(&out->reset_bytes, 0);
+  atomic_init(&out->failed_bytes, 0);
+  atomic_init(&out->failed_batches, 0);
   out->fd = -1;
   out->lock_fd = -1;
   out->socket = socket_output;
@@ -227,6 +246,9 @@ int flexray_output_start(struct flexray_output *out, const char *path, bool sock
   } else {
     out->fd = open_segment(out);
     if (out->fd < 0) goto queue_failed;
+    out->journal = flexray_journal_open(path);
+    if (!out->journal) perror("flexray: gap metadata unavailable; capture continues");
+    flexray_journal_segment(out->journal, out->segment_name, 0);
   }
   error = pthread_create(&out->thread, NULL, socket_output ? serve_socket : write_file, out);
   if (error) { if (socket_output) unlink(path); errno = error; goto queue_failed; }
@@ -234,6 +256,7 @@ int flexray_output_start(struct flexray_output *out, const char *path, bool sock
   return 0;
 queue_failed:
   error = errno;
+  flexray_journal_close(out->journal);
   if (out->fd >= 0) close(out->fd);
   if (out->lock_fd >= 0) close(out->lock_fd);
   pthread_cond_destroy(&q->changed);
@@ -245,12 +268,24 @@ failed:
   return -1;
 }
 
-int flexray_output_push(struct flexray_output *out, const void *data, size_t size) {
-  if (atomic_load(&out->error)) return -1;
+enum flexray_push_result flexray_output_push(struct flexray_output *out, const void *data, size_t size) {
+  uint64_t offset = out->input_bytes;
+  out->input_bytes += size;
   struct byte_queue *q = &out->queue;
   pthread_mutex_lock(&q->mutex);
+  int error = atomic_load(&out->error);
+  if (error) {
+    pthread_mutex_unlock(&q->mutex);
+    out->failed_bytes += size;
+    out->failed_batches++;
+    if (!out->socket) flexray_journal_gap(out->journal, "recording_disabled", offset, size,
+                                         atomic_load(&out->written_bytes), error);
+    errno = error;
+    return FLEXRAY_PUSH_ERROR;
+  }
   if (size > q->capacity - q->count) {
     out->dropped_bytes += size;
+    out->dropped_batches++;
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
     if (out->last_drop_report != now.tv_sec) {
@@ -260,7 +295,9 @@ int flexray_output_push(struct flexray_output *out, const void *data, size_t siz
       out->last_drop_report = now.tv_sec;
     }
     pthread_mutex_unlock(&q->mutex);
-    return 0;
+    if (!out->socket) flexray_journal_gap(out->journal, "queue_full", offset, size,
+                                         atomic_load(&out->written_bytes), ENOBUFS);
+    return FLEXRAY_PUSH_DROPPED;
   }
   size_t write_pos = (q->read + q->count) % q->capacity;
   size_t first = q->capacity - write_pos;
@@ -270,7 +307,7 @@ int flexray_output_push(struct flexray_output *out, const void *data, size_t siz
   q->count += size;
   pthread_cond_signal(&q->changed);
   pthread_mutex_unlock(&q->mutex);
-  return 0;
+  return FLEXRAY_PUSH_QUEUED;
 }
 
 int flexray_output_close(struct flexray_output *out) {
@@ -282,6 +319,8 @@ int flexray_output_close(struct flexray_output *out) {
   pthread_mutex_unlock(&out->queue.mutex);
   pthread_join(out->thread, NULL);
   int error = atomic_load(&out->error);
+  flexray_journal_close(out->journal);
+  out->journal = NULL;
   if (close(out->fd) && !error) error = errno;
   if (out->socket) {
     unlink(out->path);

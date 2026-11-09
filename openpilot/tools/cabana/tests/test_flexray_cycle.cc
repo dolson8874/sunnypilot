@@ -5,6 +5,35 @@
 #include "tools/cabana/dbc/dbcfile.h"
 
 void test_flexray_cycle() {
+  DBCFile diagnostics("openpilot/tools/cabana/dbc/examples/fpga_logging_diagnostics.dbc");
+  const auto *diagnostic = diagnostics.msg(0x1fa);
+  REQUIRE(diagnostic != nullptr);
+  REQUIRE(diagnostic->multiplexor->size == 8);
+  const std::array<const char *, 8> names = {"SNAPSHOT_BYTES_00_05", "SNAPSHOT_BYTES_06_11", "SNAPSHOT_BYTES_12_17", "SNAPSHOT_BYTES_18_23",
+                                          "SNAPSHOT_BYTES_24_29", "SNAPSHOT_BYTES_30_35", "SNAPSHOT_BYTES_36_41", "SNAPSHOT_BYTES_42_47"};
+  for (int selector = 0; selector < 256; ++selector) {
+    std::array<uint8_t, 8> bytes = {(uint8_t)selector, 255, 0x78, 0x56, 0x34, 0x12, 0xab, 0xcd};
+    for (int page = 0; page < 8; ++page) {
+      double sequence = -1;
+      auto sequence_signal = diagnostic->sig("SNAPSHOT_SEQUENCE_PAGE_" + std::to_string(page));
+      REQUIRE(sequence_signal != nullptr);
+      REQUIRE(sequence_signal->getValue(bytes.data(), bytes.size(), &sequence) == (selector == 32 + page));
+      if (selector == 32 + page) REQUIRE(sequence == 255);
+      double value = -1;
+      REQUIRE(diagnostic->sig(names[page])->getValue(bytes.data(), bytes.size(), &value) == (selector == 32 + page));
+      if (selector == 32 + page) REQUIRE(value == 0xcdab12345678ULL);
+    }
+    for (const auto *name : {"FIRMWARE_MAJOR", "FIRMWARE_MINOR", "FIRMWARE_PATCH", "FIRMWARE_BUILD_ID"}) {
+      double value = -1;
+      REQUIRE(diagnostic->sig(name)->getValue(bytes.data(), bytes.size(), &value) == (selector == 0x2f));
+      if (selector == 0x2f) {
+        const double expected = std::string(name) == "FIRMWARE_MAJOR" ? 255 : std::string(name) == "FIRMWARE_MINOR" ? 0x78 :
+                                std::string(name) == "FIRMWARE_PATCH" ? 0x56 : 0xcdab1234;
+        REQUIRE(value == expected);
+      }
+    }
+  }
+
   DBCFile file("openpilot/tools/cabana/dbc/examples/flexray_cycle.dbc");
   auto msg = file.msg(0x0f);
   REQUIRE(msg != nullptr);
@@ -75,6 +104,11 @@ void test_flexray_stream() {
   REQUIRE(event->address == 15);
   REQUIRE(std::equal(data.begin(), data.end(), event->dat));
   REQUIRE(cabana::maxMessageSize(6) == 259);
+  REQUIRE(cabana::maxMessageSize(4) == 259);
+  frame.setSrc(4);
+  const auto *bcm = stream.newEvent(101, frame.asReader());
+  REQUIRE(bcm->src == 4 && bcm->address == event->address);
+  REQUIRE(std::equal(data.begin(), data.end(), bcm->dat));
   REQUIRE(cabana::maxMessageSize(2) == 64);
   stream.updateEvent({.source = 6, .address = 15}, 1.0, event->dat, event->size);
   stream.updateLastMessages();

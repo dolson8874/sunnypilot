@@ -1,6 +1,7 @@
 #ifndef FLEXRAY_DECODER_H
 #define FLEXRAY_DECODER_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -43,7 +44,10 @@ struct __attribute__((packed)) flexray_header {
 
 
 struct flexray_decode_stats {
-  uint64_t frames, noise_bytes, header_crc_errors, payload_crc_errors, metadata_errors;
+  uint64_t frames, noise_bytes, padding_bytes, header_crc_errors, payload_crc_errors, metadata_errors;
+  // Index 0: wire bus 0 (BCM-side -> DADC), index 1: wire bus 2 (DADC -> BCM).
+  uint64_t direction_frames[2], direction_wire_bytes[2], resyncs;
+  bool recovering;
 };
 
 size_t decode_flexray_buffer_stats(char *data, size_t *size, char *out, size_t capacity,

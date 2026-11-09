@@ -8,12 +8,53 @@
 #include "flexray_capture.h"
 #include "flexray_decoder.h"
 #include "flexray_output.h"
+#include "flexray_journal.h"
 #include "flexray_reader.h"
 
 static volatile sig_atomic_t interrupted;
 static void stop_capture(int signal_number) {
   (void)signal_number;
   interrupted = 1;
+}
+
+static void report_stats(uint64_t bulk_bytes, uint64_t reads, const struct flexray_decode_stats *s,
+                         struct flexray_output *socket_out, struct flexray_output *file_out, size_t pending, uint64_t skipped) {
+  size_t raw_unwritten = 0, socket_pending = 0;
+  if (file_out->started) {
+    pthread_mutex_lock(&file_out->queue.mutex);
+    raw_unwritten = file_out->queue.count;
+    pthread_mutex_unlock(&file_out->queue.mutex);
+  }
+  if (socket_out->started) {
+    pthread_mutex_lock(&socket_out->queue.mutex);
+    socket_pending = socket_out->queue.count;
+    pthread_mutex_unlock(&socket_out->queue.mutex);
+  }
+  uint64_t metadata_lost = 0;
+  int metadata_error = 0;
+  if (file_out->started) flexray_journal_status(file_out->journal, &metadata_lost, &metadata_error);
+  fprintf(stderr, "flexray_stats: {\"bulk_bytes\":%llu,\"bulk_reads\":%llu,"
+    "\"dadc_frames\":%llu,\"dadc_wire_bytes\":%llu,\"bcm_frames\":%llu,\"bcm_wire_bytes\":%llu,"
+    "\"padding_bytes\":%llu,\"noise_bytes\":%llu,\"header_crc_errors\":%llu,"
+    "\"frame_crc_errors\":%llu,\"metadata_errors\":%llu,\"resyncs\":%llu,\"pending_bytes\":%zu,"
+    "\"socket_sent_bytes\":%llu,\"socket_errno\":%d,\"socket_drop_bytes\":%llu,\"socket_drop_batches\":%llu,\"socket_reset_bytes\":%llu,"
+    "\"raw_queue_drop_bytes\":%llu,\"raw_queue_drop_batches\":%llu,\"raw_written_bytes\":%llu,"
+    "\"raw_skipped_bytes\":%llu,\"raw_failed_bytes\":%llu,\"raw_unwritten_bytes\":%zu,\"socket_pending_bytes\":%zu,\"raw_errno\":%d,\"metadata_lost_events\":%llu,\"metadata_errno\":%d}\n",
+    (unsigned long long)bulk_bytes, (unsigned long long)reads,
+    (unsigned long long)s->direction_frames[1], (unsigned long long)s->direction_wire_bytes[1],
+    (unsigned long long)s->direction_frames[0], (unsigned long long)s->direction_wire_bytes[0],
+    (unsigned long long)s->padding_bytes, (unsigned long long)s->noise_bytes,
+    (unsigned long long)s->header_crc_errors, (unsigned long long)s->payload_crc_errors,
+    (unsigned long long)s->metadata_errors, (unsigned long long)s->resyncs, pending,
+    (unsigned long long)atomic_load(&socket_out->written_bytes), atomic_load(&socket_out->error),
+    (unsigned long long)atomic_load(&socket_out->dropped_bytes),
+    (unsigned long long)atomic_load(&socket_out->dropped_batches),
+    (unsigned long long)atomic_load(&socket_out->reset_bytes),
+    (unsigned long long)atomic_load(&file_out->dropped_bytes),
+    (unsigned long long)atomic_load(&file_out->dropped_batches),
+    (unsigned long long)atomic_load(&file_out->written_bytes),
+    (unsigned long long)skipped, (unsigned long long)atomic_load(&file_out->failed_bytes), raw_unwritten, socket_pending, atomic_load(&file_out->error),
+    (unsigned long long)metadata_lost, metadata_error);
 }
 
 int flexray_capture_main(int argc, char **argv, bool serve_socket) {
@@ -69,6 +110,8 @@ int flexray_capture_main(int argc, char **argv, bool serve_socket) {
   bool recording_failed = false;
   uint64_t recording_skipped = 0;
   if (directory && flexray_output_start(&file_output, directory, false, rotate_bytes)) {
+    int startup_error = errno;
+    atomic_store(&file_output.error, startup_error);
     perror("flexray: recording startup");
     if (!serve_socket) goto cleanup;
     recording_failed = true;
@@ -81,11 +124,20 @@ int flexray_capture_main(int argc, char **argv, bool serve_socket) {
   char raw[SPI_CHUNK_SIZE], pending[SPI_CHUNK_SIZE + 266], decoded[SPI_CHUNK_SIZE + 266];
   size_t pending_size = 0;
   struct flexray_decode_stats stats = {0};
-  uint64_t raw_bytes = 0;
+  uint64_t raw_bytes = 0, bulk_reads = 0;
+  struct timespec last_report = {0};
   result = EXIT_SUCCESS;
-  while (!interrupted) {
-    if (file_output.started && atomic_load(&file_output.error)) {
-      if (flexray_output_close(&file_output)) perror("flexray: recording disabled; capture continues");
+  if (reader.type == FT_SPI) reader.spi.stream_stop = &interrupted;
+  while (!interrupted || flexray_reader_pending(&reader)) {
+    if (interrupted) flexray_reader_finish(&reader);
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    if (now.tv_sec > last_report.tv_sec) {
+      report_stats(raw_bytes, bulk_reads, &stats, &socket_output, &file_output, pending_size, recording_skipped);
+      last_report = now;
+    }
+    if (file_output.started && atomic_load(&file_output.error) && !recording_failed) {
+      fprintf(stderr, "flexray: recording disabled; capture continues errno=%d\n", atomic_load(&file_output.error));
       recording_failed = true;
     }
     if (socket_output.started && atomic_load(&socket_output.error)) {
@@ -94,39 +146,40 @@ int flexray_capture_main(int argc, char **argv, bool serve_socket) {
     }
     ssize_t n = flexray_reader_read(&reader, raw, sizeof(raw));
     if (n < 0) {
-      if (interrupted) break;
+      if (interrupted && reader.type != FT_SPI) break;
       perror("flexray: input read");
       result = EXIT_FAILURE;
       break;
     }
     if (!n) {
-      if (reader.type == FT_FILE_TEST) break;
+      if (reader.type == FT_FILE_TEST || (interrupted && !flexray_reader_pending(&reader))) break;
       usleep(1000);
       continue;
     }
     raw_bytes += n;
-    if (file_output.started && flexray_output_push(&file_output, raw, n)) {
-      recording_skipped += n;
-      if (flexray_output_close(&file_output)) perror("flexray: recording disabled; capture continues");
-      recording_failed = true;
-    } else if (directory && !file_output.started) {
+    bulk_reads++;
+    if (file_output.started) {
+      enum flexray_push_result pushed = flexray_output_push(&file_output, raw, n);
+      if (pushed != FLEXRAY_PUSH_QUEUED) recording_skipped += n;
+      if (pushed == FLEXRAY_PUSH_ERROR && !recording_failed) {
+        fprintf(stderr, "flexray: recording disabled; capture continues errno=%d\n", atomic_load(&file_output.error));
+        recording_failed = true;
+      }
+    } else if (directory) {
       recording_skipped += n;
     }
+    if (pending_size + (size_t)n > sizeof(pending)) {
+      fprintf(stderr, "flexray: decoder pending overflow\n");
+      result = EXIT_FAILURE;
+      break;
+    }
+    memcpy(pending + pending_size, raw, n);
+    pending_size += n;
+    size_t decoded_size = decode_flexray_buffer_stats(pending, &pending_size, decoded, sizeof(decoded), &stats);
     if (socket_output.started) {
-      const void *data = raw;
-      size_t size = n;
-      if (decode) {
-        if (pending_size + size > sizeof(pending)) {
-          fprintf(stderr, "flexray: decoder pending overflow\n");
-          result = EXIT_FAILURE;
-          break;
-        }
-        memcpy(pending + pending_size, raw, size);
-        pending_size += size;
-        size = decode_flexray_buffer_stats(pending, &pending_size, decoded, sizeof(decoded), &stats);
-        data = decoded;
-      }
-      if (size && flexray_output_push(&socket_output, data, size)) {
+      const void *data = decode ? (const void *)decoded : (const void *)raw;
+      size_t size = decode ? decoded_size : (size_t)n;
+      if (size && flexray_output_push(&socket_output, data, size) == FLEXRAY_PUSH_ERROR) {
         fprintf(stderr, "flexray: socket worker failed\n");
         result = EXIT_FAILURE;
         break;
@@ -135,6 +188,7 @@ int flexray_capture_main(int argc, char **argv, bool serve_socket) {
     // Preserve the previous nominal replay rate; it is not an original receive timestamp.
     if (loop) usleep((useconds_t)((size_t)n * 0.8));
   }
+  report_stats(raw_bytes, bulk_reads, &stats, &socket_output, &file_output, pending_size, recording_skipped);
   fprintf(stderr, "flexray: input=%llu frames=%llu header_crc=%llu payload_crc=%llu metadata=%llu noise=%llu trailing=%zu\n",
           (unsigned long long)raw_bytes, (unsigned long long)stats.frames,
           (unsigned long long)stats.header_crc_errors, (unsigned long long)stats.payload_crc_errors,
@@ -150,7 +204,7 @@ int flexray_capture_main(int argc, char **argv, bool serve_socket) {
     }
   }
 cleanup:
-  flexray_reader_close(&reader);
+  if (flexray_reader_close(&reader)) { perror("flexray: input close/incomplete SPI response"); result = EXIT_FAILURE; }
   if (flexray_output_close(&socket_output)) { perror("flexray: socket shutdown"); result = EXIT_FAILURE; }
   if (flexray_output_close(&file_output)) { perror("flexray: recording shutdown"); recording_failed = true; }
   if (recording_failed || file_output.dropped_bytes) {

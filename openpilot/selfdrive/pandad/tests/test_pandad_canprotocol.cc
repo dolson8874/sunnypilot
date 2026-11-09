@@ -1,3 +1,4 @@
+#include <array>
 #include <climits>
 
 #include "common/tests/native_test.h"
@@ -9,6 +10,7 @@ struct PandaTest : public Panda {
   void test_can_send();
   void test_can_recv(uint32_t chunk_size = 0);
   void test_chunked_can_recv();
+  void test_fpga_diagnostic_recv();
 
   std::map<int, std::string> test_data;
   int can_list_size = 0;
@@ -95,7 +97,44 @@ void PandaTest::test_can_recv(uint32_t rx_chunk_size) {
   }
 }
 
+// Simulated Panda transport only: this does not transmit CAN or establish wiring.
+void PandaTest::test_fpga_diagnostic_recv() {
+  MessageBuilder diagnostics;
+  auto can = diagnostics.initEvent().initCan(27);
+  for (unsigned bus = 0; bus < 3; ++bus) {
+    for (unsigned page = 0; page < 9; ++page) {
+      std::array<uint8_t, 8> bytes = {(uint8_t)(0x20 + page), 255, 0x78, 0x56, 0x34, 0x12, 0xab, 0xcd};
+      if (page == 8) bytes = {0x2f, 1, 0, 0, 1, 0, 0, 0};
+      auto frame = can[bus * 9 + page];
+      frame.setAddress(0x1fa);
+      frame.setSrc(bus);
+      frame.setDat(kj::arrayPtr(bytes.data(), bytes.size()));
+    }
+  }
+  std::vector<can_frame> frames;
+  this->receive_buffer_size = 0;
+  this->pack_can_buffer(can.asReader(), [&](uint8_t *data, uint32_t size) {
+    can_header header;
+    memcpy(&header, data, sizeof(header));
+    CHECK(!header.extended);
+    CHECK(header.addr == 0x1fa);
+    CHECK(this->unpack_can_buffer(data, size, frames));
+    CHECK(size == 0);
+  });
+  CHECK(frames.size() == 27);
+  for (unsigned i = 0; i < frames.size(); ++i) {
+    CHECK(frames[i].address == 0x1fa);
+    CHECK(frames[i].src == i / 9);
+    CHECK(frames[i].dat.size() == 8);
+    std::array<uint8_t, 8> expected = {(uint8_t)(0x20 + i % 9), 255, 0x78, 0x56, 0x34, 0x12, 0xab, 0xcd};
+    if (i % 9 == 8) expected = {0x2f, 1, 0, 0, 1, 0, 0, 0};
+    CHECK(memcmp(frames[i].dat.data(), expected.data(), expected.size()) == 0);
+  }
+}
+
 void test_can_protocol() {
+  PandaTest diagnostic_test(0, cereal::PandaState::PandaType::DOS);
+  diagnostic_test.test_fpga_diagnostic_recv();
   for (auto hw_type : {cereal::PandaState::PandaType::DOS, cereal::PandaState::PandaType::RED_PANDA}) {
     for (int can_list_size : {1, 3, 5, 10, 30, 60, 100, 200}) {
       PandaTest send_test(can_list_size, hw_type);

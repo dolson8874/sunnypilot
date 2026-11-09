@@ -70,9 +70,21 @@ The source offset is 4 (`PANDA_BUS_OFFSET`) because this branch's pandad handles
 Revisit the offset before adding support for multiple Pandas.
 
 Cabana reads the saved frames through its existing CAN event path and subscribes to both channels for device streaming. To distinguish FlexRay from car CAN,
-FlexRay frames are stored with source **4 + received bus** (sources **4–11**); the current board's bus 2 appears as source **6**.
+FlexRay frames retain source **4 + received bus**. The accepted wire markers are **CA A0**
+(DADC → BCM-side, bus 2 → source **6**) and **CA 80** (BCM-side → DADC, bus 0 → source **4**).
+DADC logs represent the FPGA's modified forwarding output. BCM-side identifies a bus segment,
+not a guarantee that the BCM ECU alone transmitted the frame. Both directions preserve the original frame ID.
 Frame IDs remain unchanged. The old ID/counter classification is retained but disabled;
 use Cabana's DBC Multiplexor to classify cycles.
+Capture reports per-direction frames/wire bytes, bulk bytes, padding/noise, CRC/metadata errors,
+resynchronizations and independent queue losses once per second.
+Physical CAN diagnostics at ID **0x1FA** use packed version **2** (eight 6-byte pages → 48 bytes / 12 uint32 values), separate from SPI capture. They remain on pandad's
+`can` channel and require an explicitly selected Panda bus (`FlexrayDiagnosticBus`, default **-1**, disabled).
+See Cabana's README for live/offline snapshot assembly, wrapping byte-counter throughput, FIFO growth and observed SPI headroom.
+The 937500 byte/s continuous-clock ceiling is nominal; measured service comes from the FPGA completed-SPI-byte counter.
+A separate `0x2F` CAN record reports observed FPGA firmware major/minor/patch and a manual build ID.
+Identity is unknown before receipt and stale after 3 seconds; it does not change the statistics layout.
+The new identifier requires the separately updated FPGA bitstream to be programmed on the board.
 See [Cabana's FlexRay instructions](openpilot/tools/cabana/README.md#flexray-cycle-classification).
 
 #### Optional raw dump
@@ -93,6 +105,8 @@ Use one collector per FTDI interface. Raw files use unique names and rotate at 6
 File replay runs once with `-f FILE`; add `-l` to loop. Run `-h` for the available options.
 
 - Raw recording queue overflow drops the incoming batch and reports the lost bytes while capture continues.
+  A separate `flexray-gaps-*.jsonl` sidecar records input offsets, sizes, times and reasons without changing raw wire files.
+  Its bounded metadata queue and write failures are reported separately; missing metadata makes a recording incomplete.
 - Raw file write failures disable that recording and report the cause to stderr; capture and rlog publication continue. Raw recording does not automatically restart.
 - Input errors end the native capture subprocess; the managed publisher reports the error and retries.
 

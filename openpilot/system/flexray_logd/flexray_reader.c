@@ -2,16 +2,50 @@
 #include <string.h>
 #include "flexray_reader.h"
 
-void flexray_reader_close(struct flexray_reader *r) {
+void flexray_reader_finish(struct flexray_reader *r) {
+  if (r->type == FT_SPI) ftdispi_stream_finish(&r->spi);
+}
+bool flexray_reader_pending(const struct flexray_reader *r) {
+  return r->type == FT_SPI && r->spi.stream_pending != 0;
+}
+static void report_spi(struct flexray_reader *r, bool force) {
+  struct timespec now;
+  clock_gettime(CLOCK_MONOTONIC, &now);
+  if (!r->report_at.tv_sec && !r->report_at.tv_nsec) {
+    r->report_at = now;
+    r->report_bytes = r->spi.stream_usb_payload_bytes;
+    if (!force) return;
+  }
+  double dt = now.tv_sec - r->report_at.tv_sec + (now.tv_nsec - r->report_at.tv_nsec) / 1e9;
+  if (dt >= 1 || force) {
+    fprintf(stderr, "SPI: configured_clock=%uHz usb_payload_bytes=%llu usb_payload_Bps=%.1f interval_s=%.3f "
+      "delivered=%llu pending=%u buffered=%u pending_peak=%u commands=%llu usb_calls=%llu "
+      "empty=%llu timeout=%llu interrupted=%llu max_gap_ms=%.3f usb_read_ms=%.3f call_total_ms=%.3f error=%d\n",
+      r->spi.actual_clock_hz, (unsigned long long)r->spi.stream_usb_payload_bytes,
+      dt > 0 ? (r->spi.stream_usb_payload_bytes - r->report_bytes) / dt : 0, dt,
+      (unsigned long long)r->spi.stream_bytes, r->spi.stream_pending, r->spi.fc.readbuffer_remaining,
+      r->spi.stream_pending_peak, (unsigned long long)r->spi.stream_commands,
+      (unsigned long long)r->spi.stream_usb_calls, (unsigned long long)r->spi.stream_idle_reads,
+      (unsigned long long)r->spi.stream_timeouts, (unsigned long long)r->spi.stream_interrupts,
+      r->spi.stream_gap_ns / 1e6, r->spi.stream_usb_read_ns / 1e6, r->spi.stream_read_ns / 1e6, r->spi.stream_error);
+    r->report_at = now;
+    r->report_bytes = r->spi.stream_usb_payload_bytes;
+  }
+}
+
+int flexray_reader_close(struct flexray_reader *r) {
+  int result = 0;
   if (r->file) fclose(r->file);
   if (r->spi_owned) {
-    ftdispi_close(&r->spi, 1);
+    report_spi(r, true);
+    if (ftdispi_close(&r->spi, 1) != 0) { errno = EIO; result = -1; }
   } else if (r->initialized) {
     ftdi_usb_close(&r->usb);
     ftdi_deinit(&r->usb);
   }
   r->file = NULL;
   r->initialized = r->spi_owned = false;
+  return result;
 }
 
 int flexray_reader_open(struct flexray_reader *r, const char *file, bool loop) {
@@ -73,7 +107,10 @@ ssize_t flexray_reader_read(struct flexray_reader *r, void *data, size_t capacit
   }
   if (r->type == FT_SPI) {
     if (capacity > 65535) capacity = 65535;
-    if (ftdispi_read_stream(&r->spi, data, capacity, 0) == 0) return capacity;
+    int n = ftdispi_stream_read_some(&r->spi, data, capacity, 0);
+    report_spi(r, false);
+    if (n >= 0) return n;
+    fprintf(stderr, "SPI: read failed code=%d pending=%u bytes\n", n, r->spi.stream_pending);
   } else {
     int n = ftdi_read_data(&r->usb, data, capacity);
     if (n >= 0) return n;

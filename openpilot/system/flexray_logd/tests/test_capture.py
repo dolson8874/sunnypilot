@@ -1,3 +1,4 @@
+import json
 import pathlib
 import resource
 import signal
@@ -25,18 +26,48 @@ def bits(value, width):
   return [(value >> i) & 1 for i in range(width - 1, -1, -1)]
 
 
-def frame():
-  flags, identifier, words, counter = 3, 0x47F, 2, 7
+def frame(bus=2, payload=b'\x12\x34\x56\x78', identifier=0x47F, flags=3, counter=7):
+  assert bus in (0, 2) and len(payload) <= 254 and len(payload) % 2 == 0
+  words = len(payload) // 2
   header_crc = crc(bits((flags << 18) | (identifier << 7) | words, 20), 11, 0x1A, 0x385)
   header = ((flags << 35) | (identifier << 24) | (words << 17) | (header_crc << 6) | counter).to_bytes(5, 'big')
-  payload = b'\x12\x34\x56\x78'
   trailer = crc([bit for byte in header + payload for bit in bits(byte, 8)], 24, 0xFEDCBA, 0x5D6DCB)
-  return b'\xca\xa0' + header + bytes([flags, counter]) + payload + trailer.to_bytes(3, 'big')
+  return bytes([0xCA, 0x80 | (bus << 4)]) + header + bytes([flags, counter]) + payload + trailer.to_bytes(3, 'big')
 
 
 class CaptureTest(unittest.TestCase):
   def run_binary(self, name, *args):
     return subprocess.run([str(ROOT / name), *map(str, args)], capture_output=True, timeout=5)
+
+  def test_bidirectional_replay_stats_and_raw_metadata(self):
+    with tempfile.TemporaryDirectory() as directory:
+      path = pathlib.Path(directory)
+      bcm = frame(0, payload=b'')
+      payload = b'\xca\xa0\xca\x80' + bytes(range(250))
+      dadc = frame(2, payload=payload)
+      data = b'\0' * 17 + bcm + dadc + b'\0' * 24
+      source = path / 'input'
+      source.write_bytes(data)
+      result = self.run_binary('flexray_dump', '-f', source, '-o', path)
+      self.assertEqual(result.returncode, 0, result.stderr)
+      reports = [json.loads(line.split(': ', 1)[1]) for line in result.stderr.decode().splitlines()
+                 if line.startswith('flexray_stats: ')]
+      stats = reports[-1]
+      self.assertEqual(stats['bulk_bytes'], len(data))
+      self.assertEqual(stats['dadc_frames'], 1)
+      self.assertEqual(stats['bcm_frames'], 1)
+      self.assertEqual(stats['dadc_wire_bytes'], len(dadc))
+      self.assertEqual(stats['bcm_wire_bytes'], len(bcm))
+      self.assertEqual(stats['padding_bytes'], 41)
+      self.assertEqual(stats['noise_bytes'], 0)
+      self.assertEqual(stats['resyncs'], 0)
+      self.assertEqual(b''.join(p.read_bytes() for p in sorted(path.glob('flexray-*.log'))), data)
+      sidecars = list(path.glob('flexray-gaps-*.jsonl'))
+      self.assertEqual(len(sidecars), 1)
+      records = [json.loads(line) for line in sidecars[0].read_text().splitlines()]
+      self.assertEqual(records[0]['reason'], 'segment_start')
+      self.assertTrue((path / records[0]['segment']).exists())
+      self.assertGreater(records[0]['monotonic_ns'], 0)
 
   def test_rotation_and_no_overwrite(self):
     with tempfile.TemporaryDirectory() as directory:
