@@ -6,7 +6,7 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes the Land Rover upstream-master integration for C3X.
+This README describes the Land Rover upstream-master integration for C3X and C4.
 `lrmaster-SP-master-test` is the validation branch; `lrmaster-SP` receives the validated integration.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
@@ -15,12 +15,12 @@ The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 | Branch | Purpose |
 | --- | --- |
 | `lrmaster-SP-master-test` | Pinned upstream-master integration and validation; clone command below |
-| `lrmaster-SP` | Land Rover base branch for C3X |
+| `lrmaster-SP` | Land Rover base branch for C3X and C4 |
 | `lrmaster-SP-v2026.002.002` | Preserved release integration |
 | `lrmaster-SP-v2026.002.002-flexrylog-v2` | Preserved release-based FlexRay v2 integration |
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
-| `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture development branch |
+| `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture for C3X and C4 |
 
 ### Clone this branch
 
