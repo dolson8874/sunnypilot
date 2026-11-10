@@ -12,8 +12,8 @@ struct flexray_reader {
   FILE *file;
   struct ftdi_context usb;
   struct ftdispi_context spi;
-  bool initialized, spi_owned, loop;
-  struct timespec report_at;
+  bool initialized, spi_owned, loop, received_data;
+  struct timespec report_at, last_read_at;
   uint64_t report_bytes;
 };
 int flexray_reader_open(struct flexray_reader *reader, const char *file, bool loop);

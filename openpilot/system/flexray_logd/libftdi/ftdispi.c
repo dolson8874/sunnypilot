@@ -45,6 +45,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ftdispi.h"
+#include <errno.h>
 
 #define BBMODE_NORMAL 1
 #define BBMODE_SPI    2
@@ -70,16 +71,14 @@
 #define RETRY_MAX       10
 #define RETRY_TIME      1000
 
-#define FTDI_CHECK(FUN, MSG, CTX) do {				\
-		if ((FUN) < 0)                                  \
-		{                                               \
-			fprintf(stderr,				\
-				"%s: %s\n",			\
-				MSG,				\
-				ftdi_get_error_string(&CTX));	\
-			return FTDISPI_ERROR_LIB;		\
-		}                                               \
-	} while (0)
+#define FTDI_CHECK(FUN, MSG, CTX) do { \
+  errno = 0; \
+  int operation_result = (FUN); \
+  int operation_errno = errno; \
+  fprintf(stderr, "native stage=%s rc=%d errno=%d strerror=%s libftdi=%s\n", \
+          MSG, operation_result, operation_errno, strerror(operation_errno), operation_result < 0 ? ftdi_get_error_string(&CTX) : "none"); \
+  if (operation_result < 0) { errno = operation_errno; return FTDISPI_ERROR_LIB; } \
+} while (0)
 
 #define ASSERT_CHECK(TEST, MSG, RVAL) do {		\
 		if ((TEST))                             \
@@ -92,7 +91,12 @@
 static int spi_write_exact(struct ftdispi_context *fsc, const unsigned char *data, int size) {
   if (fsc->stream_error) return -1;
   int written = ftdi_write_data(&fsc->fc, data, size);
-  if (written != size) { fsc->stream_error = FTDISPI_ERROR_LIB; return -1; }
+  if (written != size) {
+    int saved = errno;
+    fprintf(stderr, "native stage=command_write rc=%d expected=%d errno=%d strerror=%s libftdi=%s\n",
+            written, size, saved, strerror(saved), ftdi_get_error_string(&fsc->fc));
+    fsc->stream_error = FTDISPI_ERROR_LIB; errno = saved; return -1;
+  }
   return written;
 }
 
@@ -122,13 +126,13 @@ __dll int ftdispi_open(struct ftdispi_context *fsc,
   #endif
 	FTDI_CHECK(ftdi_set_interface(&fsc->fc, interface), "SET INT",
 		   fsc->fc);
-	FTDI_CHECK(ftdi_usb_reset(&fsc->fc), "RESET", fsc->fc);
+	FTDI_CHECK(ftdi_usb_reset(&fsc->fc), "interface_reset", fsc->fc);
 	FTDI_CHECK(ftdi_set_latency_timer(&fsc->fc, 2), "SET LAT 2ms", fsc->fc);
   #if 0
 	FTDI_CHECK(ftdi_setflowctrl(&fsc->fc, SIO_RTS_CTS_HS), "RTS/CTS",
 		   fsc->fc);
   #endif
-	/*FTDI_CHECK(ftdi_set_bitmode(&fsc->fc, 0, 0), "RESET MPSSE", fsc->fc); */
+	FTDI_CHECK(ftdi_set_bitmode(&fsc->fc, 0, BITMODE_RESET), "mpsse_reset", fsc->fc);
 	FTDI_CHECK(ftdi_set_bitmode(&fsc->fc, 0, BBMODE_SPI), "SET SPI MODE",
 		   fsc->fc);
 
@@ -236,11 +240,6 @@ __dll int ftdispi_setmode(struct ftdispi_context *fsc,
 	buf[1] = fsc->bitini;
 	buf[2] = BIT_DIR;
 	FTDI_CHECK(spi_write_exact(fsc, buf, 3), "WR INI", fsc->fc);
-	if (ftdispi_wait(fsc, BIT_P_CS | BIT_P_GX, fsc->bitini, RETRY_MAX)) {
-		/* I still don't know why sometime the command must be resent */
-		FTDI_CHECK(spi_write_exact(fsc, buf, 3), "WR INI",
-			   fsc->fc);
-	}
 	return ftdispi_wait(fsc, BIT_P_CS | BIT_P_GX, fsc->bitini, RETRY_MAX);
 }
 
@@ -529,28 +528,57 @@ static int ftdispi_realloc(struct ftdispi_context *fsc, size_t size)
 static int ftdispi_wait(struct ftdispi_context *fsc, uint8_t mask,
 			uint8_t value, int maxtry)
 {
-	uint8_t cmd = GET_BITS_LOW;
-	uint8_t ret = 0;
-
-	FTDI_CHECK(spi_write_exact(fsc, &cmd, 1), "GBLW", fsc->fc);
-	int received = ftdi_read_data(&fsc->fc, &ret, 1);
-  if (received != 1) {
-    fsc->stream_error = received < 0 ? FTDISPI_ERROR_LIB : FTDISPI_ERROR_TO;
-    return fsc->stream_error;
-  }
-	while (maxtry-- && (ret & mask) != (value & mask)) {
-		usleep(RETRY_TIME);
-		FTDI_CHECK(spi_write_exact(fsc, &cmd, 1), "GBLW", fsc->fc);
-		received = ftdi_read_data(&fsc->fc, &ret, 1);
-    if (received != 1) {
-      fsc->stream_error = received < 0 ? FTDISPI_ERROR_LIB : FTDISPI_ERROR_TO;
-      return fsc->stream_error;
+  // One response per query. Status-only USB packets must not accumulate queries.
+  struct timespec start, now;
+  clock_gettime(CLOCK_MONOTONIC, &start);
+  int saved_timeout = fsc->fc.usb_read_timeout;
+  int saved_write_timeout = fsc->fc.usb_write_timeout;
+  int result = FTDISPI_ERROR_TO;
+  const char *reason = "deadline_no_response";
+  for (int query = 0; query < maxtry; ++query) {
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    int64_t write_left = 300000000LL - ((int64_t)(now.tv_sec-start.tv_sec)*1000000000LL + now.tv_nsec-start.tv_nsec);
+    if (write_left <= 0) break;
+    int write_timeout = (int)(write_left / 1000000);
+    if (write_timeout < 1) write_timeout = 1;
+    fsc->fc.usb_write_timeout = saved_write_timeout > 0 && saved_write_timeout < write_timeout ? saved_write_timeout : write_timeout;
+    uint8_t command[] = {GET_BITS_LOW, 0x87};  // SEND_IMMEDIATE
+    if (spi_write_exact(fsc, command, sizeof(command)) != (int)sizeof(command)) {
+      reason = "short_or_failed_command_write"; result = FTDISPI_ERROR_LIB; break;
     }
-	}
-
-	if ((ret & mask) == (value & mask)) {
-		return FTDISPI_ERROR_NONE;
-	} else {
-		return FTDISPI_ERROR_TO;
-	}
+    reason = "deadline_no_response";
+    uint8_t response = 0;
+    int received = 0;
+    while (!received) {
+      clock_gettime(CLOCK_MONOTONIC, &now);
+      int64_t left = 300000000LL - ((int64_t)(now.tv_sec-start.tv_sec)*1000000000LL + now.tv_nsec-start.tv_nsec);
+      if (left <= 0) goto done;
+      int timeout = (int)(left / 1000000);
+      if (timeout < 1) timeout = 1;
+      fsc->fc.usb_read_timeout = saved_timeout > 0 && saved_timeout < timeout ? saved_timeout : timeout;
+      errno = 0;
+      received = ftdi_read_data(&fsc->fc, &response, 1);
+      if (received == -7 || received == -10) received = 0; // libusb timeout/interrupted
+      if (received < 0) {
+        fprintf(stderr, "native stage=gpio_read failed rc=%d errno=%d libftdi=%s\n",
+                received, errno, ftdi_get_error_string(&fsc->fc));
+        reason = "fatal_read"; result = FTDISPI_ERROR_LIB; goto done;
+      }
+      if (!received) usleep(RETRY_TIME);
+    }
+    if ((response & mask) == (value & mask)) { reason = "matched"; result = 0; break; }
+    reason = "mask_mismatch";
+    fprintf(stderr, "native stage=gpio_compare observed=0x%02x mask=0x%02x expected=0x%02x\n", response, mask, value);
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    if ((int64_t)(now.tv_sec-start.tv_sec)*1000000000LL + now.tv_nsec-start.tv_nsec >= 300000000LL) break;
+  }
+done:
+  fsc->fc.usb_read_timeout = saved_timeout;
+  fsc->fc.usb_write_timeout = saved_write_timeout;
+  if (result) fsc->stream_error = result;
+  int saved_errno = errno;
+  fprintf(stderr, "native stage=gpio_response reason=%s rc=%d errno=%d strerror=%s libftdi=%s\n",
+          reason, result, saved_errno, strerror(saved_errno), result ? ftdi_get_error_string(&fsc->fc) : "none");
+  errno = saved_errno;
+  return result;
 }

@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +7,10 @@
 #include "flexray_reader.h"
 #include "mocks/libusb.h"
 
+static int device_count, open_result, selected_product, closed, deinitialized;
+static int init_result, open_errno, cleanup_errno, gpio_error_once;
+static int gpio_empty = -1, gpio_value = 8, gpio_error, gpio_reads, gpio_queries;
+static int fail_operation, operation_count;
 static unsigned writes, bulk_calls, commands, outstanding, wire_position;
 static int short_on_write, next_error, payload_limit = -1, modes, purges;
 static unsigned char last_write[32];
@@ -26,11 +31,13 @@ static void release(struct ftdispi_context *x) { free(x->mem);free(x->fc.readbuf
 int ftdi_write_data(struct ftdi_context *x, const unsigned char *data, int size) {
   (void)x;writes++;last_size=size;memcpy(last_write,data,size<32?size:32);
   if (short_on_write==(int)writes) return size-1;
+  if(size==2 && data[0]==GET_BITS_LOW){assert(data[1]==0x87);gpio_queries++;}
   if (size==6 && data[0]==SET_BITS_LOW && data[3]==MPSSE_DO_READ) {
     outstanding+=1+data[4]+((unsigned)data[5]<<8);commands++;
   }
   return size;
 }
+const char *libusb_error_name(int error) { (void)error;return "MOCK_USB_ERROR"; }
 int libusb_bulk_transfer(struct libusb_device_handle *h, unsigned char ep,
                         unsigned char *data, int size, int *actual, unsigned timeout) {
   (void)h;(void)ep;last_timeout=timeout;bulk_calls++;
@@ -48,19 +55,50 @@ int libusb_bulk_transfer(struct libusb_device_handle *h, unsigned char ep,
   outstanding-=payload;*actual=count;
   int error=next_error;next_error=0;payload_limit=-1;return error;
 }
-int ftdi_init(struct ftdi_context *x) { memset(x,0,sizeof(*x));return 0; }
-int ftdi_usb_open(struct ftdi_context *x,int v,int p) { (void)x;(void)v;(void)p;return -5; }
+static int operation(void) { return ++operation_count == fail_operation ? -9 : 0; }
+int ftdi_init(struct ftdi_context *x) {
+  memset(x,0,sizeof(*x)); x->type=TYPE_4232H;
+  x->readbuffer=malloc(64);x->readbuffer_chunksize=32;x->max_packet_size=8;
+  return init_result;
+}
+int ftdi_usb_find_all(struct ftdi_context *x, struct ftdi_device_list **list,int v,int p) {
+  (void)x;assert(v==0x0403);selected_product=p;*list=NULL;
+  for(int i=device_count;i>0;--i) {
+    struct ftdi_device_list *item=malloc(sizeof(*item));
+    item->dev=(struct libusb_device *)(uintptr_t)i;item->next=*list;*list=item;
+  }
+  return device_count;
+}
+void ftdi_list_free(struct ftdi_device_list **list) {
+  while(*list) {struct ftdi_device_list *item=*list;*list=item->next;free(item);}
+}
+int ftdi_usb_get_strings(struct ftdi_context *x,struct libusb_device *d,char *m,int ml,char *desc,int dl,char *serial,int sl) {
+  (void)x;(void)m;(void)ml;(void)desc;(void)dl;snprintf(serial,sl,"serial%u",(unsigned)(uintptr_t)d);return 0;
+}
+int ftdi_usb_open_dev(struct ftdi_context *x,struct libusb_device *d) {
+  (void)d;errno=open_errno;if(!open_result)x->usb_dev=(struct libusb_device_handle *)1;return open_result;
+}
+unsigned char libusb_get_bus_number(struct libusb_device *d) {(void)d;return 2;}
+unsigned char libusb_get_device_address(struct libusb_device *d) {(void)d;return 3;}
+int libusb_get_port_numbers(struct libusb_device *d,unsigned char *p,int n) {(void)d;assert(n>=2);p[0]=1;p[1]=4;return 2;}
 const char *ftdi_get_error_string(struct ftdi_context *x) { (void)x;return "mock"; }
-int ftdi_read_data(struct ftdi_context *x,unsigned char *p,int n) { (void)x;(void)p;(void)n;return 0; }
-int ftdi_set_interface(struct ftdi_context *x,enum ftdi_interface n) { (void)x;(void)n;return 0; }
-int ftdi_usb_reset(struct ftdi_context *x) { (void)x;return 0; }
-int ftdi_set_latency_timer(struct ftdi_context *x,unsigned char n) { (void)x;(void)n;return 0; }
-int ftdi_set_bitmode(struct ftdi_context *x,unsigned char a,unsigned char b) { (void)x;(void)a;(void)b;modes++;return 0; }
-int ftdi_write_data_set_chunksize(struct ftdi_context *x,unsigned n) { (void)x;(void)n;return 0; }
-int ftdi_read_data_set_chunksize(struct ftdi_context *x,unsigned n) { (void)x;(void)n;return 0; }
-int ftdi_tcioflush(struct ftdi_context *x) { (void)x;purges++;return 0; }
-int ftdi_usb_close(struct ftdi_context *x) { (void)x;return 0; }
-void ftdi_deinit(struct ftdi_context *x) { (void)x; }
+int ftdi_read_data(struct ftdi_context *x,unsigned char *p,int n) {
+  (void)x;assert(n==1);gpio_reads++;
+  if(gpio_error_once){int result=gpio_error_once;gpio_error_once=0;return result;}
+  if(gpio_error)return gpio_error;
+  if(gpio_empty<0)return 0;
+  if(gpio_empty>0){gpio_empty--;return 0;}
+  *p=gpio_value;return 1;
+}
+int ftdi_set_interface(struct ftdi_context *x,enum ftdi_interface n) { assert(n==INTERFACE_B);x->interface=1;x->index=2;return operation(); }
+int ftdi_usb_reset(struct ftdi_context *x) { (void)x;return operation(); }
+int ftdi_set_latency_timer(struct ftdi_context *x,unsigned char n) { (void)x;(void)n;return operation(); }
+int ftdi_set_bitmode(struct ftdi_context *x,unsigned char a,unsigned char b) { (void)x;(void)a;(void)b;modes++;return operation(); }
+int ftdi_write_data_set_chunksize(struct ftdi_context *x,unsigned n) { (void)x;(void)n;return operation(); }
+int ftdi_read_data_set_chunksize(struct ftdi_context *x,unsigned n) { (void)x;(void)n;return operation(); }
+int ftdi_tcioflush(struct ftdi_context *x) { (void)x;purges++;return operation(); }
+int ftdi_usb_close(struct ftdi_context *x) { x->usb_dev=NULL;closed++;errno=cleanup_errno;return 0; }
+void ftdi_deinit(struct ftdi_context *x) { free(x->readbuffer);x->readbuffer=NULL;deinitialized++; }
 static void bytes(const unsigned char *p,int n,unsigned *expected) {
   for (int i=0;i<n;i++) assert(p[i]==(unsigned char)(*expected)++);
 }

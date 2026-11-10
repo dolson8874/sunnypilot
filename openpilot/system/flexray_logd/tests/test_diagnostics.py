@@ -467,3 +467,28 @@ def test_firmware_bus_isolation_and_same_identity_reset():
   assert not right.status(4.1)['rates']['valid']
   assert right.status(4.1)['firmware']['version'] == '2.0.0'
   assert right.stats['firmware_changes'] == 0  # Same identifier cannot exclude an FPGA reset.
+
+
+def test_stalled_spi_is_not_a_bandwidth_measurement():
+  assembler = DiagnosticAssembler(1)
+  values = [0] * 12
+  values[5] = values[6] = 131072
+  values[10] = 1
+  feed(assembler, 0, 1, values)
+  for seq in (1, 2):
+    values[0] += 100
+    values[8] += 276080
+    feed(assembler, seq, 1 + seq, values)
+  status = assembler.status(3.1)
+  assert status['spi_read_state'] == 'SPI 읽기 미진행'
+  assert status['spi_stalled_observation_intervals'] == 2
+  assert status['rates']['observed_headroom_fraction'] is None
+  values[11] += 500000
+  values[10] += 300000
+  values[5] -= 100
+  values[8] += 276080
+  values[0] += 100
+  feed(assembler, 3, 4, values)
+  status = assembler.status(4.1)
+  assert status['spi_read_state'] == 'progressing' and status['spi_stalled_observation_intervals'] == 0
+  assert assembler.status(20)['spi_read_state'] == 'unknown'

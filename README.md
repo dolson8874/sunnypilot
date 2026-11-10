@@ -85,6 +85,12 @@ The 937500 byte/s continuous-clock ceiling is nominal; measured service comes fr
 A separate `0x2F` CAN record reports observed FPGA firmware major/minor/patch and a manual build ID.
 Identity is unknown before receipt and stale after 3 seconds; it does not change the statistics layout.
 The new identifier requires the separately updated FPGA bitstream to be programmed on the board.
+Native startup/error stderr is forwarded through cloudlog into rlog, with bounded output,
+initialization stages, child exit status and capture activity reports. Default USB selection is
+0403:6011 Interface B; multiple adapters require `FLEXRAY_FTDI_SERIAL`, and legacy 6010
+requires explicit selection. For the investigated vehicle, set `FlexrayDiagnosticBus=1`
+(default -1 disables diagnostics) and recheck actual USB/SPI progress before assessing bandwidth.
+See [native startup troubleshooting](openpilot/tools/cabana/README.md#native-capture-startup-diagnostics-c3xc4).
 See [Cabana's FlexRay instructions](openpilot/tools/cabana/README.md#flexray-cycle-classification).
 
 #### Optional raw dump

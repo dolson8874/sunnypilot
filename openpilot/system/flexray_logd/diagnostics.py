@@ -43,6 +43,7 @@ RATE_FIELDS = (
   'fifo_delta_bytes',
   'input_exceeds_service',
   'fifo_growing',
+  'spi_read_not_progressing',
   'loss_observed',
   'prefetch_ahead_of_service',
 )
@@ -155,6 +156,7 @@ def snapshot_rates(previous: Snapshot | None, current: Snapshot, reset_or_ambigu
     'input_demand_bytes_per_s': dadc + bcm,
     'valid_output_bytes_per_s': output,
     'spi_service_bytes_per_s': service,
+    'spi_read_not_progressing': service == 0 and dadc + bcm > 0 and new[5] == FIFO_CAPACITY,
     'approx_padding_bytes_per_s': service - output,
     'prefetch_ahead_of_service': output > service,
     'observed_headroom_fraction': (service - dadc - bcm) / service if service else None,
@@ -187,6 +189,7 @@ class DiagnosticAssembler:
     self.reset_suspected = False
     self.counter_decrease = False
     self.rates = unknown_rates('no_previous_snapshot')
+    self.spi_stalled_intervals = 0
     self.deficit_intervals = 0
     self.fifo_growing_intervals = 0
     self.reset_observations = 0
@@ -227,6 +230,7 @@ class DiagnosticAssembler:
       self.reset_candidate = None
       self.reset_suspected = False
       self.counter_decrease = False
+      self.spi_stalled_intervals = 0
       self.rates = unknown_rates('firmware_changed')
       self.deficit_intervals = 0
       self.fifo_growing_intervals = 0
@@ -348,6 +352,7 @@ class DiagnosticAssembler:
     if self.counter_decrease:
       self.reset_observations += 1
     self.rates = snapshot_rates(previous, snapshot, self.counter_decrease or epoch_changed or self.reset_suspected)
+    self.spi_stalled_intervals = self.spi_stalled_intervals + 1 if self.rates.get('spi_read_not_progressing') else 0
     self.deficit_intervals = self.deficit_intervals + 1 if self.rates['valid'] and self.rates['input_exceeds_service'] else 0
     self.fifo_growing_intervals = self.fifo_growing_intervals + 1 if self.rates['valid'] and self.rates['fifo_growing'] else 0
     self.reset_candidate = None
@@ -387,9 +392,13 @@ class DiagnosticAssembler:
       'sequence_alone_cannot_identify_reset': True,
       'saturated': [] if complete is None else [ITEM_NAMES[i] for i in COUNTER_ITEMS if complete.words()[i] == 0xFFFFFFFF],
       'rates': rates,
+      'spi_read_state': ('SPI 읽기 미진행' if self.spi_stalled_intervals >= 2 else
+                         'awaiting_progress_confirmation' if rates.get('spi_read_not_progressing') else
+                         'progressing' if rates.get('spi_service_bytes_per_s', 0) else 'unknown') if rates['valid'] else 'unknown',
       'fifo_current_percent': None if complete is None else 100 * complete.words()[5] / FIFO_CAPACITY,
       'fifo_peak_percent': None if complete is None else 100 * complete.words()[6] / FIFO_CAPACITY,
       'queue_usage_is_peak_not_current': True,
+      'spi_stalled_observation_intervals': self.spi_stalled_intervals if rates['valid'] else 0,
       'deficit_observation_intervals': self.deficit_intervals if rates['valid'] else 0,
       'fifo_growing_observation_intervals': self.fifo_growing_intervals if rates['valid'] else 0,
       'stats': dict(self.stats),

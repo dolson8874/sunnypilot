@@ -595,8 +595,11 @@ int ftdi_usb_open_dev(struct ftdi_context *ftdi, libusb_device *dev)
     if (ftdi == NULL)
         ftdi_error_return(-8, "ftdi context invalid");
 
-    if (libusb_open(dev, &ftdi->usb_dev) < 0)
+    int open_result = libusb_open(dev, &ftdi->usb_dev);
+    if (open_result < 0) {
+        fprintf(stderr, "native stage=usb_open libusb_code=%d libusb=%s\n", open_result, libusb_error_name(open_result));
         ftdi_error_return(-4, "libusb_open() failed");
+    }
 
     if (libusb_get_device_descriptor(dev, &desc) < 0)
         ftdi_error_return(-9, "libusb_get_device_descriptor() failed");
@@ -614,8 +617,10 @@ int ftdi_usb_open_dev(struct ftdi_context *ftdi, libusb_device *dev)
     // Likely scenario is a static ftdi_sio kernel module.
     if (ftdi->module_detach_mode == AUTO_DETACH_SIO_MODULE)
     {
-        if (libusb_detach_kernel_driver(ftdi->usb_dev, ftdi->interface) !=0)
-            detach_errno = errno;
+        int detach_result = libusb_detach_kernel_driver(ftdi->usb_dev, ftdi->interface);
+        if (detach_result != 0) detach_errno = errno;
+        fprintf(stderr, "native stage=kernel_driver_detach interface=%d rc=%d libusb=%s (interface detach, not cable disconnect)\n",
+                ftdi->interface, detach_result, libusb_error_name(detach_result));
     }
     else if (ftdi->module_detach_mode == AUTO_DETACH_REATACH_SIO_MODULE)
     {
@@ -644,8 +649,11 @@ int ftdi_usb_open_dev(struct ftdi_context *ftdi, libusb_device *dev)
         }
     }
 
-    if (libusb_claim_interface(ftdi->usb_dev, ftdi->interface) < 0)
+    int claim_result = libusb_claim_interface(ftdi->usb_dev, ftdi->interface);
+    if (claim_result < 0)
     {
+        fprintf(stderr, "native stage=usb_claim interface=%d libusb_code=%d libusb=%s errno=%d\n",
+                ftdi->interface, claim_result, libusb_error_name(claim_result), errno);
         ftdi_usb_close_internal (ftdi);
         if (detach_errno == EPERM)
         {
@@ -2046,8 +2054,11 @@ int ftdi_read_data(struct ftdi_context *ftdi, unsigned char *buf, int size)
         ftdi->readbuffer_offset = 0;
         /* returns how much received */
         ret = libusb_bulk_transfer (ftdi->usb_dev, ftdi->out_ep, ftdi->readbuffer, ftdi->readbuffer_chunksize, &actual_length, ftdi->usb_read_timeout);
-        if (ret < 0)
+        if (ret < 0) {
+            if (ret != LIBUSB_ERROR_TIMEOUT && ret != LIBUSB_ERROR_INTERRUPTED)
+                fprintf(stderr, "native stage=usb_bulk_read libusb_code=%d libusb=%s\n", ret, libusb_error_name(ret));
             ftdi_error_return(ret, "usb bulk read failed");
+        }
 
         if (actual_length > 2)
         {

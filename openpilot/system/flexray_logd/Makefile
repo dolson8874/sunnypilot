@@ -17,8 +17,9 @@ tests/test_spi_timeout: tests/test_spi_timeout.c libftdi/ftdispi.o libftdi/ftdis
 	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=ftdi_read_data -Wl,--wrap=ftdi_write_data -o $@ $(filter %.c %.o,$^) $(LDLIBS)
 tests/test_output: tests/test_output.c flexray_output.c flexray_journal.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=send -Wl,--wrap=write -o $@ $(filter %.c %.o,$^) -pthread
-tests/test_reader: tests/test_reader.c flexray_reader.c libftdi/ftdispi.o libftdi/ftdispi_usb.o libftdi/ftdi.o
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Wl,--wrap=ftdi_usb_open -Wl,--wrap=ftdi_set_bitmode -Wl,--wrap=ftdi_set_latency_timer -Wl,--wrap=ftdi_read_data -Wl,--wrap=ftdispi_stream_read_some -o $@ $(filter %.c %.o,$^) $(LDLIBS)
+tests/test_reader: tests/test_reader.c tests/test_spi_pipeline.c flexray_reader.c libftdi/ftdispi.c libftdi/ftdispi_usb.c
+	$(CC) -Itests/mocks -I. -Ilibftdi $(CFLAGS) -o $@ tests/test_reader.c flexray_reader.c libftdi/ftdispi.c libftdi/ftdispi_usb.c -pthread
+
 test: all tests/test_decoder tests/test_spi_timeout tests/test_spi_pipeline tests/test_output tests/test_reader
 	./tests/test_decoder
 	./tests/test_spi_timeout

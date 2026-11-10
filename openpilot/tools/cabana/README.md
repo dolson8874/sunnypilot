@@ -396,3 +396,63 @@ use the Python assembler/live/offline summary. Apply it only to the selected phy
 CAN source. Existing vehicle DBCs and FlexRay cycle rules are unchanged. If that
 source already has a vehicle DBC, add the message to a local copy only after checking
 ID conflicts rather than replacing the existing definitions.
+
+### Native capture startup diagnostics (C3X/C4)
+
+The Python publisher drains native stderr asynchronously into `cloudlog`, which
+`logmessaged` forwards through `logMessage` into rlog. Reports retain the child
+PID/exit code, initialization stages, native/library error codes, POSIX errno,
+first error and final stderr tail. The drain thread uses bounded lines and queues;
+frequent output is summarized and suppressed-line counts are reported. A short
+exit is drained through EOF before its final report. Native stdout and the capture
+socket remain separate. Capture state reports distinguish `starting`,
+`running-with-data`, `waiting-for-data`, `retrying`, and `stopped`; they include
+last observed successful read/frame times, ages and actual errors. Retry reports
+include the retry count. An empty heartbeat or manager's running flag does not
+confirm USB reads or valid FlexRay frames. USB read time is a host observation,
+not the FPGA frame's physical arrival time.
+
+Default selection is **0403:6011 / FT4232H / Interface B / mode 0 / 7500000 Hz**.
+The native stages distinguish probe, serial selection, interface, USB open/claim,
+MPSSE setup/reset/purge, GPIO response, clock, loopback, and first successful bulk
+read. Device reports include serial, USB bus/address/port path, FTDI type and
+interface. Multiple matching adapters require `FLEXRAY_FTDI_SERIAL` in the
+manager's environment; no matching serial fails rather than claiming another
+adapter. Legacy 0403:6010 Fast Serial requires explicit
+`FLEXRAY_FTDI_PRODUCT=6010`; it is no longer silently preferred or used as fallback.
+For standalone capture, for example:
+
+```bash
+FLEXRAY_FTDI_SERIAL=YOUR_SERIAL ./openpilot/system/flexray_logd/flexray_logd
+```
+
+Stop the managed collector first; only one process may claim Interface B. Kernel
+driver detach refers to that interface and is distinct from cable disconnection.
+No whole-device USB reset or blanket driver unbind is added. GPIO queries request
+immediate response and wait up to a total 300 ms, including delayed/status-only
+reads, without issuing a second query while a response is pending. A consumed
+but mismatched GPIO response permits a bounded re-query; fatal errors, incomplete
+command writes and deadline expiry fail visibly. This fixes a code weakness; it
+does **not** establish the cause of the previously observed C3X failure.
+
+In the investigated vehicle, FPGA firmware 1.0.0/build 1 was observed on **Panda
+CAN bus 1**. Configure it explicitly on that vehicle:
+
+```bash
+python3 -c 'from openpilot.common.params import Params; Params().put("FlexrayDiagnosticBus", 1, block=True)'
+```
+
+Restart the FlexRay publisher to load the setting. Default **-1 disables CAN
+monitoring**; do not assume bus 1 on other installations. CAN monitoring continues
+while native capture retries. Two consecutive valid measurement intervals with
+positive input demand, a full FIFO and zero SPI-completed-byte growth report
+`SPI 읽기 미진행` (SPI read not progressing). Zero service is not evidence that
+7.5 MHz bandwidth is insufficient. Missing/stale/ambiguous snapshots remain
+unknown; the firmware identity and eight statistics pages retain their formats.
+
+Hardware recheck remains required after installing the local changes: confirm
+`configured_clock=7500000`, increasing USB payload and FPGA SPI completed bytes,
+FIFO recovery, and source 4/6 frames in rlog. Then compare actual service, input,
+FIFO growth and drops (the investigated input was about 276080 wire bytes/s).
+Host mocks do not verify C3X USB permissions, wiring, bitstream programming,
+board timing, device removal, or actual sustained throughput.

@@ -18,6 +18,7 @@ from openpilot.common.basedir import BASEDIR
 from openpilot.common.params import Params
 from openpilot.system.flexray_logd.diagnostics import DiagnosticReceiver
 from openpilot.common.swaglog import cloudlog
+from openpilot.system.flexray_logd.native_capture import NativeCaptureLog
 
 # Match PANDA_BUS_OFFSET: pandad currently owns one Panda (sources 0–3).
 FLEXRAY_SOURCE_OFFSET = 4
@@ -83,7 +84,11 @@ def stop_capture(process: subprocess.Popen) -> None:
 
 def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, capture_args: tuple[str, ...] = (), observe=None) -> None:
   pending = bytearray()
-  process = subprocess.Popen([str(binary), *capture_args, '-p', socket_path])
+  process = subprocess.Popen([str(binary), *capture_args, '-p', socket_path], stderr=subprocess.PIPE)
+  native = NativeCaptureLog(process)
+  state = {'state': 'starting', 'pid': process.pid, 'last_valid_frame_monotonic': None}
+  cloudlog.info('FlexRay capture state: ' + json.dumps(state))
+  last_state = 0.0
   last_publish = 0.0
   try:
     while not stop():
@@ -96,11 +101,22 @@ def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, captu
       pending.extend(data)
       frames = unpack_frames(pending)
       if frames:
+        state['last_valid_frame_monotonic'] = time.monotonic()
         pm.send('flexray', frame_message(frames))
         last_publish = time.monotonic()
       elif time.monotonic() - last_publish >= 1:
         pm.send('flexray', frame_message([]))
         last_publish = time.monotonic()
+      native.report()
+      now = time.monotonic()
+      if now - last_state >= 1:
+        health = native.health()
+        state.update(health)
+        activity = [value for value in (health['last_successful_read_monotonic'], state['last_valid_frame_monotonic']) if value is not None]
+        state['last_valid_frame_age_s'] = None if state['last_valid_frame_monotonic'] is None else now - state['last_valid_frame_monotonic']
+        state['state'] = ('running-with-data' if now - max(activity) < 3 else 'waiting-for-data') if activity else 'starting'
+        cloudlog.info('FlexRay capture state: ' + json.dumps(state))
+        last_state = now
       if observe is not None:
         observe()
       time.sleep(0.01)
@@ -120,6 +136,10 @@ def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, captu
           time.sleep(0.01)
     finally:
       stop_capture(process)
+      native.finish()
+      state.update(native.health())
+      state.update(state='stopped' if stop() else 'retrying', returncode=process.returncode)
+      cloudlog.info('FlexRay capture state: ' + json.dumps(state))
     if pending:
       cloudlog.warning(f"FlexRay incomplete socket tail: {len(pending)} bytes")
 
@@ -141,6 +161,8 @@ def main() -> None:
       receiver = DiagnosticReceiver(bus)
     except Exception:
       cloudlog.exception('FlexRay diagnostic subscriber unavailable; SPI capture continues')
+  elif bus == -1:
+    cloudlog.info('FlexrayDiagnosticBus=-1: FPGA CAN diagnostics disabled; observed vehicle uses bus 1, configure explicitly')
   elif bus != -1:
     cloudlog.error(f'Invalid FlexrayDiagnosticBus={bus}; select -1 (disabled) or 0..3')
 
@@ -155,13 +177,15 @@ def main() -> None:
         cloudlog.exception('FlexRay diagnostic subscriber failed; SPI capture continues')
         receiver = None
 
+  retries = 0
   while not stopped:
     try:
       # Each child gets its own socket, so retries never consume a different collector's data.
       with tempfile.TemporaryDirectory(prefix='flexray-') as directory:
         run_capture(pm, str(Path(directory) / 'capture.sock'), lambda: stopped, observe=observe)
     except (OSError, RuntimeError, ValueError) as error:
-      cloudlog.error(f"FlexRay capture unavailable: {error}; retrying in 5 seconds")
+      retries += 1
+      cloudlog.error(f"FlexRay capture state=retrying retry_count={retries} last_actual_error={error}; retrying in 5 seconds")
       pm.send('flexray', frame_message([]))
       deadline = time.monotonic() + 5
       while not stopped and time.monotonic() < deadline:

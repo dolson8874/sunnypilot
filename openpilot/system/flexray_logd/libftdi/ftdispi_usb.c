@@ -1,4 +1,5 @@
 #include <libusb.h>
+#include <stdio.h>
 #include "ftdispi.h"
 
 int ftdispi_read_usb_partial(struct ftdi_context *fc, unsigned char *data,
@@ -20,6 +21,8 @@ int ftdispi_read_usb_partial(struct ftdi_context *fc, unsigned char *data,
   int raw = 0;
   *usb_error = libusb_bulk_transfer(fc->usb_dev, fc->out_ep, fc->readbuffer,
                                   fc->readbuffer_chunksize, &raw, fc->usb_read_timeout);
+  if (*usb_error < 0 && *usb_error != LIBUSB_ERROR_TIMEOUT && *usb_error != LIBUSB_ERROR_INTERRUPTED)
+    fprintf(stderr, "native stage=usb_bulk_read failed libusb_code=%d libusb=%s\n", *usb_error, libusb_error_name(*usb_error));
   if (raw < 0 || (unsigned)raw > fc->readbuffer_chunksize) return -1;
   unsigned source = 0, payload = 0;
   while (source < (unsigned)raw) {

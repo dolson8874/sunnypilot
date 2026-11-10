@@ -230,3 +230,148 @@ def test_diagnostic_failure_does_not_stop_spi_publisher(monkeypatch, failure):
   monkeypatch.setattr(flexrayd, 'run_capture', capture)
   flexrayd.main()
   assert captures == [True]
+
+
+def test_native_stderr_exit_and_flood(tmp_path, monkeypatch):
+  import json
+  import sys
+  from openpilot.system.flexray_logd import flexrayd
+
+  messages = []
+  monkeypatch.setattr(flexrayd.cloudlog, 'info', messages.append)
+  script = tmp_path / 'child.py'
+  script.write_text("import os\nos.write(2,b'native stage=usb_claim failed rc=-5 errno=16 libusb=BUSY\\n')\n"
+                    + "for i in range(2048): os.write(2,b'x'*4096)\n"
+                    + "os.write(2,b'\\nnative stage=usb_open_claim failed final-cause\\n')\nraise SystemExit(1)\n")
+  deadline = time.monotonic() + 5
+  pm = SimpleNamespace(send=lambda *args: None)
+  with pytest.raises(RuntimeError, match='status 1'):
+    run_capture(pm, str(tmp_path / 'missing.sock'), lambda: time.monotonic() > deadline,
+                binary=Path(sys.executable), capture_args=(str(script),))
+  native = [json.loads(line.removeprefix('FlexRay native: ')) for line in messages if line.startswith('FlexRay native: ')]
+  final = native[-1]
+  assert final['stderr_eof'] and final['returncode'] == 1
+  assert 'usb_claim' in final['first_error'] and 'final-cause' in final['last_error']
+  assert final['suppressed_lines'] > 0
+  assert len(final['stderr']) <= 16 and max(map(len, final['stderr_tail'])) <= 1024
+  assert time.monotonic() < deadline
+
+
+def test_native_immediate_stderr_exit(tmp_path, monkeypatch):
+  import sys
+  from openpilot.system.flexray_logd import flexrayd
+
+  messages = []
+  monkeypatch.setattr(flexrayd.cloudlog, 'info', messages.append)
+  child = tmp_path / 'exit.py'
+  child.write_text("import sys\nsys.stderr.write('native stage=kernel_driver_detach interface=1 rc=-5 (not cable disconnect)\\n')\n"
+                   + "sys.stderr.write('native stage=gpio_setmode failed rc=-6 errno=0 final-without-newline')\nsys.exit(1)")
+  with pytest.raises(RuntimeError, match='status 1'):
+    run_capture(SimpleNamespace(send=lambda *args: None), str(tmp_path / 'missing.sock'), lambda: False,
+                binary=Path(sys.executable), capture_args=(str(child),))
+  assert any('final-without-newline' in message and '"stderr_eof": true' in message for message in messages)
+  assert not any('running-with-data' in message for message in messages)
+  import json
+  final = json.loads(next(message.removeprefix('FlexRay native: ') for message in reversed(messages) if message.startswith('FlexRay native: ')))
+  assert 'gpio_setmode' in final['first_error']
+
+
+def test_native_stderr_flood_does_not_block_socket_capture(tmp_path, monkeypatch):
+  import sys
+  from openpilot.system.flexray_logd import flexrayd
+
+  messages = []
+  monkeypatch.setattr(flexrayd.cloudlog, 'info', messages.append)
+  child = tmp_path / 'stream.py'
+  child.write_text("import os, signal, time\n"
+                   + "signal.signal(signal.SIGINT, lambda *a: exit(0))\n"
+                   + "while True: os.write(2,b'x'*8192)\n")
+  calls = []
+  monkeypatch.setattr(flexrayd, 'read_capture', lambda path: envelope())
+  pm = SimpleNamespace(send=lambda service, message: calls.append(len(message.can)))
+  start = time.monotonic()
+  run_capture(pm, 'unused', lambda: len(calls) >= 10 or time.monotonic() - start > 3,
+              binary=Path(sys.executable), capture_args=(str(child),))
+  assert sum(calls) >= 10 and time.monotonic() - start < 3
+  assert any('running-with-data' in message for message in messages)
+
+
+def test_native_failure_reaches_rlog_via_cloudlog(tmp_path, monkeypatch):
+  import sys
+  from openpilot.common.swaglog import cloudlog, ipchandler
+  from openpilot.tools.lib.logreader import LogReader
+
+  log_root = tmp_path / 'logs'
+  monkeypatch.setenv('LOG_ROOT', str(log_root))
+  monkeypatch.setenv('LOGGERD_TEST', '1')
+  monkeypatch.setenv('LOGGERD_SEGMENT_LENGTH', '60')
+  pm = messaging.PubMaster(['flexray'])
+  log_sub = messaging.sub_sock('logMessage', timeout=100, conflate=False)
+  processes = []
+  ipchandler.close()
+  ipchandler.connect()
+  try:
+    processes.append(subprocess.Popen([str(Path(BASEDIR) / 'openpilot/system/loggerd/loggerd')], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+    assert pm.wait_for_readers_to_update('flexray', timeout=5)
+    processes.append(subprocess.Popen([sys.executable, '-m', 'openpilot.system.logmessaged'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+      cloudlog.info('FlexRay stderr bridge test ready')
+      if messaging.recv_sock(log_sub) is not None:
+        break
+    else:
+      pytest.fail('logmessaged did not receive cloudlog')
+    child = tmp_path / 'exit.py'
+    child.write_text("import sys\nsys.stderr.write('native stage=usb_claim failed rc=-5 libusb=BUSY preserved-to-rlog\\n')\nsys.exit(1)")
+    with pytest.raises(RuntimeError, match='status 1'):
+      run_capture(pm, str(tmp_path / 'missing.sock'), lambda: False,
+                  binary=Path(sys.executable), capture_args=(str(child),))
+    deadline = time.monotonic() + 3
+    while time.monotonic() < deadline:
+      event = messaging.recv_sock(log_sub)
+      if event is not None and 'preserved-to-rlog' in event.logMessage:
+        break
+    else:
+      pytest.fail('native stderr was not forwarded through logMessage')
+    # Ensure loggerd has consumed the logMessage before requesting final flush.
+    time.sleep(0.15)
+  finally:
+    for process in reversed(processes):
+      if process.poll() is None:
+        process.send_signal(signal.SIGINT)
+        try:
+          process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+          process.kill()
+          process.wait()
+    ipchandler.close()
+    ipchandler.pid = None
+  records = [event.logMessage for path in log_root.glob('*/rlog.zst') for event in LogReader(str(path)) if event.which() == 'logMessage']
+  assert any('preserved-to-rlog' in record and 'stderr_eof' in record for record in records)
+
+
+def test_can_monitor_continues_during_native_retry(monkeypatch):
+  from openpilot.system.flexray_logd import flexrayd
+
+  handlers, observed = {}, []
+
+  class Receiver:
+    def __init__(self, bus):
+      assert bus == 1
+
+    def poll(self, now):
+      observed.append(now)
+      if len(observed) == 3:
+        handlers[signal.SIGTERM](signal.SIGTERM, None)
+      return {'bus': 1, 'complete_fresh': True}
+
+  def failed_capture(*args, **kwargs):
+    raise RuntimeError('native stage=usb_claim failed status 1')
+
+  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1))
+  monkeypatch.setattr(flexrayd, 'DiagnosticReceiver', Receiver)
+  monkeypatch.setattr(flexrayd, 'run_capture', failed_capture)
+  monkeypatch.setattr(flexrayd.signal, 'signal', lambda sig, handler: handlers.__setitem__(sig, handler))
+  monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))
+  flexrayd.main()
+  assert len(observed) == 3
