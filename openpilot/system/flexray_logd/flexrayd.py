@@ -1,6 +1,7 @@
 """Publish CAN events on the dedicated FlexRay logging transport.
 
-The channel deliberately carries Event.can, so rlogs need no custom schema.
+The data channel deliberately carries Event.can, preserving the frame schema.
+Capture health is published separately on flexrayStatus.
 Use raw socket subscribers (loggerd/Cabana), not SubMaster(['flexray']), which
 expects channel names to match Event union members. Never publish on 'can':
 pandad owns that channel.
@@ -19,6 +20,8 @@ from openpilot.common.params import Params
 from openpilot.system.flexray_logd.diagnostics import DiagnosticReceiver
 from openpilot.common.swaglog import cloudlog
 from openpilot.system.flexray_logd.native_capture import NativeCaptureLog
+from openpilot.system.flexray_logd.status import CaptureStatus
+from openpilot.system.flexray_logd.usb_inventory import start_usb_inventory
 
 # Match PANDA_BUS_OFFSET: pandad currently owns one Panda (sources 0–3).
 FLEXRAY_SOURCE_OFFSET = 4
@@ -82,10 +85,12 @@ def stop_capture(process: subprocess.Popen) -> None:
       process.wait()
 
 
-def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, capture_args: tuple[str, ...] = (), observe=None) -> None:
+def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, capture_args: tuple[str, ...] = (), observe=None, telemetry=None) -> None:
   pending = bytearray()
   process = subprocess.Popen([str(binary), *capture_args, '-p', socket_path], stderr=subprocess.PIPE)
   native = NativeCaptureLog(process)
+  if telemetry is not None:
+    telemetry.starting(process.pid)
   state = {'state': 'starting', 'pid': process.pid, 'last_valid_frame_monotonic': None}
   cloudlog.info('FlexRay capture state: ' + json.dumps(state))
   last_state = 0.0
@@ -103,11 +108,16 @@ def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, captu
       if frames:
         state['last_valid_frame_monotonic'] = time.monotonic()
         pm.send('flexray', frame_message(frames))
+        if telemetry is not None:
+          telemetry.received(frames)
         last_publish = time.monotonic()
       elif time.monotonic() - last_publish >= 1:
         pm.send('flexray', frame_message([]))
         last_publish = time.monotonic()
       native.report()
+      if telemetry is not None:
+        telemetry.native(native.health())
+        telemetry.publish()
       now = time.monotonic()
       if now - last_state >= 1:
         health = native.health()
@@ -131,12 +141,16 @@ def run_capture(pm, socket_path: str, stop, binary: Path = CAPTURE_BINARY, captu
             frames = unpack_frames(pending)
             if frames:
               pm.send('flexray', frame_message(frames))
+              if telemetry is not None:
+                telemetry.received(frames)
           except (OSError, ValueError):
             break
           time.sleep(0.01)
     finally:
       stop_capture(process)
       native.finish()
+      if telemetry is not None:
+        telemetry.native(native.health())
       state.update(native.health())
       state.update(state='stopped' if stop() else 'retrying', returncode=process.returncode)
       cloudlog.info('FlexRay capture state: ' + json.dumps(state))
@@ -153,7 +167,9 @@ def main() -> None:
 
   signal.signal(signal.SIGINT, request_stop)
   signal.signal(signal.SIGTERM, request_stop)
-  pm = messaging.PubMaster(['flexray'])
+  pm = messaging.PubMaster(['flexray', 'flexrayStatus'])
+  telemetry = CaptureStatus(pm)
+  inventory = start_usb_inventory()
   receiver = None
   bus = Params().get('FlexrayDiagnosticBus', return_default=True)
   if bus in range(4):
@@ -168,6 +184,9 @@ def main() -> None:
 
   def observe():
     nonlocal receiver
+    telemetry.publish()
+    if inventory is not None:
+      inventory.report()
     if receiver is not None:
       try:
         status = receiver.poll(time.monotonic())
@@ -182,15 +201,21 @@ def main() -> None:
     try:
       # Each child gets its own socket, so retries never consume a different collector's data.
       with tempfile.TemporaryDirectory(prefix='flexray-') as directory:
-        run_capture(pm, str(Path(directory) / 'capture.sock'), lambda: stopped, observe=observe)
+        run_capture(pm, str(Path(directory) / 'capture.sock'), lambda: stopped, observe=observe, telemetry=telemetry)
     except (OSError, RuntimeError, ValueError) as error:
       retries += 1
+      telemetry.retrying(error)
       cloudlog.error(f"FlexRay capture state=retrying retry_count={retries} last_actual_error={error}; retrying in 5 seconds")
       pm.send('flexray', frame_message([]))
       deadline = time.monotonic() + 5
       while not stopped and time.monotonic() < deadline:
         observe()
         time.sleep(0.1)
+
+  if inventory is not None:
+    inventory.report()
+  telemetry.phase = 'stopped'
+  telemetry.publish(force=True)
 
 
 if __name__ == '__main__':

@@ -456,3 +456,58 @@ FIFO recovery, and source 4/6 frames in rlog. Then compare actual service, input
 FIFO growth and drops (the investigated input was about 276080 wire bytes/s).
 Host mocks do not verify C3X USB permissions, wiring, bitstream programming,
 board timing, device removal, or actual sustained throughput.
+
+### FlexRay board compatibility and receive indicator
+
+For the selected **0403:6011 / Interface B** capture board, the reader now applies
+an explicit `flexray_6011_h` SPI profile. This restores the working legacy
+`8A 97 8D 85` MPSSE initialization and 7.5 MHz mode 0 even when libftdi reports
+`TYPE_BM`, as observed on C3X. The detected type is preserved and logged separately;
+the profile supplies SPI capabilities to both initialization and clock division.
+Automatic generic FTDI handling and explicit 6010 Fast Serial selection retain
+their existing behavior. Serial filtering, unique-device selection, real setup
+error checks and bounded GPIO/stream waits still apply. USB enumeration and this
+profile do not by themselves prove that the board is receiving valid frames.
+
+The collector automatically runs read-only `lsusb -v -d 0403:6011` once at publisher
+startup in a separate worker. Command, return code, combined stdout/stderr,
+timeout and truncation are recorded as `FlexRay USB descriptor` cloudlog records,
+forwarded through `logMessage` into rlog (and the normal device log files).
+The worker has a five-second deadline and retains at most 32768 output bytes;
+excess output is drained and counted. A missing command or permission failure is
+recorded without stopping capture. Native logs also record bcdDevice, USB speed
+code, detected FTDI type, endpoint packet size and the selected board profile.
+No separate user-run lsusb command is required before trying the update.
+
+In **Settings → Toggles**, **Show FlexRay Receive Status** is immediately below
+**Record FlexRay Data**. Its persistent default is enabled. The setting is also
+available in the C4 settings layout. Turning the indicator off affects only the
+screen; collection, CAN diagnostics and rlog recording continue unchanged.
+
+The driving-screen indicator shows:
+
+- Green **Receiving data**: a source 4/6 frame has actually been published within
+  the last two seconds, with per-source frames/s measured over host intervals.
+- Yellow **Waiting for data**: capture is active but valid FlexRay frames are absent.
+- Blue **Starting**: initialization is in progress.
+- Red **Retrying connection**: the native collector failed; the retry count is shown.
+- Gray **Logging disabled / Stopped** or orange **Status unavailable** as applicable.
+
+USB padding, empty heartbeats, manager `running=true` and physical CAN diagnostic
+records alone never produce the green indication. Telemetry older than three
+seconds is unavailable, and previous-trip messages do not keep the indication
+alive. A green indicator confirms host reception/publication, not a disk-write
+acknowledgement or the physical arrival time of each frame. Full-screen driving
+alerts take priority over the indicator.
+
+A separate low-rate `flexrayStatus` service records capture activity, source 4/6
+counts/rates, native read/frame timestamps, retry count and last error in rlog.
+It uses a reserved fork metadata slot; FlexRay frames remain standard `Event.can`
+on `flexray` with original IDs and sources 4/6. pandad still owns physical `can`.
+
+For a clean test-route finish, park and disengage, then use the sunnypilot Device
+panel's **Enable Always Offroad** (or switch off ignition/ACC). Wait for the home
+screen and allow about 30 seconds with power maintained before disconnecting or
+copying the completed logs. **Exit Always Offroad** resumes normal onroad startup.
+The delay allows recording to finish; it is not a substitute for the offroad
+transition. Actual C3X/C4 operation and SPI throughput still require device tests.

@@ -886,3 +886,47 @@ msgstr "FlexRay 데이터 기록"
 #: selfdrive/ui/layouts/settings/toggles.py
 msgid "Record FlexRay data with the driving logs when the vehicle is on, including dashcam mode. A connected FlexRay capture board is required. Changes take effect without restarting sunnypilot."
 msgstr "차량이 켜져 있을 때 대시캠 모드를 포함해 FlexRay 데이터를 주행 로그와 함께 기록합니다. FlexRay 수집 보드가 연결되어 있어야 합니다. 변경 사항은 sunnypilot을 재시작하지 않고 적용됩니다."
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Show FlexRay Receive Status"
+msgstr "FlexRay 수신 정보 표시"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Show FlexRay receive status and source 4/6 frame rates on the driving screen. This only changes the display; data collection and logging are unchanged."
+msgstr "주행 화면에 FlexRay 수신 정보와 소스 4/6의 초당 프레임 수를 표시합니다. 화면 표시만 변경합니다. 데이터 수집과 기록에는 영향을 주지 않습니다."
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Receiving data"
+msgstr "수신 중"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Waiting for data"
+msgstr "데이터 대기"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Starting"
+msgstr "시작 중"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Retrying connection"
+msgstr "연결 재시도"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Stopped"
+msgstr "중지됨"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Logging disabled"
+msgstr "기록 중지"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Status unavailable"
+msgstr "수신 확인 불가"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Waiting for valid frames"
+msgstr "정상 프레임 수신 대기"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Retry {}"
+msgstr "재시도 {}회"

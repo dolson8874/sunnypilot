@@ -1,6 +1,7 @@
 import numpy as np
 import pyray as rl
 from openpilot.cereal import log
+from openpilot.selfdrive.ui.onroad.flexray_status import FlexrayStatusRenderer
 from openpilot.cereal.visionipc import VisionStreamType
 from openpilot.selfdrive.ui import UI_BORDER_SIZE
 from openpilot.selfdrive.ui.ui_state import ui_state, UIStatus
@@ -54,6 +55,7 @@ class AugmentedRoadView(CameraView, AugmentedRoadViewSP):
 
     self.model_renderer = ModelRenderer()
     self._hud_renderer = HudRenderer()
+    self._flexray_status_renderer = FlexrayStatusRenderer()
     self.alert_renderer = AlertRenderer()
     self.driver_state_renderer = DriverStateRenderer()
 
@@ -91,6 +93,7 @@ class AugmentedRoadView(CameraView, AugmentedRoadViewSP):
     self.model_renderer.render(self._content_rect)
     AugmentedRoadViewSP.update_fade_out_bottom_overlay(self, self._content_rect)
     self._hud_renderer.render(self._content_rect)
+    self._flexray_status_renderer.render(self._content_rect)
     self.alert_renderer.render(self._content_rect)
     self.driver_state_renderer.render(self._content_rect)
 

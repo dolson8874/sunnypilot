@@ -132,6 +132,6 @@ class NativeCaptureLog:
 
   def health(self):
     with self.lock:
-      return {'last_successful_read_monotonic': self.last_read,
+      return {'last_successful_read_monotonic': self.last_read, 'first_actual_error': self.first_error,
               'last_successful_read_age_s': None if self.last_read is None else time.monotonic() - self.last_read, 'last_actual_error': self.last_error,
               'delivered_bytes': self.delivered}

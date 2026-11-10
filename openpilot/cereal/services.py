@@ -86,6 +86,7 @@ _services: dict[str, tuple] = {
   "qNarrowRoadEncodeData": (False, 20., None, QueueSize.BIG),
 
   # sunnypilot
+  "flexrayStatus": (True, 1., 1),
   "modelManagerSP": (False, 1., 1, QueueSize.BIG),
   "backupManagerSP": (False, 1., 1, QueueSize.BIG),
   "selfdriveStateSP": (True, 100., 10),

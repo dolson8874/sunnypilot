@@ -104,6 +104,15 @@ int flexray_reader_open(struct flexray_reader *r, const char *file, bool loop) {
     fprintf(stderr, "native stage=selection matches=%u; select one adapter with FLEXRAY_FTDI_SERIAL\n", matches);
     rc = -1; goto failed;
   }
+  struct libusb_device_descriptor descriptor;
+  int descriptor_result = libusb_get_device_descriptor(selected, &descriptor);
+  if (!descriptor_result) {
+    fprintf(stderr, "native usb_descriptor vid=%04x pid=%04x bcdDevice=%04x configurations=%u speed_code=%d\n",
+            descriptor.idVendor, descriptor.idProduct, descriptor.bcdDevice,
+            descriptor.bNumConfigurations, libusb_get_device_speed(selected));
+  } else {
+    fprintf(stderr, "native usb_descriptor rc=%d libusb=%s\n", descriptor_result, libusb_error_name(descriptor_result));
+  }
   uint8_t ports[8];
   int port_count = libusb_get_port_numbers(selected, ports, sizeof(ports));
   fprintf(stderr, "native device vid=0403 pid=%04x serial=%s usb_bus=%u usb_address=%u port_path=",
@@ -128,10 +137,14 @@ int flexray_reader_open(struct flexray_reader *r, const char *file, bool loop) {
     READER_STEP("fastserial_bitmode", ftdi_set_bitmode(&r->usb, 0xff, BITMODE_RESET));
     READER_STEP("fastserial_latency", ftdi_set_latency_timer(&r->usb, 2));
   } else {
-    if (r->usb.type != TYPE_4232H) { stage = "expected_FT4232H"; rc = -1; errno = ENODEV; goto failed; }
+    // This selected 0403:6011 board used H-class MPSSE successfully in v1.
+    // On the observed C3X route libftdi reported TYPE_BM for this board.
+    // Apply the explicit SPI profile without falsifying the detected chip type.
+    fprintf(stderr, "native board_profile=flexray_6011_h detected_type=%d max_packet_size=%u interface=B\n",
+            r->usb.type, r->usb.max_packet_size);
     // open copies context ownership, including partial allocation failures.
     r->spi_owned = true;
-    READER_STEP("mpsse_open", ftdispi_open(&r->spi, &r->usb, INTERFACE_B));
+    READER_STEP("mpsse_open", ftdispi_open_profile(&r->spi, &r->usb, INTERFACE_B, FTDISPI_PROFILE_FLEXRAY_6011));
     READER_STEP("gpio_setmode", ftdispi_setmode(&r->spi, 1, 0, 0, 0, 0, 0));
     READER_STEP("setclock_7500000", ftdispi_setclock(&r->spi, 7500000));
     READER_STEP("loopback_off", ftdispi_setloopback(&r->spi, 0));

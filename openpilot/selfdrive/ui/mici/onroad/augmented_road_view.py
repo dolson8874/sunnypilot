@@ -1,6 +1,7 @@
 import numpy as np
 import pyray as rl
 from openpilot.cereal import log
+from openpilot.selfdrive.ui.onroad.flexray_status import FlexrayStatusRenderer
 from opendbc.car.structs import car
 from openpilot.cereal.visionipc import VisionStreamType
 from openpilot.selfdrive.ui.ui_state import ui_state, UIStatus
@@ -177,6 +178,7 @@ class AugmentedRoadView(CameraView):
     self._navigation = NavigationPanel()
     self._model_renderer = ModelRenderer()
     self._hud_renderer = HudRenderer()
+    self._flexray_status_renderer = FlexrayStatusRenderer()
     self._long_indicator = LongIndicator()
     self._alert_renderer = AlertRenderer()
     self._driver_state_renderer = DriverStateRenderer()
@@ -261,6 +263,8 @@ class AugmentedRoadView(CameraView):
     self._hud_renderer.set_can_draw_top_icons(alert_to_render is None)
     self._hud_renderer.set_wheel_critical_icon(alert_to_render is not None and not not_animating_out and
                                                alert_to_render.visual_alert == car.CarControl.HUDControl.VisualAlert.steerRequired)
+    if alert_to_render is None:
+      self._flexray_status_renderer.render(self._content_rect)
     self._alert_renderer.render(self._content_rect)
     self._hud_renderer.render(self._content_rect)
 

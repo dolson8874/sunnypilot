@@ -9,6 +9,9 @@
 
 static int device_count, open_result, selected_product, closed, deinitialized;
 static int init_result, open_errno, cleanup_errno, gpio_error_once;
+static enum ftdi_chip_type detected_type=TYPE_4232H;
+static unsigned char mpsse_initial[4];
+static int mpsse_initial_size;
 static int gpio_empty = -1, gpio_value = 8, gpio_error, gpio_reads, gpio_queries;
 static int fail_operation, operation_count;
 static unsigned writes, bulk_calls, commands, outstanding, wire_position;
@@ -30,6 +33,9 @@ static void init(struct ftdispi_context *x) {
 static void release(struct ftdispi_context *x) { free(x->mem);free(x->fc.readbuffer); }
 int ftdi_write_data(struct ftdi_context *x, const unsigned char *data, int size) {
   (void)x;writes++;last_size=size;memcpy(last_write,data,size<32?size:32);
+  if (!mpsse_initial_size && ((size==4 && data[0]==0x8a && data[1]==0x97) || (size==1 && data[0]==0x85))) {
+    memcpy(mpsse_initial,data,size);mpsse_initial_size=size;
+  }
   if (short_on_write==(int)writes) return size-1;
   if(size==2 && data[0]==GET_BITS_LOW){assert(data[1]==0x87);gpio_queries++;}
   if (size==6 && data[0]==SET_BITS_LOW && data[3]==MPSSE_DO_READ) {
@@ -57,7 +63,7 @@ int libusb_bulk_transfer(struct libusb_device_handle *h, unsigned char ep,
 }
 static int operation(void) { return ++operation_count == fail_operation ? -9 : 0; }
 int ftdi_init(struct ftdi_context *x) {
-  memset(x,0,sizeof(*x)); x->type=TYPE_4232H;
+  memset(x,0,sizeof(*x)); x->type=detected_type;
   x->readbuffer=malloc(64);x->readbuffer_chunksize=32;x->max_packet_size=8;
   return init_result;
 }
@@ -78,6 +84,10 @@ int ftdi_usb_get_strings(struct ftdi_context *x,struct libusb_device *d,char *m,
 int ftdi_usb_open_dev(struct ftdi_context *x,struct libusb_device *d) {
   (void)d;errno=open_errno;if(!open_result)x->usb_dev=(struct libusb_device_handle *)1;return open_result;
 }
+int libusb_get_device_descriptor(struct libusb_device *d,struct libusb_device_descriptor *desc) {
+  (void)d;desc->idVendor=0x0403;desc->idProduct=0x6011;desc->bcdDevice=0x1234;desc->bNumConfigurations=1;return 0;
+}
+int libusb_get_device_speed(struct libusb_device *d) { (void)d;return 3; }
 unsigned char libusb_get_bus_number(struct libusb_device *d) {(void)d;return 2;}
 unsigned char libusb_get_device_address(struct libusb_device *d) {(void)d;return 3;}
 int libusb_get_port_numbers(struct libusb_device *d,unsigned char *p,int n) {(void)d;assert(n>=2);p[0]=1;p[1]=4;return 2;}

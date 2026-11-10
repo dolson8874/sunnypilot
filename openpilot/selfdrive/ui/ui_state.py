@@ -109,6 +109,8 @@ class UIState(UIStateSP):
     self.started: bool = False
     self.ignition: bool = False
     self.recording_audio: bool = False
+    self.flexray_show_status: bool = self.params.get("FlexrayShowStatus", return_default=True)
+    self.flexray_logging_enabled: bool = self.params.get("FlexrayLoggingEnabled", return_default=True)
     self.panda_type: log.PandaState.PandaType = log.PandaState.PandaType.unknown
     self.personality: log.LongitudinalPersonality = log.LongitudinalPersonality.standard
     self.has_longitudinal_control: bool = False
@@ -257,6 +259,8 @@ class UIState(UIStateSP):
         self.has_longitudinal_control = self.CP.openpilotLongitudinalControl
 
     self.recording_audio = self.params.get_bool("RecordAudio") and self.started
+    self.flexray_show_status = self.params.get("FlexrayShowStatus", return_default=True)
+    self.flexray_logging_enabled = self.params.get("FlexrayLoggingEnabled", return_default=True)
     self.is_metric = self.params.get_bool("IsMetric")
     self.initial_cruise_speed = self.params.get("InitialCruiseSpeedKph", return_default=True)
     self.always_on_dm = self.params.get_bool("AlwaysOnDM")

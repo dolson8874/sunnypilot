@@ -104,12 +104,22 @@ static int ftdispi_realloc(struct ftdispi_context *fsc, size_t size);
 static int ftdispi_wait(struct ftdispi_context *fsc, uint8_t mask,
 			uint8_t value, int maxtry);
 
-__dll int ftdispi_open(struct ftdispi_context *fsc,
-		       struct ftdi_context *fc, int interface)
+static int spi_high_speed(const struct ftdispi_context *fsc) {
+  return fsc->profile == FTDISPI_PROFILE_FLEXRAY_6011 ||
+         fsc->fc.type == TYPE_2232H || fsc->fc.type == TYPE_4232H || fsc->fc.type == TYPE_232H;
+}
+
+__dll int ftdispi_open(struct ftdispi_context *fsc, struct ftdi_context *fc, int interface) {
+  return ftdispi_open_profile(fsc, fc, interface, FTDISPI_PROFILE_AUTO);
+}
+
+__dll int ftdispi_open_profile(struct ftdispi_context *fsc, struct ftdi_context *fc,
+                             int interface, enum ftdispi_profile profile)
 {
 	ASSERT_CHECK(!fc || !fsc, "CTX NOT INITIALIZED", FTDISPI_ERROR_CTX);
 	memset(fsc, 0, sizeof(*fsc));
   fsc->bitini = BIT_P_CS;
+  fsc->profile = profile;
 	memcpy(&fsc->fc, fc, sizeof(*fc));
 	if (0 != (fsc->mem = malloc(DEFAULT_MEM_SIZE))) {
 		fsc->memsize = DEFAULT_MEM_SIZE;
@@ -143,7 +153,7 @@ __dll int ftdispi_open(struct ftdispi_context *fsc,
     0x8D, // Disable 3-phase clocking (I2C용 기능, SPI에서는 OFF)
     0x85  // Disable loopback
   };
-  int high_speed = fsc->fc.type == TYPE_2232H || fsc->fc.type == TYPE_4232H || fsc->fc.type == TYPE_232H;
+  int high_speed = spi_high_speed(fsc);
   unsigned char *initial = high_speed ? init_cmds : init_cmds + 3;
   int initial_size = high_speed ? sizeof(init_cmds) : 1;
   if (spi_write_exact(fsc, initial, initial_size) != initial_size) return FTDISPI_ERROR_LIB;
@@ -160,7 +170,7 @@ __dll int ftdispi_setclock(struct ftdispi_context *fsc, uint32_t speed)
 {
   ASSERT_CHECK(!fsc, "CTX NOT INITIALIZED", FTDISPI_ERROR_CTX);
   if (fsc->stream_chunk || fsc->stream_error) return FTDISPI_ERROR_CMD;
-  int high_speed = fsc->fc.type == TYPE_2232H || fsc->fc.type == TYPE_4232H || fsc->fc.type == TYPE_232H;
+  int high_speed = spi_high_speed(fsc);
   if (speed < CLOCK_MIN_SPEED || speed > CLOCK_MAX_SPEEDX5 || (!high_speed && speed > CLOCK_MAX_SPEED))
     return FTDISPI_ERROR_CLK;
   uint32_t base = high_speed && speed > CLOCK_MAX_SPEED ? CLOCK_MAX_SPEEDX5 : CLOCK_MAX_SPEED;

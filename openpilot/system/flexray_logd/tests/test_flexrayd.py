@@ -31,6 +31,7 @@ def test_default_and_toggle_conditions(tmp_path):
   params = Params(str(tmp_path))
   assert params.get_default_value('FlexrayLoggingEnabled') is True
   assert params.get_default_value('FlexrayDiagnosticBus') == -1
+  assert params.get_default_value('FlexrayShowStatus') is True
   params.put_bool('FlexrayLoggingEnabled', params.get_default_value('FlexrayLoggingEnabled'), block=True)
   cp = car.CarParams.new_message()
   cp.passive = True
@@ -114,7 +115,9 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
   monkeypatch.delenv('FLEXRAY_LOG_DIR', raising=False)
   source = tmp_path / 'input'
   source.write_bytes((frame(2) + frame(0)) * 2048)
-  pm = messaging.PubMaster(['flexray', 'can'])
+  pm = messaging.PubMaster(['flexray', 'can', 'flexrayStatus'])
+  from openpilot.system.flexray_logd.status import CaptureStatus
+  telemetry = CaptureStatus(pm)
   count = 0
 
   class Publisher:
@@ -142,7 +145,10 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
     long_frame = unpack_frames(long_data + bcm_data)
     pm.send('flexray', frame_message(long_frame))
     deadline = time.monotonic() + 3
-    run_capture(Publisher(), str(tmp_path / 'capture.sock'), lambda: count > 100 or time.monotonic() > deadline, capture_args=('-f', str(source), '-l'))
+    run_capture(Publisher(), str(tmp_path / 'capture.sock'), lambda: count > 100 or time.monotonic() > deadline,
+                capture_args=('-f', str(source), '-l'), telemetry=telemetry)
+    telemetry.publish(force=True)
+    assert pm.wait_for_readers_to_update('flexrayStatus', timeout=5)
     assert count > 100
     assert pm.wait_for_readers_to_update('flexray', timeout=5)
   finally:
@@ -156,6 +162,8 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
   assert process.returncode == 0, output
   files = list(log_root.glob('*/rlog.zst'))
   assert files
+  statuses = [event.flexrayStatus.to_dict() for path in files for event in LogReader(str(path)) if event.which() == 'flexrayStatus']
+  assert any(status['lastFrameMonoTime'] > 0 and status['src4Frames'] > 0 and status['src6Frames'] > 0 for status in statuses)
   recorded = [f.to_dict() for path in files for event in LogReader(str(path)) if event.which() == 'can' for f in event.can]
   captured = [f for f in recorded if f['src'] in (4, 6)]
   assert len(captured) == count + 2
@@ -225,7 +233,8 @@ def test_diagnostic_failure_does_not_stop_spi_publisher(monkeypatch, failure):
 
   monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1))
   monkeypatch.setattr(flexrayd, 'DiagnosticReceiver', BrokenReceiver)
-  monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: object())
+  monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
+  monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))
   monkeypatch.setattr(flexrayd.signal, 'signal', lambda sig, handler: handlers.__setitem__(sig, handler))
   monkeypatch.setattr(flexrayd, 'run_capture', capture)
   flexrayd.main()
@@ -311,16 +320,39 @@ def test_native_failure_reaches_rlog_via_cloudlog(tmp_path, monkeypatch):
   ipchandler.close()
   ipchandler.connect()
   try:
-    processes.append(subprocess.Popen([str(Path(BASEDIR) / 'openpilot/system/loggerd/loggerd')], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
-    assert pm.wait_for_readers_to_update('flexray', timeout=5)
+    # Match the device lifecycle: logmessaged is already running offroad;
+    # loggerd subscribes when the vehicle goes onroad.
     processes.append(subprocess.Popen([sys.executable, '-m', 'openpilot.system.logmessaged'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
       cloudlog.info('FlexRay stderr bridge test ready')
       if messaging.recv_sock(log_sub) is not None:
         break
+      time.sleep(0.05)
     else:
       pytest.fail('logmessaged did not receive cloudlog')
+    processes.append(subprocess.Popen([str(Path(BASEDIR) / 'openpilot/system/loggerd/loggerd')], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+    assert pm.wait_for_readers_to_update('flexray', timeout=5)
+    route_deadline = time.monotonic() + 5
+    while Params().get('CurrentRoute') is None and time.monotonic() < route_deadline:
+      time.sleep(0.01)
+    assert Params().get('CurrentRoute') is not None
+    from openpilot.system.flexray_logd import usb_inventory
+    monkeypatch.setattr(usb_inventory, 'capture_usb_inventory', lambda: {'command': ['lsusb', '-v', '-d', '0403:6011'],
+                                                                      'returncode': 0, 'output': 'mocked bcdDevice 08.00 saved-to-rlog'})
+    inventory = usb_inventory.start_usb_inventory()
+    inventory.thread.join(timeout=1)
+    assert inventory.result is not None and 'saved-to-rlog' in inventory.result['output'], inventory.result
+    inventory.report()
+    assert inventory.reported
+    descriptor_seen = False
+    descriptor_deadline = time.monotonic() + 2
+    while time.monotonic() < descriptor_deadline:
+      event = messaging.recv_sock(log_sub, wait=True)
+      if event is not None and 'FlexRay USB descriptor' in event.logMessage:
+        descriptor_seen = True
+        break
+    assert descriptor_seen
     child = tmp_path / 'exit.py'
     child.write_text("import sys\nsys.stderr.write('native stage=usb_claim failed rc=-5 libusb=BUSY preserved-to-rlog\\n')\nsys.exit(1)")
     with pytest.raises(RuntimeError, match='status 1'):
@@ -348,6 +380,7 @@ def test_native_failure_reaches_rlog_via_cloudlog(tmp_path, monkeypatch):
     ipchandler.pid = None
   records = [event.logMessage for path in log_root.glob('*/rlog.zst') for event in LogReader(str(path)) if event.which() == 'logMessage']
   assert any('preserved-to-rlog' in record and 'stderr_eof' in record for record in records)
+  assert any('FlexRay USB descriptor' in record and 'saved-to-rlog' in record for record in records)
 
 
 def test_can_monitor_continues_during_native_retry(monkeypatch):
@@ -370,6 +403,7 @@ def test_can_monitor_continues_during_native_retry(monkeypatch):
 
   monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1))
   monkeypatch.setattr(flexrayd, 'DiagnosticReceiver', Receiver)
+  monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
   monkeypatch.setattr(flexrayd, 'run_capture', failed_capture)
   monkeypatch.setattr(flexrayd.signal, 'signal', lambda sig, handler: handlers.__setitem__(sig, handler))
   monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))

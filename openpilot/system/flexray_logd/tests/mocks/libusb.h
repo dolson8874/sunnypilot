@@ -2,6 +2,12 @@
 #define SPI_TEST_LIBUSB_H
 struct libusb_device_handle;
 struct libusb_device;
+struct libusb_device_descriptor {
+  unsigned short idVendor, idProduct, bcdDevice;
+  unsigned char bNumConfigurations;
+};
+int libusb_get_device_descriptor(struct libusb_device *, struct libusb_device_descriptor *);
+int libusb_get_device_speed(struct libusb_device *);
 unsigned char libusb_get_bus_number(struct libusb_device *);
 unsigned char libusb_get_device_address(struct libusb_device *);
 int libusb_get_port_numbers(struct libusb_device *, unsigned char *, int);

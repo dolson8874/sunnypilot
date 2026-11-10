@@ -36,6 +36,10 @@ DESCRIPTIONS = {
   'RecordFront': tr_noop("Upload data from the driver facing camera and help improve the driver monitoring algorithm."),
   "IsMetric": tr_noop("Display speed in km/h instead of mph."),
   "RecordAudio": tr_noop("Record and store microphone audio while driving. The audio will be included in the dashcam video in comma connect."),
+  "FlexrayShowStatus": tr_noop(
+    "Show FlexRay receive status and source 4/6 frame rates on the driving screen. " +
+    "This only changes the display; data collection and logging are unchanged."
+  ),
   "FlexrayLoggingEnabled": tr_noop(
     "Record FlexRay data with the driving logs when the vehicle is on, including dashcam mode. " +
     "A connected FlexRay capture board is required. Changes take effect without restarting sunnypilot."
@@ -89,6 +93,12 @@ class TogglesLayout(Widget):
       "FlexrayLoggingEnabled": (
         lambda: tr("Record FlexRay Data"),
         DESCRIPTIONS["FlexrayLoggingEnabled"],
+        "chffr_wheel.png",
+        False,
+      ),
+      "FlexrayShowStatus": (
+        lambda: tr("Show FlexRay Receive Status"),
+        DESCRIPTIONS["FlexrayShowStatus"],
         "chffr_wheel.png",
         False,
       ),

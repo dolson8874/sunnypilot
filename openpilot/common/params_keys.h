@@ -43,6 +43,7 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"FirmwareQueryDone", {CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION, BOOL}},
     {"FlexrayDiagnosticBus", {PERSISTENT, INT, "-1"}},  // -1 disables physical CAN diagnostics.
     {"FlexrayLoggingEnabled", {PERSISTENT | BACKUP, BOOL, "1"}},
+    {"FlexrayShowStatus", {PERSISTENT | BACKUP, BOOL, "1"}},
     {"ForcePowerDown", {PERSISTENT, BOOL}},
     {"GitBranch", {PERSISTENT, STRING}},
     {"GitCommit", {PERSISTENT, STRING}},

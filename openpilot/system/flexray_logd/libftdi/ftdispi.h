@@ -90,6 +90,8 @@ extern "C" {
 /**
  * @brief FDTI SPI context
  */
+enum ftdispi_profile { FTDISPI_PROFILE_AUTO, FTDISPI_PROFILE_FLEXRAY_6011 };
+
 struct ftdispi_context {
     struct ftdi_context fc;      /**< @brief ftdi context */
     uint8_t             wr_cmd;  /**< @brief write command */
@@ -99,6 +101,7 @@ struct ftdispi_context {
                                   * functions */
     size_t              memsize; /**< @brief size of the memory region for write
                                   * and read functions */
+    enum ftdispi_profile profile;  // SPI capability; never overwrite libftdi detected type.
     uint32_t actual_clock_hz, stream_pending;
     uint16_t stream_chunk;
     uint8_t stream_gpo;
@@ -111,6 +114,11 @@ struct ftdispi_context {
     volatile sig_atomic_t *stream_stop;
 };
 
+
+/* Explicit known-board SPI profile, otherwise use libftdi's type detection.
+ * Like open(), transfers ownership of the copied FTDI context on initialization. */
+__dll int ftdispi_open_profile(struct ftdispi_context *fsc, struct ftdi_context *fc,
+                             int interface, enum ftdispi_profile profile);
 
 /**
  * @brief Open the a FTDI interface in SPI mode.
