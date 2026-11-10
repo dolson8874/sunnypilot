@@ -930,3 +930,11 @@ msgstr "정상 프레임 수신 대기"
 #: openpilot/selfdrive/ui/onroad/flexray_status.py
 msgid "Retry {}"
 msgstr "재시도 {}회"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Preparing recording"
+msgstr "기록 준비 중"
+
+#: openpilot/selfdrive/ui/onroad/flexray_status.py
+msgid "Buffered: {} frames"
+msgstr "보관: {}개"

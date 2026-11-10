@@ -495,6 +495,13 @@ struct FlexrayStatus @0xcb9fd56c7057593a {
   src6Rate @8 :Float32;
   lastError @9 :Text;
   usbDeliveredBytes @10 :UInt64;
+  loggerReady @11 :Bool;
+  startupBufferedFrames @12 :UInt64;
+  startupBufferedBytes @13 :UInt64;
+  startupDroppedFrames @14 :UInt64;
+  startupDroppedBytes @15 :UInt64;
+  src4ReceivedFrames @16 :UInt64;
+  src6ReceivedFrames @17 :UInt64;
 }
 
 struct CustomReserved11 @0xc2243c65e0340384 {

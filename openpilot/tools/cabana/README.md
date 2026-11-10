@@ -511,3 +511,71 @@ screen and allow about 30 seconds with power maintained before disconnecting or
 copying the completed logs. **Exit Always Offroad** resumes normal onroad startup.
 The delay allows recording to finish; it is not a substitute for the offroad
 transition. Actual C3X/C4 operation and SPI throughput still require device tests.
+
+### Follow-up from the C3X route (nonstandard USB revision and startup recording)
+
+The captured USB descriptors confirmed **0403:6011**, four interfaces, 512-byte
+Bulk endpoints on Interface B and **bcdDevice 36.00 (`0x3600`)**. The bundled
+libftdi only recognized the factory FT4232H revision `0x0800`; the unmatched
+revision left its initial `TYPE_BM` value unchanged. That value was a fallback,
+not a positive identification of BM hardware. Native logs now distinguish an
+unmatched descriptor from the applied `flexray_6011_h` profile. The USB descriptor
+revision is separate from FPGA CAN firmware identity 1.0.0/build 1.
+
+Successful native calls no longer report leftover errno as a failure. Structured
+`flexray_stats` records are interpreted as statistics, so a field named
+`raw_failed_bytes` with value zero cannot populate the last-error field. Real
+negative returns, short command writes and explicit failure records remain visible.
+
+The receive indicator is now at the **lower left**, above the driver icon and
+bottom developer bar. It reserves space for the right developer column in narrow
+camera views and for small/medium alerts; full-screen alerts still take priority.
+The `/s` numbers are **valid host-received frames per second for each source**,
+not cumulative counts, USB bytes/s, physical bus occupancy or disk acknowledgements.
+Rate calculation uses arrivals independently of delayed startup publication, so
+flushing buffered frames does not inflate the receive rate.
+
+The complete route also exposed a fixed initial gap of 6197 frames between
+publisher totals and rlog, with no subsequent growth. Capture began before the
+recorder had consumed data. The startup path now retains serialized CAN events
+with original host timestamps in a **4 MiB bounded buffer** while continuing to
+read and decode SPI. Only after loggerd writes an invalid empty `flexray` probe
+from this publisher to the active route does its acknowledgement unlock frame
+publication. Probes stay on the private FlexRay transport and never transmit CAN
+on the vehicle. Old acknowledgements cannot unlock a new publisher's probe.
+
+Flushing is bounded per iteration; a slow or unavailable recorder does not pause
+SPI capture. Full-buffer and shutdown-before-ready losses are reported separately
+with frame/byte totals, time and reason. The indicator displays **Preparing
+recording** while valid frames await recorder readiness. `flexrayStatus` records
+`loggerReady`, startup buffered/dropped frame and byte counts, host received totals
+(`src4ReceivedFrames`/`src6ReceivedFrames`) and published totals (`src4Frames`/
+`src6Frames`). Startup byte totals count serialized Event bytes, including message
+overhead; they are separate from FPGA wire-byte and USB payload counters.
+The readiness acknowledgement is not a per-frame durability ACK;
+it does not guarantee against recorder failure after startup. This change does
+not enable offroad acquisition or change the existing logging/control conditions.
+
+Host validation includes starting the actual loggerd after frames have already
+arrived, then verifying complete ordered rlog preservation, including 259-byte
+CAN bodies, rejection of old ACKs, bounded overflow/shutdown accounting, and stable
+arrival rates across a delayed flush. Device confirmation of the startup fix and
+physical screen placement remains required after rebuilding the updated binaries.
+
+The review also hardens reported IPC send failures: data remains queued until a
+send succeeds, published totals advance only on success, and a fresh probe is
+required after transport failure. Probe/ACK read errors are reported with bounded
+frequency while SPI capture continues. Shutdown flushing has a one-second deadline
+and accounts for any remaining backlog; cleanup also runs on an unexpected parent
+exception. `lastError` reflects the latest reported native error, while the first
+native error remains available in the bounded stderr diagnostic record. Repeated
+unchanged native history does not overwrite a newer transport error.
+Loggerd also reports a failed readiness-parameter write with its return code and
+errno rather than silently leaving the collector waiting for acknowledgement.
+
+Readiness is a startup/subscription check. A writer killed after acknowledgement,
+a later disk failure or a transport that silently loses data still requires
+separate monitoring; the acknowledgement is not a per-frame persistence protocol.
+FPGA frames dropped before host acquisition starts cannot be recovered by this
+host startup buffer. Verify the startup published-versus-recorded counts and the
+new lower-left placement on C3X after updating.

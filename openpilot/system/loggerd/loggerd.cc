@@ -309,6 +309,21 @@ void loggerd_thread() {
           bytes_count += handle_encoder_msg(&s, msg, service.name, remote_encoders[sock], encoder_infos_dict[service.name]);
         } else {
           s.logger.write((uint8_t *)msg->getData(), msg->getSize(), in_qlog);
+          if (service.name == "flexray") {
+            capnp::FlatArrayMessageReader probe_reader({(capnp::word *)msg->getData(), msg->getSize() / sizeof(capnp::word)});
+            auto probe = probe_reader.getRoot<cereal::Event>();
+            if (probe.which() == cereal::Event::CAN && !probe.getValid() && probe.getCan().size() == 0) {
+              // Confirm an actively consumed probe from this publisher, after
+              // writing it to the current route. No physical CAN is transmitted.
+              Params ack_params;
+              int ack_result = ack_params.put("FlexrayLoggerAck", std::to_string(probe.getLogMonoTime()));
+              if (ack_result != 0) {
+                int ack_errno = errno;
+                LOGE("FlexRay recorder readiness acknowledgement failed: rc=%d errno=%d (%s)",
+                     ack_result, ack_errno, strerror(ack_errno));
+              }
+            }
+          }
           bytes_count += msg->getSize();
           delete msg;
         }

@@ -54,7 +54,7 @@ def test_retry_and_restart_invalidate_old_receiving():
   status.native({'first_actual_error': 'stage=gpio failed', 'last_actual_error': 'input error'})
   status.retrying('status 1')
   assert display_state(reader(status), 10.1, received_at=10.1) == 'retrying'
-  assert status.snapshot()['lastError'] == 'stage=gpio failed'
+  assert status.snapshot()['lastError'] == 'input error'
   assert status.snapshot()['retryCount'] == 1
   now[0] = 11
   status.starting(2)
@@ -97,3 +97,22 @@ def test_usb_inventory_worker_logs_without_blocking_capture(monkeypatch):
   inventory.report()
   assert len(observed) == 1
   assert json.loads(observed[0].removeprefix('FlexRay USB descriptor: '))['output'] == 'bcdDevice 08.00'
+
+
+def test_logger_wait_state_is_not_receiving():
+  status, now, sent = tracker()
+  status.received([{'src': 4}])
+  status.logger_state(False, 10, 1000, 0, 0)
+  assert status.snapshot()['state'] == 'buffering'
+  assert display_state(reader(status), now[0], received_at=now[0]) == 'buffering'
+
+
+def test_latest_native_error_replaces_earliest_error():
+  status, now, sent = tracker()
+  status.native({'first_actual_error': 'initial setup failure', 'last_actual_error': 'later read failure'})
+  assert status.snapshot()['lastError'] == 'later read failure'
+  status.last_error = 'newer recorder transport failure'
+  status.native({'first_actual_error': 'initial setup failure', 'last_actual_error': 'later read failure'})
+  assert status.snapshot()['lastError'] == 'newer recorder transport failure'
+  status.native({'first_actual_error': None, 'last_actual_error': None})
+  assert status.snapshot()['lastError'] == 'newer recorder transport failure'

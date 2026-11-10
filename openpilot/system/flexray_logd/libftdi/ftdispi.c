@@ -74,7 +74,7 @@
 #define FTDI_CHECK(FUN, MSG, CTX) do { \
   errno = 0; \
   int operation_result = (FUN); \
-  int operation_errno = errno; \
+  int operation_errno = operation_result < 0 ? errno : 0; \
   fprintf(stderr, "native stage=%s rc=%d errno=%d strerror=%s libftdi=%s\n", \
           MSG, operation_result, operation_errno, strerror(operation_errno), operation_result < 0 ? ftdi_get_error_string(&CTX) : "none"); \
   if (operation_result < 0) { errno = operation_errno; return FTDISPI_ERROR_LIB; } \
@@ -586,7 +586,7 @@ done:
   fsc->fc.usb_read_timeout = saved_timeout;
   fsc->fc.usb_write_timeout = saved_write_timeout;
   if (result) fsc->stream_error = result;
-  int saved_errno = errno;
+  int saved_errno = result ? errno : 0;
   fprintf(stderr, "native stage=gpio_response reason=%s rc=%d errno=%d strerror=%s libftdi=%s\n",
           reason, result, saved_errno, strerror(saved_errno), result ? ftdi_get_error_string(&fsc->fc) : "none");
   errno = saved_errno;

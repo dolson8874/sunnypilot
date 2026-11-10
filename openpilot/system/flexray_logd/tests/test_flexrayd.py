@@ -409,3 +409,72 @@ def test_can_monitor_continues_during_native_retry(monkeypatch):
   monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))
   flexrayd.main()
   assert len(observed) == 3
+
+
+def test_success_errno_and_statistics_are_not_native_errors():
+  from openpilot.system.flexray_logd.native_capture import NativeCaptureLog
+  import threading
+  from collections import deque
+
+  native = NativeCaptureLog.__new__(NativeCaptureLog)
+  native.lock = threading.Lock()
+  native.tail = deque(maxlen=8)
+  native.lines = deque(maxlen=native.MAX_LINES)
+  native.initialization = []
+  native.first_error = native.last_error = None
+  native.dropped = 0
+  native.last_read = None
+  native.delivered = 0
+  for line in (
+    b'native stage=interface_reset rc=0 errno=11 strerror=Resource temporarily unavailable libftdi=none',
+    b'native stage=WR INI rc=3 errno=11 strerror=Resource temporarily unavailable libftdi=none',
+    b'flexray_stats: {"raw_failed_bytes":0,"frame_crc_errors":0,"socket_errno":0}',
+    b'SPI: configured_clock=7500000Hz delivered=100 error=0',
+  ):
+    native._line(line)
+  assert native.first_error is None and native.last_error is None
+  native._line(b'native stage=command_write rc=2 expected=6 errno=0 libftdi=none')
+  assert 'command_write' in native.first_error
+  native._line(b'native stage=gpio_response reason=deadline_no_response rc=-6 errno=0')
+  assert 'gpio_response' in native.last_error
+
+
+def test_capture_polls_startup_without_optional_observer(tmp_path, monkeypatch):
+  import sys
+  from openpilot.system.flexray_logd import flexrayd
+  from openpilot.system.flexray_logd.startup import LoggerStartup
+  from openpilot.system.flexray_logd.status import CaptureStatus
+
+  sent = []
+  pm = SimpleNamespace(send=lambda service, message: sent.append((service, message)))
+  telemetry = CaptureStatus(pm)
+  params = SimpleNamespace(get=lambda key: str(gate.probes[-1]) if gate.probes else None)
+  gate = LoggerStartup(pm, params, telemetry)
+  monkeypatch.setattr(flexrayd, 'read_capture', lambda path: envelope())
+  child = tmp_path / 'idle.py'
+  child.write_text('import signal,time\nsignal.signal(signal.SIGINT,lambda *args: exit(0))\ntime.sleep(30)\n')
+  deadline = time.monotonic() + 2
+  run_capture(pm, 'unused', lambda: telemetry.counts[6] > 0 or time.monotonic() > deadline,
+              binary=Path(sys.executable), capture_args=(str(child),), telemetry=telemetry, startup=gate)
+  gate.close()
+  assert gate.ready and telemetry.counts[6] > 0 and not gate.queue
+
+
+def test_unexpected_publisher_error_still_closes_startup_buffer(monkeypatch):
+  from openpilot.system.flexray_logd import flexrayd
+
+  closed = []
+  gate = SimpleNamespace(poll=lambda: None, close=lambda: closed.append(True))
+
+  def broken_capture(*args, **kwargs):
+    raise LookupError('unexpected capture failure')
+
+  monkeypatch.setattr(flexrayd, 'LoggerStartup', lambda *args: gate)
+  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: -1))
+  monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
+  monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))
+  monkeypatch.setattr(flexrayd.signal, 'signal', lambda *args: None)
+  monkeypatch.setattr(flexrayd, 'run_capture', broken_capture)
+  with pytest.raises(LookupError, match='unexpected capture failure'):
+    flexrayd.main()
+  assert closed == [True]

@@ -42,8 +42,18 @@ class NativeCaptureLog:
       if len(self.lines) == self.MAX_LINES:
         self.dropped += 1
       self.lines.append(line)
-      error = ('failed' in line.lower() or re.search(r'(?:rc=-|libusb_code=-|error=-?[1-9]|errno=[1-9])', line)
-               or line.startswith('flexray: ') and not line.startswith('flexray: input='))
+      # Statistics are structured observations, not error sentences. In
+      # particular raw_failed_bytes=0 must never become a failure by substring.
+      error = False
+      if not line.startswith('flexray_stats: '):
+        rc = re.search(r'\brc=(-?\d+)\b', line)
+        expected = re.search(r'\bexpected=(\d+)\b', line)
+        if rc is not None:
+          result = int(rc[1])
+          error = result < 0 or (expected is not None and result != int(expected[1])) or ' failed' in line.lower()
+        else:
+          error = (' failed' in line.lower() or re.search(r'(?:libusb_code=-|error=-?[1-9]|errno=[1-9])', line)
+                   or line.startswith('flexray: ') and not line.startswith('flexray: input='))
       # A detach result alone is not an open/claim failure. Retain it in the
       # initialization trace without presenting it as the capture's cause.
       if error and 'stage=kernel_driver_detach ' not in line:

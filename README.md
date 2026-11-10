@@ -92,7 +92,9 @@ is retained separately. Multiple adapters require `FLEXRAY_FTDI_SERIAL`, and leg
 requires explicit selection. For the investigated vehicle, set `FlexrayDiagnosticBus=1`
 (default -1 disables diagnostics) and recheck actual USB/SPI progress before assessing bandwidth.
 **Show FlexRay Receive Status**, directly below **Record FlexRay Data**, controls an optional
-onroad indicator for actual source 4/6 reception and frame rates. Hiding it does not stop logging.
+onroad indicator at the lower left, clear of developer diagnostics and the driver icon.
+Numbers are source 4/6 received frames per second. Hiding the indicator does not stop logging.
+Startup frames are bounded-buffered until loggerd acknowledges this publisher; startup losses are counted.
 USB descriptor command results and low-rate capture status are also recorded in rlog.
 See [native startup troubleshooting](openpilot/tools/cabana/README.md#native-capture-startup-diagnostics-c3xc4).
 See [Cabana's FlexRay instructions](openpilot/tools/cabana/README.md#flexray-cycle-classification).

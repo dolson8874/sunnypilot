@@ -691,6 +691,11 @@ int ftdi_usb_open_dev(struct ftdi_context *ftdi, libusb_device *dev)
     else if (desc.bcdDevice == 0x1000)
         ftdi->type = TYPE_230X;
 
+    else {
+        fprintf(stderr, "native chip_detection bcdDevice=%04x matched=0 fallback_type=%d (library default, not physical chip identification)\n",
+                desc.bcdDevice, ftdi->type);
+    }
+
     // Determine maximum packet size
     ftdi->max_packet_size = _ftdi_determine_max_packet_size(ftdi, dev);
 
