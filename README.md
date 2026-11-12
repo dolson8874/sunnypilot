@@ -5,17 +5,80 @@
 
 <br><br>
 # 🚘 This branch adds LAND ROVER vehicles to Sunnypilot.
- lrmaster-SP-tici is for C3 branch.
- lrmaster-SP is for C3X branch.
+This README describes **`lrmaster-SP-flexraylog-v2-tici`**, the C3 (comma three)
+FlexRay v2 port based on `lrmaster-SP-tici` (`8caeca71df`), with capture code
+ported from `lrmaster-SP-flexraylog-v2` (`34a9b50b9d`). It retains the C3 base's
+openpilot **0.10.1**, AGNOS **12.8**, Land Rover/Panda configuration and exact
+submodule commits. It does not merge the C3X/C4 master platform or its safety IDs.
 
+| Branch | Target |
+| --- | --- |
+| `lrmaster-SP-flexraylog-v2-tici` | C3 FlexRay v2 port described here; clone command below |
+| `lrmaster-SP-tici` | Existing C3 base |
+| `lrmaster-SP` | C3X/C4 Land Rover master integration |
+| `lrmaster-SP-flexraylog-v2` | C3X/C4 FlexRay v2 |
+| `lrmaster-SP-flexraylog` | Legacy pandad-based FlexRay implementation |
+
+### Installation
+
+Back up an existing installation before using `/data/openpilot` as a clone target.
+Clone this branch from the Land Rover fork:
+
+```bash
+cd /data
+git clone --recurse-submodules --branch lrmaster-SP-flexraylog-v2-tici https://github.com/dolson8874/sunnypilot.git openpilot
+cd /data/openpilot
+scons -j8
 ```
- cd /data
- mv openpilot openpilot.bak
- git clone -b lrmaster-SP-tici --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot
- cd /data/openpilot
- scons -j8
- sudo reboot
+
+Do not update submodules with `--remote`. Use the exact pointers recorded here.
+This is a host-validated port; C3 camera/model/Panda/USB operation and vehicle
+behavior must be confirmed on the actual device before claiming device support.
+
+### FlexRay v2 logging on C3
+
+Settings → Toggles → **Record FlexRay Data** defaults to enabled and applies
+immediately. Acquisition follows loggerd's onroad condition, including passive /
+dashcam operation; engagement is not required. Offroad acquisition is not enabled.
+**Show FlexRay Receive Status** controls only the display. The Qt indicator is at
+the lower left, above the driver icon and bottom developer bar; it is hidden
+while a driving alert is displayed. Source 4/6 numbers mean actual frames/second.
+
+The independent collector is in `system/flexray_logd`, launched by `flexrayd.py`.
+The legacy collector and virtual FTDI Panda code remain in the source but are
+inactive so only v2 acquires the adapter. Pandad alone publishes vehicle `can`;
+v2 publishes standard `Event.can` on `flexray`. Loggerd preserves it in rlog,
+with a bounded 4 MiB startup buffer until the route writer acknowledges a probe.
+The acknowledgement is not a per-frame disk durability guarantee.
+
+CA A0 maps DADC→BCM-side to bus 2 / source 6; CA 80 maps BCM-side→DADC to bus 0 /
+source 4. IDs and flags/cycle/payload/CRC24 remain intact. Cabana supports 259-byte
+bodies, both live channels and cycle multiplexing (cycle at bit 8, payload at bit
+16). The source offset of 4 assumes one physical Panda; revisit before using
+multiple Pandas. No control or physical CAN transmit feature is enabled here.
+
+FT4232H 0403:6011 Interface B uses mode 0 and 7.5 MHz. The explicit board profile
+preserves the known descriptor fallback handling; 10 MHz remains unverified.
+Multiple adapters require `FLEXRAY_FTDI_SERIAL`. Native stderr, USB descriptors,
+queue losses and receive health are recorded through cloudlog/rlog.
+
+`FlexrayDiagnosticBus` defaults to **-1** (disabled). Configure the actual Panda
+bus explicitly, for example `Params().put('FlexrayDiagnosticBus', 1)` from the
+repository Python environment. Observed bus 1 on C3X is not proof of C3 wiring.
+Read-only physical CAN 0x1FA diagnostics retain packed v2 statistics and separate
+0x2F firmware identity; unknown/stale/reset/wrap and rate semantics are preserved.
+
+No `FLEXRAY_LOG_DIR` is needed for rlog. It enables only an optional raw dump to
+an existing writable directory. Queue/file failures do not stop SPI capture.
+
+Host verification commands:
+
+```bash
+make -C system/flexray_logd all test
+pytest system/flexray_logd/tests/test_diagnostics.py system/flexray_logd/tests/test_flexrayd.py system/flexray_logd/tests/test_startup.py system/flexray_logd/tests/test_status.py
+scons system/flexray_logd/flexray_logd system/loggerd/loggerd selfdrive/pandad/pandad selfdrive/ui/ui
 ```
+
 <br><br><br><br>
 
 

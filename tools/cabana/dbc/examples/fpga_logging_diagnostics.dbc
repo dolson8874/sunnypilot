@@ -1,0 +1,36 @@
+VERSION "FPGA packed logging diagnostics v2"
+
+NS_ :
+  CM_
+
+BS_:
+
+BU_: FPGA Host
+
+BO_ 506 FPGA_LOGGING_DIAGNOSTICS: 8 FPGA
+ SG_ VERSION_PAGE M : 0|8@1+ (1,0) [0|255] "" Host
+ SG_ VERSION : 4|4@1+ (1,0) [0|15] "" Host
+ SG_ PAGE : 0|4@1+ (1,0) [0|15] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_0 m32 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_1 m33 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_2 m34 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_3 m35 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_4 m36 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_5 m37 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_6 m38 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_SEQUENCE_PAGE_7 m39 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ SNAPSHOT_BYTES_00_05 m32 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_06_11 m33 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_12_17 m34 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_18_23 m35 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_24_29 m36 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_30_35 m37 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_36_41 m38 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ SNAPSHOT_BYTES_42_47 m39 : 16|48@1+ (1,0) [0|281474976710655] "raw" Host
+ SG_ FIRMWARE_MAJOR m47 : 8|8@1+ (1,0) [0|255] "" Host
+ SG_ FIRMWARE_MINOR m47 : 16|8@1+ (1,0) [0|255] "" Host
+ SG_ FIRMWARE_PATCH m47 : 24|8@1+ (1,0) [0|255] "" Host
+ SG_ FIRMWARE_BUILD_ID m47 : 32|32@1+ (1,0) [0|4294967295] "release" Host
+
+CM_ BO_ 506 "Explicit physical Panda CAN source only; not SPI source 4/6. Full byte0 gating version2/page0..7. Bytes2..7 are six consecutive bytes of a 48-byte snapshot, not a per-page uint32. Use the Python diagnostics assembler for 12 uint32 values, freshness and throughput. No per-frame timestamp or USB delivery acknowledgement.";
+CM_ SG_ 506 FIRMWARE_BUILD_ID "Manually assigned release number reported by the FPGA bitstream, not a Git hash or cryptographic source/build attestation. Identity record 0x2F has no snapshot sequence.";

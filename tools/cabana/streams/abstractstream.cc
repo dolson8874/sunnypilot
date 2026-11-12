@@ -109,7 +109,7 @@ void AbstractStream::setTimeRange(const std::optional<std::pair<double, double>>
   emit timeRangeChanged(time_range_);
 }
 
-void AbstractStream::updateEvent(const MessageId &id, double sec, const uint8_t *data, uint8_t size) {
+void AbstractStream::updateEvent(const MessageId &id, double sec, const uint8_t *data, size_t size) {
   std::lock_guard lk(mutex_);
   messages_[id].compute(id, data, size, sec, getSpeed(), masks_[id]);
   new_msgs_.insert(id);
@@ -199,26 +199,28 @@ const CanEvent *AbstractStream::newEvent(uint64_t mono_time, const cereal::CanDa
 }
 
 void AbstractStream::mergeEvents(const std::vector<const CanEvent *> &events) {
+  if (events.empty()) return;
   static MessageEventsMap msg_events;
-  std::for_each(msg_events.begin(), msg_events.end(), [](auto &e) { e.second.clear(); });
+  for (auto &[id, batch] : msg_events) batch.clear();
+  for (auto *event : events) msg_events[{.source = event->src, .address = event->address}].push_back(event);
 
-  // Group events by message ID
-  for (auto e : events) {
-    msg_events[{.source = e->src, .address = e->address}].push_back(e);
-  }
-
-  if (!events.empty()) {
-    for (const auto &[id, new_e] : msg_events) {
-      if (!new_e.empty()) {
-        auto &e = events_[id];
-        auto pos = std::upper_bound(e.cbegin(), e.cend(), new_e.front()->mono_time, CompareCanEvent());
-        e.insert(pos, new_e.cbegin(), new_e.cend());
-      }
+  // Startup-buffered FlexRay frames may precede already received vehicle CAN.
+  const auto by_time = [](const auto *a, const auto *b) { return a->mono_time < b->mono_time; };
+  const auto merge = [&](auto &destination, auto batch) {
+    if (!std::is_sorted(batch.begin(), batch.end(), by_time)) std::stable_sort(batch.begin(), batch.end(), by_time);
+    const auto old_size = destination.size();
+    const bool overlaps = old_size && destination.back()->mono_time > batch.front()->mono_time;
+    destination.insert(destination.end(), batch.begin(), batch.end());
+    if (overlaps) std::inplace_merge(destination.begin(), destination.begin() + old_size, destination.end(), by_time);
+  };
+  for (auto &[id, batch] : msg_events) {
+    if (!batch.empty()) {
+      std::stable_sort(batch.begin(), batch.end(), by_time);
+      merge(events_[id], batch);
     }
-    auto pos = std::upper_bound(all_events_.cbegin(), all_events_.cend(), events.front()->mono_time, CompareCanEvent());
-    all_events_.insert(pos, events.cbegin(), events.cend());
-    emit eventsMerged(msg_events);
   }
+  merge(all_events_, events);
+  emit eventsMerged(msg_events);
 }
 
 std::pair<CanEventIter, CanEventIter> AbstractStream::eventsInRange(const MessageId &id, std::optional<std::pair<double, double>> time_range) const {

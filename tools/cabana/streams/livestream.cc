@@ -91,7 +91,7 @@ void LiveStream::timerEvent(QTimerEvent *event) {
       // merge events received from live stream thread.
       std::lock_guard lk(lock);
       mergeEvents(received_events_);
-      uint64_t last_received_ts = !received_events_.empty() ? received_events_.back()->mono_time : 0;
+      uint64_t last_received_ts = !all_events_.empty() ? all_events_.back()->mono_time : 0;
       lastest_event_ts = std::max(lastest_event_ts, last_received_ts);
       received_events_.clear();
     }

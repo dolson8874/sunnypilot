@@ -155,3 +155,66 @@ TEST_CASE("parse_opendbc") {
   INFO(errors.join("\n").toStdString());
   REQUIRE(errors.empty());
 }
+
+// Exercise the real Cabana event storage with full-length FlexRay bodies.
+#include "tools/cabana/streams/abstractstream.h"
+
+class FlexrayTestStream : public DummyStream {
+public:
+  explicit FlexrayTestStream(QObject *parent) : DummyStream(parent) {}
+  using AbstractStream::mergeEvents;
+  using AbstractStream::newEvent;
+};
+
+TEST_CASE("FlexRay length, source separation and late startup ordering", "[flexray]") {
+  QObject parent;
+  FlexrayTestStream stream(&parent);
+  capnp::MallocMessageBuilder message;
+  auto event = message.initRoot<cereal::Event>();
+  auto frames = event.initCan(3);
+  std::vector<uint8_t> body(259);
+  for (size_t i = 0; i < body.size(); ++i) body[i] = i;
+  body[0] = 3;
+  body[1] = 7;
+  for (int i = 0; i < 3; ++i) {
+    frames[i].setAddress(0x47f);
+    frames[i].setSrc(i == 1 ? 4 : 6);
+    frames[i].setDat(kj::arrayPtr(body.data(), body.size()));
+  }
+  const auto *late = stream.newEvent(300, frames[0].asReader());
+  const auto *early = stream.newEvent(100, frames[1].asReader());
+  const auto *middle = stream.newEvent(200, frames[2].asReader());
+  REQUIRE(late->size == 259);
+  REQUIRE(std::equal(body.begin(), body.end(), late->dat));
+  stream.mergeEvents({late});
+  stream.mergeEvents({middle, early});
+  REQUIRE(stream.allEvents() == std::vector<const CanEvent *>{early, middle, late});
+  REQUIRE(stream.events({6, 0x47f}) == std::vector<const CanEvent *>{middle, late});
+  REQUIRE(stream.events({4, 0x47f}) == std::vector<const CanEvent *>{early});
+
+  cabana::Signal cycle;
+  cycle.name = "CYCLE";
+  cycle.start_bit = 8;
+  cycle.size = 6;
+  cycle.is_little_endian = true;
+  cycle.is_signed = false;
+  cycle.factor = 1;
+  cycle.offset = 0;
+  cycle.update();
+  cabana::Signal value;
+  value.name = "VALUE";
+  value.start_bit = 16;
+  value.size = 8;
+  value.is_little_endian = true;
+  value.is_signed = false;
+  value.factor = 1;
+  value.offset = 0;
+  value.multiplexor = &cycle;
+  value.multiplex_value = 7;
+  value.update();
+  double decoded = 0;
+  REQUIRE(value.getValue(late->dat, late->size, &decoded));
+  REQUIRE(decoded == body[2]);
+  value.multiplex_value = 8;
+  REQUIRE_FALSE(value.getValue(late->dat, late->size, &decoded));
+}

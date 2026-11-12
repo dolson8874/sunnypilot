@@ -27,6 +27,9 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 
   stacked_layout->addWidget(split_wrapper);
 
+  flexray_status = new FlexrayStatusWidget(this);
+  stacked_layout->addWidget(flexray_status);
+
   alerts = new OnroadAlerts(this);
   alerts->setAttribute(Qt::WA_TransparentForMouseEvents, true);
   stacked_layout->addWidget(alerts);
@@ -50,6 +53,13 @@ void OnroadWindow::updateState(const UIState &s) {
 
   alerts->updateState(s);
   nvg->updateState(s);
+
+#ifdef SUNNYPILOT
+  const int dev_info = s.scene.dev_ui_info;
+#else
+  const int dev_info = 0;
+#endif
+  flexray_status->refresh(s.scene.started, dev_info, alerts->hasAlert());
 
   QColor bgColor = bg_colors[s.status];
   if (bg != bgColor) {

@@ -283,7 +283,25 @@ struct ModelDataV2SP @0xa1680744031fdb2d {
     turnRight @2;
   }
 
-struct CustomReserved10 @0xcb9fd56c7057593a {
+struct FlexrayStatus @0xcb9fd56c7057593a {
+  state @0 :Text;
+  pid @1 :UInt32;
+  retryCount @2 :UInt32;
+  lastReadMonoTime @3 :UInt64;
+  lastFrameMonoTime @4 :UInt64;
+  src4Frames @5 :UInt64;
+  src6Frames @6 :UInt64;
+  src4Rate @7 :Float32;
+  src6Rate @8 :Float32;
+  lastError @9 :Text;
+  usbDeliveredBytes @10 :UInt64;
+  loggerReady @11 :Bool;
+  startupBufferedFrames @12 :UInt64;
+  startupBufferedBytes @13 :UInt64;
+  startupDroppedFrames @14 :UInt64;
+  startupDroppedBytes @15 :UInt64;
+  src4ReceivedFrames @16 :UInt64;
+  src6ReceivedFrames @17 :UInt64;
 }
 
 struct CustomReserved11 @0xc2243c65e0340384 {

@@ -27,6 +27,20 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       true,
     },
     {
+      "FlexrayLoggingEnabled",
+      tr("Record FlexRay Data"),
+      tr("Record FPGA FlexRay data in driving logs, including dashcam mode. A capture board is required. Changes apply immediately."),
+      "../assets/offroad/icon_blank.png",
+      false,
+    },
+    {
+      "FlexrayShowStatus",
+      tr("Show FlexRay Receive Status"),
+      tr("Show actual source 4/6 frames per second at the lower left. Hiding this display does not stop recording."),
+      "../assets/offroad/icon_blank.png",
+      false,
+    },
+    {
       "ExperimentalMode",
       tr("Experimental Mode"),
       "",

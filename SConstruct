@@ -358,6 +358,7 @@ SConscript(['rednose/SConscript'])
 SConscript([
   'system/ubloxd/SConscript',
   'system/loggerd/SConscript',
+  'system/flexray_logd/SConscript',
 ])
 if arch != "Darwin":
   SConscript([

@@ -23,6 +23,8 @@ _services: dict[str, tuple] = {
   "gpsNMEA": (True, 9.),
   "deviceState": (True, 2., 1),
   "touch": (True, 20., 1),
+  "flexray": (True, 0.),  # Event.can transport; rlog only.
+  "flexrayStatus": (True, 1., 1),
   "can": (True, 100., 2053),  # decimation gives ~3 msgs in a full segment
   "controlsState": (True, 100., 10),
   "selfdriveState": (True, 100., 10),

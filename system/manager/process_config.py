@@ -7,6 +7,7 @@ from openpilot.common.params import Params
 from openpilot.system.hardware import PC, TICI
 from openpilot.system.manager.process import PythonProcess, NativeProcess, DaemonProcess
 from openpilot.system.hardware.hw import Paths
+from openpilot.system.flexray_logd.manager import FlexrayProcess, flexray_logging
 
 from openpilot.sunnypilot.mapd.mapd_manager import MAPD_PATH
 
@@ -104,8 +105,8 @@ def and_(*fns):
 procs = [
   DaemonProcess("manage_athenad", "system.athena.manage_athenad", "AthenadPid"),
 
-  # dolson for flexray_log
-  NativeProcess("flexray_logd", "selfdrive/pandad/flexray_logd", ["./flexray_logd"], always_run),
+  # Standalone capture; the legacy virtual-Panda collector remains inactive.
+  FlexrayProcess("flexray_logd", "openpilot.system.flexray_logd.flexrayd", flexray_logging, enabled=not PC),
   NativeProcess("loggerd", "system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "system/loggerd", ["./encoderd", "--stream"], notcar),

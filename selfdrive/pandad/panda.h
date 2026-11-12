@@ -1,6 +1,7 @@
 #pragma once
 
-#define _USE_FLEXRAY_HARNESS_   // dolson for Flexray logging
+// Legacy virtual-Panda FlexRay path retained but disabled; v2 owns capture.
+// #define _USE_FLEXRAY_HARNESS_
 
 #include <cstdint>
 #include <ctime>

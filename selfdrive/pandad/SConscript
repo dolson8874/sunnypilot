@@ -12,4 +12,4 @@ Export('pandad_python')
 if GetOption('extras'):
   env.Program('tests/test_pandad_usbprotocol', ['tests/test_pandad_usbprotocol.cc'], LIBS=[panda] + libs)
 
-SConscript('flexray_logd/SConscript', exports=['env', 'common', 'messaging'])
+# Legacy collector retained but not built; see system/flexray_logd.

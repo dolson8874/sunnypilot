@@ -20,16 +20,20 @@ void DeviceStream::streamThread() {
 
   std::unique_ptr<Context> context(Context::create());
   std::string address = zmq_address.isEmpty() ? "127.0.0.1" : zmq_address.toStdString();
-  std::unique_ptr<SubSocket> sock(SubSocket::create(context.get(), "can", address));
-  assert(sock != NULL);
-  // run as fast as messages come in
+  std::unique_ptr<SubSocket> can_sock(SubSocket::create(context.get(), "can", address));
+  std::unique_ptr<SubSocket> flexray_sock(SubSocket::create(context.get(), "flexray", address));
+  assert(can_sock && flexray_sock);
+  std::unique_ptr<Poller> poller(Poller::create());
+  poller->registerSocket(can_sock.get());
+  poller->registerSocket(flexray_sock.get());
   while (!QThread::currentThread()->isInterruptionRequested()) {
-    std::unique_ptr<Message> msg(sock->receive(true));
-    if (!msg) {
-      QThread::msleep(50);
-      continue;
+    for (auto *sock : poller->poll(50)) {
+      for (int i = 0; i < 200; ++i) {
+        std::unique_ptr<Message> msg(sock->receive(true));
+        if (!msg) break;
+        handleEvent(kj::ArrayPtr<capnp::word>((capnp::word*)msg->getData(), msg->getSize() / sizeof(capnp::word)));
+      }
     }
-    handleEvent(kj::ArrayPtr<capnp::word>((capnp::word*)msg->getData(), msg->getSize() / sizeof(capnp::word)));
   }
 }
 

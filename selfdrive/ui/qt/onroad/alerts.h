@@ -11,6 +11,7 @@ public:
   OnroadAlerts(QWidget *parent = 0) : QWidget(parent) {}
   void updateState(const UIState &s);
   void clear();
+  bool hasAlert() const { return alert.size != cereal::SelfdriveState::AlertSize::NONE; }
 
 protected:
   struct Alert {

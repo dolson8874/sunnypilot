@@ -10,7 +10,7 @@
 
 const QString UNTITLED = "untitled";
 const QString DEFAULT_NODE_NAME = "XXX";
-constexpr int CAN_MAX_DATA_BYTES = 64;
+constexpr int CAN_MAX_DATA_BYTES = 259;  // FlexRay flags/cycle + payload + CRC24.
 
 struct MessageId {
   uint8_t source = 0;

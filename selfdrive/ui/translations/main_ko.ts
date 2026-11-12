@@ -2301,6 +2301,10 @@ Warning: You are on a metered connection!</source>
         <source>Enable the sunnypilot longitudinal control (alpha) toggle to allow Experimental mode.</source>
         <translation>실험 모드를 활성화하려면 sunnypilot 가감속 제어(알파) 토글을 켜세요.</translation>
     </message>
+    <message><source>Record FlexRay Data</source><translation>FlexRay 데이터 기록</translation></message>
+    <message><source>Record FPGA FlexRay data in driving logs, including dashcam mode. A capture board is required. Changes apply immediately.</source><translation>대시캠 모드를 포함한 주행 로그에 FPGA FlexRay 데이터를 기록합니다. 수집 보드가 필요하며 변경은 즉시 적용됩니다.</translation></message>
+    <message><source>Show FlexRay Receive Status</source><translation>FlexRay 수신 정보 표시</translation></message>
+    <message><source>Show actual source 4/6 frames per second at the lower left. Hiding this display does not stop recording.</source><translation>왼쪽 아래에 소스 4/6의 초당 수신 프레임 수를 표시합니다. 표시를 꺼도 기록은 계속됩니다.</translation></message>
 </context>
 <context>
     <name>TreeOptionDialog</name>
@@ -2393,5 +2397,18 @@ Warning: You are on a metered connection!</source>
         <source>Forget</source>
         <translation>삭제</translation>
     </message>
+</context>
+<context>
+    <name>FlexrayStatusWidget</name>
+    <message><source>Waiting for data</source><translation>데이터 대기 중</translation></message>
+    <message><source>Recording disabled</source><translation>기록 꺼짐</translation></message>
+    <message><source>Status unavailable</source><translation>수신 확인 불가</translation></message>
+    <message><source>Retrying capture</source><translation>수집 재시도 중</translation></message>
+    <message><source>Retries: %1</source><translation>재시도: %1</translation></message>
+    <message><source>Capture stopped</source><translation>수집 중지</translation></message>
+    <message><source>Preparing recording</source><translation>기록 준비 중</translation></message>
+    <message><source>Buffered: %1 frames</source><translation>보관: %1개</translation></message>
+    <message><source>Receiving</source><translation>수신 중</translation></message>
+    <message><source>Starting capture</source><translation>수집 시작 중</translation></message>
 </context>
 </TS>

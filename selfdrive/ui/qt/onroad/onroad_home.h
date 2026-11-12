@@ -1,6 +1,7 @@
 #pragma once
 
 #include "selfdrive/ui/qt/onroad/alerts.h"
+#include "selfdrive/ui/qt/onroad/flexray_status.h"
 
 #ifdef SUNNYPILOT
 #include "selfdrive/ui/sunnypilot/qt/onroad/annotated_camera.h"
@@ -19,6 +20,7 @@ public:
 protected:
   void paintEvent(QPaintEvent *event);
   OnroadAlerts *alerts;
+  FlexrayStatusWidget *flexray_status;
   AnnotatedCameraWidget *nvg;
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QHBoxLayout* split;
