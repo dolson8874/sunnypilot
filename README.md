@@ -6,7 +6,7 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`lrmaster-SP-flexraylog-v2`**, standalone FlexRay capture on the Land Rover upstream-master integration for C3X and C4.
+This README describes **`lrmaster-SP-flexraylog-v2-wip`**, the C3X/C4 work-in-progress branch with standalone FlexRay capture, selected DADC original logging (source 5), and read-only cruise/radar analysis observations.
 `lrmaster-SP` supplies the master integration; the release-based FlexRay branch remains separate.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
@@ -17,7 +17,8 @@ The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 | `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
-| `lrmaster-SP-flexraylog-v2` | Master-based FlexRay capture for C3X and C4; clone command below |
+| `lrmaster-SP-flexraylog-v2` | Separate master-based FlexRay capture branch for C3X and C4 |
+| `lrmaster-SP-flexraylog-v2-wip` | This branch: FlexRay source 4/5/6 logging and read-only analysis observations for C3X and C4; clone command below |
 
 ### Clone this branch
 
@@ -25,12 +26,24 @@ Back up any existing `/data/openpilot` installation before cloning into that pat
 
 ```bash
 cd /data
-git clone --recurse-submodules --branch lrmaster-SP-flexraylog-v2 https://github.com/dolson8874/sunnypilot.git openpilot
+git clone --recurse-submodules --branch lrmaster-SP-flexraylog-v2-wip https://github.com/dolson8874/sunnypilot.git openpilot
 cd /data/openpilot
 scons -j8
 ```
 
 This branch includes the standalone FlexRay collector and records its frames in normal driving logs.
+
+To update an existing checkout of this WIP branch, first confirm that `git branch --show-current`
+prints `lrmaster-SP-flexraylog-v2-wip` and review `git status`. With no local changes to preserve:
+
+```bash
+cd /data/openpilot
+git pull --ff-only origin lrmaster-SP-flexraylog-v2-wip
+git submodule update --init --recursive
+```
+
+Pulling the separate `lrmaster-SP-flexraylog-v2` branch does not install these WIP changes.
+The WIP branch has host synthetic validation; actual device/FPGA/vehicle validation remains outstanding.
 
 `--recurse-submodules` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.
@@ -144,7 +157,7 @@ https://docs.sunnypilot.ai/ is your one stop shop for everything from features t
 First, check out this list of items you'll need to [get started](https://community.sunnypilot.ai/t/getting-started-using-sunnypilot-in-your-supported-car/251).
 
 ## Installation
-Next, refer to the sunnypilot community forum for [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
+For this Land Rover WIP branch, use [Clone this branch](#clone-this-branch) above. For general upstream setup, refer to the sunnypilot community forum for [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
 
 ## 🎆 Pull Requests
 We welcome both pull requests and issues on GitHub. Bug fixes are encouraged.
