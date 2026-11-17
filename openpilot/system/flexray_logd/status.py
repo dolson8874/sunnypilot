@@ -21,8 +21,9 @@ class CaptureStatus:
     self.usb_bytes = 0
     self.logger = {'loggerReady': True, 'startupBufferedFrames': 0, 'startupBufferedBytes': 0,
                    'startupDroppedFrames': 0, 'startupDroppedBytes': 0}
-    self.counts = {4: 0, 6: 0}
-    self.arrival_counts = {4: 0, 6: 0}
+    # Track selected originals for capture health without changing the UI schema.
+    self.counts = {4: 0, 5: 0, 6: 0}
+    self.arrival_counts = {4: 0, 5: 0, 6: 0}
     self.rates = {4: 0.0, 6: 0.0}
     self.previous_counts = dict(self.arrival_counts)
     self.sample_at = self.clock()
@@ -101,7 +102,7 @@ class CaptureStatus:
       return
     dt = now - self.sample_at
     if dt >= 1.0:
-      self.rates = {src: (self.arrival_counts[src] - self.previous_counts[src]) / dt for src in self.counts}
+      self.rates = {src: (self.arrival_counts[src] - self.previous_counts[src]) / dt for src in self.rates}
       self.previous_counts = dict(self.arrival_counts)
       self.sample_at = now
     message = messaging.new_message('flexrayStatus')

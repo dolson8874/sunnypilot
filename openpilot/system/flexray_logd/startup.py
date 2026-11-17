@@ -36,7 +36,7 @@ class LoggerStartup:
     message.valid = True
     message.can = frames
     data = message.to_bytes()
-    counts = {src: sum(f['src'] == src for f in frames) for src in (4, 6)}
+    counts = {src: sum(f['src'] == src for f in frames) for src in (4, 5, 6)}
     received_at = self.clock()
     self.telemetry.ingested_counts(counts)
     if self.ready and not self.queue and self._send(data, counts, received_at):

@@ -48,14 +48,14 @@ static void frame_crc(char *frame, size_t size) {
   p[size - 3] = crc >> 16; p[size - 2] = crc >> 8; p[size - 1] = crc;
 }
 
-static void test_bidirectional(void) {
+static void test_three_sources(void) {
   char frame[266], input[2048], output[2048];
-  for (unsigned bus = 0; bus <= 2; bus += 2) {
+  for (unsigned bus = 0; bus <= 2; ++bus) {
     for (unsigned words = 0; words <= 127; ++words) {
       size_t size = make_frame(frame, 0x47f, 31, 63, words);
       frame[1] = 0x80 | (bus << 4);
-      if (words >= 2) {
-        memcpy(frame + 9, "\xca\xa0\xca\x80", 4);
+      if (words >= 3) {
+        memcpy(frame + 9, "\xca\xa0\xca\x80\xca\x90", 6);
         frame_crc(frame, size);
       }
       for (size_t split = 0; split <= size; ++split) {
@@ -71,8 +71,12 @@ static void test_bidirectional(void) {
         }
         assert(n == size - 1 && pending == 0);
         check_output(output, frame, 0x47f, size);
-        assert(stats.direction_frames[bus == 2] == 1);
-        assert(stats.direction_wire_bytes[bus == 2] == size);
+        assert(stats.direction_frames[0] == (bus == 0));
+        assert(stats.direction_frames[1] == (bus == 2));
+        assert(stats.original_frames == (bus == 1));
+        assert(stats.direction_wire_bytes[0] == (bus == 0 ? size : 0));
+        assert(stats.direction_wire_bytes[1] == (bus == 2 ? size : 0));
+        assert(stats.original_wire_bytes == (bus == 1 ? size : 0));
         assert(stats.resyncs == 0 && stats.noise_bytes == 0 && stats.padding_bytes == 0);
       }
     }
@@ -83,20 +87,22 @@ static void test_bidirectional(void) {
     input[1] = marker;
     size_t pending = size;
     size_t n = decode_flexray_buffer(input, &pending, output, sizeof(output));
-    assert(n == ((marker == 0x80 || marker == 0xa0) ? size - 1 : 0));
+    assert(n == ((marker == 0x80 || marker == 0x90 || marker == 0xa0) ? size - 1 : 0));
   }
-  // The same ID on both directions stays separate, with zero padding excluded.
+  // The same ID on all three sources stays separate, with padding excluded.
   memset(input, 0, 3);
   memcpy(input + 3, frame, size);
   memcpy(input + 3 + size, frame, size);
-  input[4 + size] = 0x80;
-  memset(input + 3 + size * 2, 0, 5);
-  size_t pending = 8 + size * 2;
+  input[4 + size] = 0x90;
+  memcpy(input + 3 + size * 2, frame, size);
+  input[4 + size * 2] = 0x80;
+  memset(input + 3 + size * 3, 0, 5);
+  size_t pending = 8 + size * 3;
   struct flexray_decode_stats stats = {0};
-  assert(decode_flexray_buffer_stats(input, &pending, output, sizeof(output), &stats) == (size - 1) * 2);
+  assert(decode_flexray_buffer_stats(input, &pending, output, sizeof(output), &stats) == (size - 1) * 3);
   assert(pending == 0 && stats.padding_bytes == 8 && stats.resyncs == 0);
-  assert(stats.direction_frames[0] == 1 && stats.direction_frames[1] == 1);
-  assert(output[0] == 4 && output[size - 1] == 0);
+  assert(stats.direction_frames[0] == 1 && stats.direction_frames[1] == 1 && stats.original_frames == 1);
+  assert(output[0] == 4 && output[size - 1] == 2 && output[(size - 1) * 2] == 0);
   memcpy(input, frame, size);
   memcpy(input + size, frame, size);
   input[size + 1] = 0x80;
@@ -107,22 +113,36 @@ static void test_bidirectional(void) {
   assert(decode_flexray_buffer_stats(input, &pending, output, size - 1, &stats) == size - 1);
   assert(pending == 0 && output[0] == 0 && stats.frames == 2 && stats.resyncs == 0);
   // CRC/metadata corruption, insertion, deletion and nonpadding junk all recover.
-  for (unsigned kind = 0; kind < 5; ++kind) {
-    memcpy(input, frame, size);
-    size_t damaged = size;
-    if (kind == 0) input[3] ^= 1;
-    if (kind == 1) input[size - 1] ^= 1;
-    if (kind == 2) input[7] ^= 1;
-    if (kind == 3) { memmove(input + 11, input + 10, size - 10); input[10] = 0x55; damaged++; }
-    if (kind == 4) { memmove(input + 10, input + 11, size - 11); damaged--; }
-    memcpy(input + damaged, frame, size);
-    pending = damaged + size;
-    stats = (struct flexray_decode_stats){0};
-    assert(decode_flexray_buffer_stats(input, &pending, output, sizeof(output), &stats) == size - 1);
-    assert(stats.frames == 1 && stats.resyncs == 1);
-    assert(stats.noise_bytes + stats.padding_bytes + stats.direction_wire_bytes[1] + pending == damaged + size);
-    assert(stats.header_crc_errors + stats.payload_crc_errors + stats.metadata_errors > 0);
+  for (unsigned bus = 0; bus <= 2; ++bus) {
+    frame[1] = 0x80 | (bus << 4);
+    for (unsigned kind = 0; kind < 5; ++kind) {
+      memcpy(input, frame, size);
+      size_t damaged = size;
+      if (kind == 0) input[3] ^= 1;
+      if (kind == 1) input[size - 1] ^= 1;
+      if (kind == 2) input[7] ^= 1;
+      if (kind == 3) { memmove(input + 11, input + 10, size - 10); input[10] = 0x55; damaged++; }
+      if (kind == 4) { memmove(input + 10, input + 11, size - 11); damaged--; }
+      memcpy(input + damaged, frame, size);
+      pending = damaged + size;
+      stats = (struct flexray_decode_stats){0};
+      assert(decode_flexray_buffer_stats(input, &pending, output, sizeof(output), &stats) == size - 1);
+      assert(stats.frames == 1 && stats.resyncs == 1);
+      assert(stats.noise_bytes + stats.padding_bytes + stats.direction_wire_bytes[0] + stats.direction_wire_bytes[1] + stats.original_wire_bytes + pending == damaged + size);
+      assert(stats.header_crc_errors + stats.payload_crc_errors + stats.metadata_errors > 0);
+    }
   }
+  frame[1] = 0xa0;
+  // A full original candidate waits without being counted when output is too small.
+  frame[1] = 0x90;
+  memcpy(input, frame, size);
+  pending = size;
+  stats = (struct flexray_decode_stats){0};
+  assert(decode_flexray_buffer_stats(input, &pending, output, size - 2, &stats) == 0);
+  assert(pending == size && stats.frames == 0 && stats.original_frames == 0);
+  assert(decode_flexray_buffer_stats(input, &pending, output, size - 1, &stats) == size - 1);
+  assert(pending == 0 && stats.original_frames == 1 && output[0] == 2);
+  frame[1] = 0xa0;
   // Across byte-at-a-time reads, padding isn't a resync and final CA is retained.
   pending = 0;
   stats = (struct flexray_decode_stats){0};
@@ -135,11 +155,11 @@ static void test_bidirectional(void) {
   input[0] = 0; input[1] = 0xca; pending = 2;
   assert(decode_flexray_buffer_stats(input, &pending, output, 0, &stats) == 0);
   assert(pending == 1 && (uint8_t)input[0] == 0xca && stats.padding_bytes == 1);
-  puts("decoder: both markers, all word lengths/splits, embedded markers, padding, damage recovery OK");
+  puts("decoder: three markers, all word lengths/splits, separate statistics, embedded markers, padding, recovery OK");
 }
 
 int main(void) {
-  test_bidirectional();
+  test_three_sources();
   char frame[266], input[600], output[600];
   size_t size = make_frame(frame, 0x7ff, 31, 63, 127);
   for (size_t split = 0; split < size; ++split) {

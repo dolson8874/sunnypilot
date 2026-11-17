@@ -27,7 +27,7 @@ def bits(value, width):
 
 
 def frame(bus=2, payload=b'\x12\x34\x56\x78', identifier=0x47F, flags=3, counter=7):
-  assert bus in (0, 2) and len(payload) <= 254 and len(payload) % 2 == 0
+  assert bus in (0, 1, 2) and len(payload) <= 254 and len(payload) % 2 == 0
   words = len(payload) // 2
   header_crc = crc(bits((flags << 18) | (identifier << 7) | words, 20), 11, 0x1A, 0x385)
   header = ((flags << 35) | (identifier << 24) | (words << 17) | (header_crc << 6) | counter).to_bytes(5, 'big')
@@ -39,13 +39,14 @@ class CaptureTest(unittest.TestCase):
   def run_binary(self, name, *args):
     return subprocess.run([str(ROOT / name), *map(str, args)], capture_output=True, timeout=5)
 
-  def test_bidirectional_replay_stats_and_raw_metadata(self):
+  def test_three_source_replay_stats_and_raw_metadata(self):
     with tempfile.TemporaryDirectory() as directory:
       path = pathlib.Path(directory)
       bcm = frame(0, payload=b'')
-      payload = b'\xca\xa0\xca\x80' + bytes(range(250))
+      payload = b'\xca\xa0\xca\x80\xca\x90' + bytes(range(248))
       dadc = frame(2, payload=payload)
-      data = b'\0' * 17 + bcm + dadc + b'\0' * 24
+      original = frame(1, payload=payload, identifier=0x1f)
+      data = b'\0' * 17 + bcm + dadc + original + b'\0' * 24
       source = path / 'input'
       source.write_bytes(data)
       result = self.run_binary('flexray_dump', '-f', source, '-o', path)
@@ -56,6 +57,8 @@ class CaptureTest(unittest.TestCase):
       self.assertEqual(stats['bulk_bytes'], len(data))
       self.assertEqual(stats['dadc_frames'], 1)
       self.assertEqual(stats['bcm_frames'], 1)
+      self.assertEqual(stats['dadc_original_frames'], 1)
+      self.assertEqual(stats['dadc_original_wire_bytes'], len(original))
       self.assertEqual(stats['dadc_wire_bytes'], len(dadc))
       self.assertEqual(stats['bcm_wire_bytes'], len(bcm))
       self.assertEqual(stats['padding_bytes'], 41)

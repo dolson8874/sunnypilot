@@ -47,6 +47,8 @@ struct flexray_decode_stats {
   uint64_t frames, noise_bytes, padding_bytes, header_crc_errors, payload_crc_errors, metadata_errors;
   // Index 0: wire bus 0 (BCM-side -> DADC), index 1: wire bus 2 (DADC -> BCM).
   uint64_t direction_frames[2], direction_wire_bytes[2], resyncs;
+  // CA90 / wire bus 1: selected DADC originals, separate from both outputs.
+  uint64_t original_frames, original_wire_bytes;
   bool recovering;
 };
 

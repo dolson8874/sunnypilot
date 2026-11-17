@@ -124,7 +124,7 @@ Existing captures with already transformed IDs are not converted back by loading
 
 For more information, see the [openpilot wiki](https://github.com/commaai/openpilot/wiki/Cabana)
 
-### Bidirectional FPGA SPI logs
+### FPGA SPI output and selected original logs
 
 The receiver preserves bulk-read fragments; USB/SPI chunks are not frame boundaries.
 It accepts exactly the following marker/direction pairs:
@@ -133,10 +133,24 @@ It accepts exactly the following marker/direction pairs:
 | --- | --- | --- | --- |
 | `CA A0` | DADC → BCM-side | 2 | 6 |
 | `CA 80` | BCM-side → DADC | 0 | 4 |
+| `CA 90` | Selected DADC originals before override | 1 | 5 |
 
 DADC logs are the FPGA's **modified forwarding output**, not its unmodified input.
 “BCM-side” names the source segment, not a guarantee of transmission by the BCM ECU.
-The original Frame ID and flags/cycle/payload/CRC body are preserved on both sources.
+The original Frame ID and flags/cycle/payload/CRC body are preserved on all three sources.
+Source5 covers all cycles of FPGA-selected IDs 0x1F/0x31/0x0D, not only frames whose
+payload changed. The host preserves it through startup buffering, rlog and Cabana.
+It is not automatically fed into the existing source6 cruise observer or physical CAN.
+Native `dadc_original_frames`/`dadc_original_wire_bytes` are received totals, not FPGA
+original-queue drops. Existing 0x1FA directional counters still describe source6/4;
+shared byte FIFO/SPI counters include source5. Original FPGA queue counters are not
+exported by that diagnostic. Thus input8+9 excludes originals while completed service
+includes them; the old headroom formula is not total three-source headroom. Interpret
+those fields with the actual firmware/host contract and retain source5/drop uncertainty.
+No new sequence/pair/timestamp is added: ID/cycle/proximity alone cannot prove a
+unique original/output pair after wrap, drop or reset. Source5 absence does not prove
+absence of modification. The source5-capable FPGA implementation must be verified
+separately; the old firmware1.0.0/build1 identifier does not prove support.
 Existing cycle multiplexing still starts at bit 8 of the body. Load the appropriate
 FlexRay DBC for each source independently.
 
@@ -228,7 +242,7 @@ the FPGA/Panda wiring is unspecified. Do not interpret every bus's 0x1FA as FPGA
 bytes, but not the CAN IDE flag; an extended frame with the same small numeric ID
 cannot be distinguished at this layer. Verify standard 11-bit framing on hardware.
 
-Select a physical Panda bus **0..3**, not SPI sources 4/6. The following uses bus 0
+Select a physical Panda bus **0..3**, not SPI sources 4/5/6. The following uses bus 0
 only as an example, **not as a detected wiring choice**:
 
 ```bash
@@ -486,8 +500,9 @@ screen; collection, CAN diagnostics and rlog recording continue unchanged.
 
 The driving-screen indicator shows:
 
-- Green **Receiving data**: a source 4/6 frame has actually been published within
-  the last two seconds, with per-source frames/s measured over host intervals.
+- Green **Receiving data**: a source 4/5/6 frame has actually been published within
+  the last two seconds, with source4/6 frames/s measured over host intervals. Source5 refreshes health
+  but has no separate rate field and is not added to either output rate.
 - Yellow **Waiting for data**: capture is active but valid FlexRay frames are absent.
 - Blue **Starting**: initialization is in progress.
 - Red **Retrying connection**: the native collector failed; the retry count is shown.
@@ -503,7 +518,7 @@ alerts take priority over the indicator.
 A separate low-rate `flexrayStatus` service records capture activity, source 4/6
 counts/rates, native read/frame timestamps, retry count and last error in rlog.
 It uses a reserved fork metadata slot; FlexRay frames remain standard `Event.can`
-on `flexray` with original IDs and sources 4/6. pandad still owns physical `can`.
+on `flexray` with original IDs and sources 4/5/6. pandad still owns physical `can`.
 
 For a clean test-route finish, park and disengage, then use the sunnypilot Device
 panel's **Enable Always Offroad** (or switch off ignition/ACC). Wait for the home

@@ -69,7 +69,12 @@ Revisit the offset before adding support for multiple Pandas.
 
 Cabana reads the saved frames through its existing CAN event path and subscribes to both channels for device streaming. To distinguish FlexRay from car CAN,
 FlexRay frames retain source **4 + received bus**. The accepted wire markers are **CA A0**
-(DADC → BCM-side, bus 2 → source **6**) and **CA 80** (BCM-side → DADC, bus 0 → source **4**).
+(DADC → BCM-side, bus 2 → source **6**), **CA 80** (BCM-side → DADC, bus 0 → source **4**),
+and **CA 90** (selected DADC originals, bus 1 → source **5**). Source 5 preserves all cycles
+of FPGA-selected IDs 0x1F/0x31/0x0D, whether or not the output payload was changed.
+It requires the compatible FPGA source5 implementation; firmware 1.0.0/build1 alone does not identify support.
+Original counts and wire bytes are reported separately in native flexray_stats. They do not measure FPGA original-queue drops.
+Source5 is recorded in rlog/Cabana and does not feed the existing source6 cruise observer.
 DADC logs represent the FPGA's modified forwarding output. BCM-side identifies a bus segment,
 not a guarantee that the BCM ECU alone transmitted the frame. Both directions preserve the original frame ID.
 Frame IDs remain unchanged. The old ID/counter classification is retained but disabled;
@@ -91,7 +96,7 @@ requires explicit selection. For the investigated vehicle, set `FlexrayDiagnosti
 (default -1 disables diagnostics) and recheck actual USB/SPI progress before assessing bandwidth.
 **Show FlexRay Receive Status**, directly below **Record FlexRay Data**, controls an optional
 onroad indicator at the lower left, clear of developer diagnostics and the driver icon.
-Numbers are source 4/6 received frames per second. Hiding the indicator does not stop logging.
+Numbers remain source 4/6 received frames per second; source5 also refreshes receive health but is not added to those rates. Hiding the indicator does not stop logging.
 Startup frames are bounded-buffered until loggerd acknowledges this publisher; startup losses are counted.
 USB descriptor command results and low-rate capture status are also recorded in rlog.
 See [native startup troubleshooting](openpilot/tools/cabana/README.md#native-capture-startup-diagnostics-c3xc4).

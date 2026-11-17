@@ -23,8 +23,8 @@ def isolated_prefix():
     yield
 
 
-def envelope(frame_id=0x47F, flags=3, cycle=7, payload=b'\x12\x34', crc=0x123456):
-  return b'\x04' + (frame_id << 3).to_bytes(4, 'little') + bytes([len(payload) // 2, flags, cycle]) + payload + crc.to_bytes(3, 'big')
+def envelope(frame_id=0x47F, flags=3, cycle=7, bus=2, payload=b'\x12\x34', crc=0x123456):
+  return bytes([bus << 1]) + (frame_id << 3).to_bytes(4, 'little') + bytes([len(payload) // 2, flags, cycle]) + payload + crc.to_bytes(3, 'big')
 
 
 def test_default_and_toggle_conditions(tmp_path):
@@ -114,7 +114,7 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
   monkeypatch.setenv('LOGGERD_SEGMENT_LENGTH', '60')
   monkeypatch.delenv('FLEXRAY_LOG_DIR', raising=False)
   source = tmp_path / 'input'
-  source.write_bytes((frame(2) + frame(0)) * 2048)
+  source.write_bytes((frame(2) + frame(0) + frame(1)) * 2048)
   pm = messaging.PubMaster(['flexray', 'can', 'flexrayStatus'])
   from openpilot.system.flexray_logd.status import CaptureStatus
   telemetry = CaptureStatus(pm)
@@ -142,14 +142,16 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
     long_data = bytearray(envelope(payload=bytes(range(254))))
     bcm_data = bytearray(long_data)
     bcm_data[0] = 0
-    long_frame = unpack_frames(long_data + bcm_data)
+    original_data = bytearray(long_data)
+    original_data[0] = 2
+    long_frame = unpack_frames(long_data + bcm_data + original_data)
     pm.send('flexray', frame_message(long_frame))
     deadline = time.monotonic() + 3
     run_capture(Publisher(), str(tmp_path / 'capture.sock'), lambda: count > 100 or time.monotonic() > deadline,
                 capture_args=('-f', str(source), '-l'), telemetry=telemetry)
     telemetry.publish(force=True)
     assert pm.wait_for_readers_to_update('flexrayStatus', timeout=5)
-    assert count > 100
+    assert count > 100 and telemetry.counts[5] > 0
     assert pm.wait_for_readers_to_update('flexray', timeout=5)
   finally:
     process.send_signal(signal.SIGINT)
@@ -165,11 +167,11 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
   statuses = [event.flexrayStatus.to_dict() for path in files for event in LogReader(str(path)) if event.which() == 'flexrayStatus']
   assert any(status['lastFrameMonoTime'] > 0 and status['src4Frames'] > 0 and status['src6Frames'] > 0 for status in statuses)
   recorded = [f.to_dict() for path in files for event in LogReader(str(path)) if event.which() == 'can' for f in event.can]
-  captured = [f for f in recorded if f['src'] in (4, 6)]
-  assert len(captured) == count + 2
-  assert {f['src'] for f in captured} == {4, 6}
+  captured = [f for f in recorded if f['src'] in (4, 5, 6)]
+  assert len(captured) == count + 3
+  assert {f['src'] for f in captured} == {4, 5, 6}
   assert all(f['address'] == 0x47F for f in captured)
-  assert sum(f['dat'] == b'\x03\x07' + bytes(range(254)) + b'\x12\x34\x56' for f in captured) == 2
+  assert sum(f['dat'] == b'\x03\x07' + bytes(range(254)) + b'\x12\x34\x56' for f in captured) == 3
   assert all(f['dat'][:6] == b'\x03\x07\x12\x34\x56\x78' for f in captured if len(f['dat']) != 259)
   assert any(f['src'] == 0 and f['address'] == 0x123 and f['dat'] == b'car CAN' for f in recorded)
   from openpilot.system.flexray_logd.diagnostics import DiagnosticAssembler
@@ -184,7 +186,7 @@ def test_native_capture_is_recorded_in_rlog(tmp_path, monkeypatch):
   assert assembler.last_complete.sequence == 9
   assert assembler.status(0.1)['firmware']['description'] == 'FPGA firmware 1.0.0 / build 1'
   for path in log_root.glob('*/qlog.zst'):
-    assert all(f.src not in (4, 6) for event in LogReader(str(path)) if event.which() == 'can' for f in event.can)
+    assert all(f.src not in (4, 5, 6) for event in LogReader(str(path)) if event.which() == 'can' for f in event.can)
 
 
 def test_manager_restarts_only_exited_publisher(monkeypatch):

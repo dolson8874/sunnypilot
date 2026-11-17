@@ -126,7 +126,7 @@ size_t decode_flexray_buffer_stats(char *data, size_t *psize, char *out, size_t 
 
   while (pos < size) {
     const uint8_t *wire = (const uint8_t *)data + pos;
-    if (wire[0] != 0xCA || (size - pos >= 2 && wire[1] != 0xA0 && wire[1] != 0x80)) {
+    if (wire[0] != 0xCA || (size - pos >= 2 && wire[1] != 0xA0 && wire[1] != 0x80 && wire[1] != 0x90)) {
       if (stats) {
         if (wire[0] == 0) stats->padding_bytes++;
         else { stats->noise_bytes++; stats->recovering = true; }
@@ -302,10 +302,15 @@ size_t decode_flexray_buffer_stats(char *data, size_t *psize, char *out, size_t 
     encoded[5] = header[3] >> 1;
     memcpy(encoded + 6, body, data_len);
     if (stats) {
-      unsigned direction = header[0] == 0xA0;
       stats->frames++;
-      stats->direction_frames[direction]++;
-      stats->direction_wire_bytes[direction] += 7 + data_len;
+      if (header[0] == 0x90) {
+        stats->original_frames++;
+        stats->original_wire_bytes += 7 + data_len;
+      } else {
+        unsigned direction = header[0] == 0xA0;
+        stats->direction_frames[direction]++;
+        stats->direction_wire_bytes[direction] += 7 + data_len;
+      }
       if (stats->recovering) stats->resyncs++;
       stats->recovering = false;
     }

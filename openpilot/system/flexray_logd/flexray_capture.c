@@ -35,6 +35,7 @@ static void report_stats(uint64_t bulk_bytes, uint64_t reads, const struct flexr
   if (file_out->started) flexray_journal_status(file_out->journal, &metadata_lost, &metadata_error);
   fprintf(stderr, "flexray_stats: {\"bulk_bytes\":%llu,\"bulk_reads\":%llu,"
     "\"dadc_frames\":%llu,\"dadc_wire_bytes\":%llu,\"bcm_frames\":%llu,\"bcm_wire_bytes\":%llu,"
+    "\"dadc_original_frames\":%llu,\"dadc_original_wire_bytes\":%llu,"
     "\"padding_bytes\":%llu,\"noise_bytes\":%llu,\"header_crc_errors\":%llu,"
     "\"frame_crc_errors\":%llu,\"metadata_errors\":%llu,\"resyncs\":%llu,\"pending_bytes\":%zu,"
     "\"socket_sent_bytes\":%llu,\"socket_errno\":%d,\"socket_drop_bytes\":%llu,\"socket_drop_batches\":%llu,\"socket_reset_bytes\":%llu,"
@@ -43,6 +44,7 @@ static void report_stats(uint64_t bulk_bytes, uint64_t reads, const struct flexr
     (unsigned long long)bulk_bytes, (unsigned long long)reads,
     (unsigned long long)s->direction_frames[1], (unsigned long long)s->direction_wire_bytes[1],
     (unsigned long long)s->direction_frames[0], (unsigned long long)s->direction_wire_bytes[0],
+    (unsigned long long)s->original_frames, (unsigned long long)s->original_wire_bytes,
     (unsigned long long)s->padding_bytes, (unsigned long long)s->noise_bytes,
     (unsigned long long)s->header_crc_errors, (unsigned long long)s->payload_crc_errors,
     (unsigned long long)s->metadata_errors, (unsigned long long)s->resyncs, pending,

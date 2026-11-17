@@ -109,6 +109,15 @@ void test_flexray_stream() {
   const auto *bcm = stream.newEvent(101, frame.asReader());
   REQUIRE(bcm->src == 4 && bcm->address == event->address);
   REQUIRE(std::equal(data.begin(), data.end(), bcm->dat));
+  REQUIRE(cabana::maxMessageSize(5) == 259);
+  frame.setSrc(5);
+  const auto *original = stream.newEvent(99, frame.asReader());
+  REQUIRE(original->src == 5 && original->address == 15 && original->size == 259);
+  REQUIRE(std::equal(data.begin(), data.end(), original->dat));
+  stream.updateEvent({.source = 5, .address = 15}, 1.0, original->dat, original->size);
+  stream.updateLastMessages();
+  REQUIRE(stream.lastMessage({.source = 5, .address = 15}).dat == data);
+  REQUIRE(stream.lastMessage({.source = 6, .address = 15}).dat.empty());
   REQUIRE(cabana::maxMessageSize(2) == 64);
   stream.updateEvent({.source = 6, .address = 15}, 1.0, event->dat, event->size);
   stream.updateLastMessages();
@@ -120,9 +129,11 @@ void test_flexray_stream() {
   const auto *flexray = stream.newEvent(20, frame.asReader());
   frame.setSrc(2);
   stream.mergeEvents({flexray, stream.newEvent(25, frame.asReader()), stream.newEvent(40, frame.asReader())});
+  frame.setSrc(5);
+  stream.mergeEvents({stream.newEvent(15, frame.asReader())});
   std::vector<uint64_t> times;
   for (const auto *item : stream.allEvents()) times.push_back(item->mono_time);
-  REQUIRE(times == std::vector<uint64_t>({10, 20, 25, 30, 40}));
+  REQUIRE(times == std::vector<uint64_t>({10, 15, 20, 25, 30, 40}));
   times.clear();
   for (const auto *item : stream.events({.source = 2, .address = 15})) times.push_back(item->mono_time);
   REQUIRE(times == std::vector<uint64_t>({10, 25, 30, 40}));

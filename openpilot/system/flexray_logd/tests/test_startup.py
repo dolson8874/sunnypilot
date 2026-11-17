@@ -43,7 +43,7 @@ def test_probe_ack_before_lossless_ordered_flush():
         assert event.valid and event.which() == 'can'
         recorded.extend({'address': f.address, 'src': f.src, 'dat': bytes(f.dat)} for f in event.can)
   assert recorded == frames() * 2
-  assert telemetry.counts == {4: 2, 6: 2}
+  assert telemetry.counts == {4: 2, 5: 0, 6: 2}
   assert telemetry.logger['loggerReady']
   assert gate.dropped_frames == 0
 
@@ -70,7 +70,7 @@ def test_delayed_ack_flush_keeps_earlier_receive_time_and_new_frames_work():
   gate.poll()
   assert telemetry.last_frame == 10
   gate.submit(frames())
-  assert telemetry.last_frame == 11 and telemetry.counts == {4: 2, 6: 2}
+  assert telemetry.last_frame == 11 and telemetry.counts == {4: 2, 5: 0, 6: 2}
   assert not gate.queue
 
 
@@ -96,14 +96,14 @@ def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, mon
     gate = LoggerStartup(pm, params, telemetry)
     expected = []
     for index in range(100):
-      batch = frames()
+      batch = frames() + [{'address': 0x1f, 'src': 5, 'dat': b'\x1f\x3f' + bytes(range(254)) + b'\x12\x34\x56'}]
       batch[0]['address'] += index
       if index == 0:
         batch[1]['dat'] = b'\x03\x07' + bytes(range(254)) + b'\x12\x34\x56'
       expected.extend(batch)
       gate.submit(batch)
     gate.poll()
-    assert not gate.ready and gate.buffered_frames == 200
+    assert not gate.ready and gate.buffered_frames == 300
     process = subprocess.Popen([str(Path(BASEDIR) / 'openpilot/system/loggerd/loggerd')],
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
@@ -114,8 +114,9 @@ def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, mon
         time.sleep(0.02)
       assert gate.ready and gate.buffered_frames == 0
       for _ in range(20):
-        expected.extend(frames())
-        gate.submit(frames())
+        batch = frames() + [{'address': 0x1f, 'src': 5, 'dat': b'\x1f\x3f' + bytes(range(254)) + b'\x12\x34\x56'}]
+        expected.extend(batch)
+        gate.submit(batch)
       assert pm.wait_for_readers_to_update('flexray', timeout=5)
       gate.close()
       assert gate.dropped_frames == 0
@@ -129,7 +130,7 @@ def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, mon
       for f in event.can
     ]
     assert recorded == expected
-    assert telemetry.counts == {4: 120, 6: 120}
+    assert telemetry.counts == {4: 120, 5: 120, 6: 120}
 
 
 def test_buffer_flush_does_not_inflate_receive_rate():
@@ -139,12 +140,12 @@ def test_buffer_flush_does_not_inflate_receive_rate():
     gate.poll()
     clock[0] += 1
     telemetry.publish()
-  assert telemetry.counts == {4: 0, 6: 0}
+  assert telemetry.counts == {4: 0, 5: 0, 6: 0}
   values['FlexrayLoggerAck'] = str(gate.probes[-1])
   gate.poll()
-  assert gate.ready and telemetry.counts == {4: 5, 6: 5}
+  assert gate.ready and telemetry.counts == {4: 5, 5: 0, 6: 5}
   assert telemetry.rates == {4: 1.0, 6: 1.0}
-  assert telemetry.arrival_counts == {4: 5, 6: 5}
+  assert telemetry.arrival_counts == {4: 5, 5: 0, 6: 5}
 
 
 def test_direct_send_failure_buffers_then_recovers_without_loss():
@@ -158,7 +159,7 @@ def test_direct_send_failure_buffers_then_recovers_without_loss():
   gate.pm.send = failed_send
   gate.submit(frames())
   assert not gate.ready and gate.buffered_frames == 2
-  assert telemetry.counts == {4: 0, 6: 0} and gate.dropped_frames == 0
+  assert telemetry.counts == {4: 0, 5: 0, 6: 0} and gate.dropped_frames == 0
   gate.pm.send = original_send
   clock[0] += 0.3
   gate.poll()
@@ -166,7 +167,7 @@ def test_direct_send_failure_buffers_then_recovers_without_loss():
   clock[0] += 0.1
   gate.poll()
   assert gate.ready and gate.buffered_frames == 0
-  assert telemetry.counts == {4: 1, 6: 1}
+  assert telemetry.counts == {4: 1, 5: 0, 6: 1}
   assert gate.buffered_bytes == 0 and gate.dropped_bytes == 0
 
 
@@ -189,7 +190,7 @@ def test_failed_queued_send_preserves_queue_and_shutdown_accounts_it():
   gate.poll()
   assert not gate.ready and len(gate.queue) == 2
   assert gate.buffered_bytes == size and gate.buffered_frames == 4
-  assert telemetry.counts == {4: 0, 6: 0}
+  assert telemetry.counts == {4: 0, 5: 0, 6: 0}
   gate.close()
   assert not gate.queue and gate.dropped_frames == 4 and gate.dropped_bytes == size
   assert gate.buffered_bytes == 0
@@ -240,6 +241,6 @@ def test_close_has_a_deadline_and_counts_unflushed_frames(monkeypatch):
   gate.pm.send = slow_send
   gate.close()
   assert len(sent) == 2 and gate.dropped_frames == 96
-  assert telemetry.counts == {4: 2, 6: 2}
+  assert telemetry.counts == {4: 2, 5: 0, 6: 2}
   assert gate.dropped_bytes + sum(len(data) for _, data in sent) == original_size
   assert not gate.queue and gate.buffered_frames == 0
