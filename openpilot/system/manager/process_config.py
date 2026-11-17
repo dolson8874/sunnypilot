@@ -32,6 +32,9 @@ def logging(started: bool, params: Params, CP: car.CarParams) -> bool:
 def flexray_logging(started: bool, params: Params, CP: car.CarParams) -> bool:
   return logging(started, params, CP) and params.get_bool("FlexrayLoggingEnabled")
 
+def cruise_analysis_logging(started: bool, params: Params, CP: car.CarParams) -> bool:
+  return logging(started, params, CP) and CP.brand == "landrover"
+
 def ublox_available() -> bool:
   return os.path.exists('/dev/ttyHS0') and not os.path.exists('/persist/comma/use-quectel-gps')
 
@@ -124,6 +127,7 @@ procs = [
 
   FlexrayProcess("flexray_logd", "openpilot.system.flexray_logd.flexrayd", flexray_logging,
                 enabled=not PC),
+  FlexrayProcess("cruise_analysis", "openpilot.system.cruise_analysis.analysisd", cruise_analysis_logging, enabled=not PC),
   NativeProcess("loggerd", "openpilot/system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "openpilot/system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "openpilot/system/loggerd", ["./encoderd", "--stream"], or_(livestream, notcar)),

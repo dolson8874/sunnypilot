@@ -1,5 +1,6 @@
 """Optional receive indicator, independent of engagement and logging control."""
 import time
+import json
 import pyray as rl
 
 from openpilot.cereal import log
@@ -57,8 +58,55 @@ class FlexrayStatusRenderer(Widget):
   def __init__(self):
     super().__init__()
     self._font = gui_app.font(FontWeight.MEDIUM)
+    self._analysis_message_time = -1
+    self._analysis_snapshot = {}
+
+  def _render_analysis(self, rect):
+    sm = ui_state.sm
+    if not ui_state.cruise_analysis_show or sm['selfdriveState'].alertSize != log.SelfdriveState.AlertSize.none:
+      return
+    developer = ui_state.developer_ui if gui_app.big_ui() and gui_app.sunnypilot_ui() else DeveloperUiState.OFF
+    placement = indicator_rect(rect, developer in (DeveloperUiState.BOTTOM, DeveloperUiState.BOTH),
+                               developer in (DeveloperUiState.RIGHT, DeveloperUiState.BOTH))
+    if placement is None:
+      return
+    scale = 0.5 if rect.height < 700 else 1.0
+    y = placement.y - (166 if scale < 1 else 132) * scale
+    if y < rect.y + 24 * scale:
+      return
+    text = 'Analysis: unavailable'
+    if ('cruiseAnalysis' in sm.services and sm.valid['cruiseAnalysis'] and
+        sm.recv_frame['cruiseAnalysis'] >= ui_state.started_frame):
+      try:
+        if self._analysis_message_time != sm.logMonoTime['cruiseAnalysis']:
+          self._analysis_snapshot = json.loads(sm['cruiseAnalysis'].snapshotJson)
+          self._analysis_message_time = sm.logMonoTime['cruiseAnalysis']
+        snapshot = self._analysis_snapshot
+        age = time.monotonic() - sm.logMonoTime['cruiseAnalysis'] / 1e9
+        values = {}
+        for frame in snapshot['frames'].values():
+          if frame['excluded'] is None:
+            for name, value in frame['values'].items():
+              frame_age = time.monotonic() - frame['eventMonoTime'] / 1e9
+              state = 'clock?' if frame_age < 0 else 'stale ' if frame_age * 1e9 >= frame.get('staleAfterNs', 0) else ''
+              values[name] = f"{value}({state}{frame_age:.1f}s)"
+        text = ('Analysis: stale' if age >= 2 else 'Candidate RAW / age') + '\n'
+        text += 'H ' + values.get('hRaw', '?') + ' E ' + values.get('eRaw', '?')
+        text += ('\n' if scale < 1 else ' ') + 'DADC ' + values.get('dadcRaw16', '?')
+        text += '\nGAP ' + values.get('gapRaw', '?') + ' Icon ' + values.get('iconRaw', '?')
+      except (ValueError, KeyError, TypeError):
+        text = 'Analysis: decode error'
+    box = rl.Rectangle(placement.x, y, placement.width, (160 if scale < 1 else 126) * scale)
+    rl.draw_rectangle_rounded(box, 0.2, 8, rl.Color(0, 0, 0, 165))
+    font = font_fallback(self._font)
+    for i, line in enumerate(text.splitlines()):
+      preferred_size = (26 if scale < 1 else 22) * scale
+      size = min(preferred_size, preferred_size * (box.width - 24 * scale) / max(1, measure_text_cached(font, line, preferred_size).x))
+      rl.draw_text_ex(font, line, rl.Vector2(box.x + 12 * scale, box.y + (8 + 38 * i) * scale),
+                      size, 0, rl.Color(255, 210, 80, 255))
 
   def _render(self, rect):
+    self._render_analysis(rect)
     if not ui_state.flexray_show_status or ui_state.sm['selfdriveState'].alertSize == log.SelfdriveState.AlertSize.full:
       return
     font = font_fallback(self._font)

@@ -103,6 +103,10 @@ class DeveloperLayout(Widget):
       self._lat_maneuver_toggle,
       self._alpha_long_toggle,
       self._ui_debug_toggle,
+      toggle_item(lambda: tr("Cruise analysis raw display"),
+                  description=lambda: tr("Show candidate raw values. Analysis recording continues when this display is off."),
+                  initial_state=self._params.get_bool("CruiseAnalysisShow"),
+                  callback=lambda enabled: self._params.put_bool("CruiseAnalysisShow", enabled)),
     ], line_separator=True, spacing=0)
 
     # Toggles should be not available to change in onroad state

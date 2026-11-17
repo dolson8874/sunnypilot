@@ -504,7 +504,9 @@ struct FlexrayStatus @0xcb9fd56c7057593a {
   src6ReceivedFrames @17 :UInt64;
 }
 
-struct CustomReserved11 @0xc2243c65e0340384 {
+struct CruiseAnalysis @0xc2243c65e0340384 {
+  version @0 :UInt16;
+  snapshotJson @1 :Text;  # Versioned candidate observation; original raw events remain authoritative.
 }
 
 struct CustomReserved12 @0x9ccdc8676701b412 {

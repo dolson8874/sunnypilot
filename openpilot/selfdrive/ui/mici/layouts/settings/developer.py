@@ -65,6 +65,11 @@ class DeveloperLayoutMici(NavScroller):
                                    description="Grant SSH access to all public keys in your GitHub settings. Only enter your own username.")
     self._ssh_keys_btn.set_click_callback(ssh_keys_callback)
 
+    self._scroller.add_widgets([
+      BigParamControl("cruise analysis raw display", "CruiseAnalysisShow",
+                      description="Candidate raw values. Recording continues when display is off."),
+    ])
+
     # adb, ssh, ssh keys, debug mode, joystick debug mode, longitudinal maneuver mode, ip address
     # ******** Main Scroller ********
     self._adb_toggle = BigCircleParamControl(gui_app.texture("icons_mici/adb_short.png", 82, 82), "AdbEnabled", icon_offset=(0, 12),
