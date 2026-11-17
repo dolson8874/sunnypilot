@@ -86,7 +86,7 @@ _services: dict[str, tuple] = {
   "qNarrowRoadEncodeData": (False, 20., None, QueueSize.BIG),
 
   # sunnypilot
-  "cruiseAnalysis": (True, 2., None),  # Analysis only, full rlog; no qlog.
+  "cruiseAnalysis": (True, 2., None, QueueSize.MEDIUM),  # Analysis only, full rlog; no qlog.
   "flexrayStatus": (True, 1., 1),
   "modelManagerSP": (False, 1., 1, QueueSize.BIG),
   "backupManagerSP": (False, 1., 1, QueueSize.BIG),

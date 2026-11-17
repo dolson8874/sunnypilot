@@ -54,6 +54,11 @@ TurnDirection = custom.ModelDataV2SP.TurnDirection
 IGNORED_SAFETY_MODES = (SafetyModel.silent, SafetyModel.noOutput)
 
 
+def driving_processes_missing(not_running):
+  # Only optional map/analysis services are excluded; keep all driving watchdogs.
+  return not_running - {'mapd', 'cruise_analysis'}
+
+
 class SelfdriveD:
   def __init__(self, CP=None, CP_SP=None):
     self.params = Params()
@@ -149,8 +154,6 @@ class SelfdriveD:
     self.dm_uncertain_alerted = False
     self.state_machine = StateMachine()
     self.rk = Ratekeeper(100, print_delay_threshold=None)
-
-    self.ignored_processes = {'mapd', }
 
     # Determine startup event
     is_remote = build_metadata.openpilot.comma_remote or build_metadata.openpilot.sunnypilot_remote
@@ -404,7 +407,7 @@ class SelfdriveD:
       if not_running != self.not_running_prev:
         cloudlog.event("process_not_running", not_running=not_running, error=True)
       self.not_running_prev = not_running
-    if self.sm.recv_frame['managerState'] and (not_running - self.ignored_processes):
+    if self.sm.recv_frame['managerState'] and driving_processes_missing(not_running):
       self.events.add(EventName.processNotRunning)
     else:
       if not SIMULATION and not self.rk.lagging:

@@ -44,6 +44,12 @@ git submodule update --init --recursive
 
 Pulling the separate `lrmaster-SP-flexraylog-v2` branch does not install these WIP changes.
 The WIP branch has host synthetic validation; actual device/FPGA/vehicle validation remains outstanding.
+After updating this branch, restart the device so loggerd, the analysis publisher and UI all
+use the same message-queue sizes. Do not hot-restart only the analysis publisher across this update.
+The optional analysis observer uses a bounded 2MiB transport with a 200000-byte serialized
+snapshot budget. Oversized snapshots are summarized and marked as limited; original CAN/FlexRay
+rlog events remain separate. Observer failures use bounded restart backoff and appear as stale/unavailable
+analysis instead of a driving-process failure; required driving-process monitoring remains enabled.
 
 `--recurse-submodules` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.

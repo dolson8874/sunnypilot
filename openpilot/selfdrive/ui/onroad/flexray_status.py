@@ -84,13 +84,16 @@ class FlexrayStatusRenderer(Widget):
         snapshot = self._analysis_snapshot
         age = time.monotonic() - sm.logMonoTime['cruiseAnalysis'] / 1e9
         values = {}
-        for frame in snapshot['frames'].values():
+        for frame in snapshot.get('frames', {}).values():
           if frame['excluded'] is None:
             for name, value in frame['values'].items():
               frame_age = time.monotonic() - frame['eventMonoTime'] / 1e9
               state = 'clock?' if frame_age < 0 else 'stale ' if frame_age * 1e9 >= frame.get('staleAfterNs', 0) else ''
               values[name] = f"{value}({state}{frame_age:.1f}s)"
-        text = ('Analysis: stale' if age >= 2 else 'Candidate RAW / age') + '\n'
+        status = ('Analysis: stale' if age >= 2 else
+                  'Analysis: limited (size budget)' if snapshot.get('snapshotOmitted') else
+                  'Analysis: error' if snapshot.get('lastError') else 'Candidate RAW / age')
+        text = status + '\n'
         text += 'H ' + values.get('hRaw', '?') + ' E ' + values.get('eRaw', '?')
         text += ('\n' if scale < 1 else ' ') + 'DADC ' + values.get('dadcRaw16', '?')
         text += '\nGAP ' + values.get('gapRaw', '?') + ' Icon ' + values.get('iconRaw', '?')

@@ -1,10 +1,12 @@
 import os
 import operator
 import platform
+import time
 
 from opendbc.car.structs import car
 from openpilot.cereal import custom
 from openpilot.common.params import Params
+from openpilot.common.swaglog import cloudlog
 from openpilot.common.hardware import PC, COMMA_HARDWARE
 from openpilot.system.manager.process import PythonProcess, NativeProcess, DaemonProcess
 from openpilot.common.hardware.hw import Paths
@@ -122,12 +124,32 @@ class FlexrayProcess(PythonProcess):
     super().start()
 
 
+class AnalysisProcess(FlexrayProcess):
+  """Bound retries of the optional observer without delaying manager or capture."""
+  retry_at = 0.0
+  started_at = 0.0
+  failures = 0
+
+  def start(self) -> None:
+    now = time.monotonic()
+    if self.proc is not None and self.proc.exitcode is not None:
+      code = self.proc.exitcode
+      self.failures = self.failures + 1 if now - self.started_at < 60 else 1
+      delay = min(30, 2 ** min(self.failures - 1, 5))
+      self.stop()
+      self.retry_at = now + delay
+      cloudlog.error('cruise_analysis exited code=%s retry=%d delay=%ds', code, self.failures, delay)
+    if self.proc is None and now >= self.retry_at:
+      self.started_at = now
+      super().start()
+
+
 procs = [
   DaemonProcess("manage_athenad", "openpilot.system.athena.manage_athenad", "AthenadPid"),
 
   FlexrayProcess("flexray_logd", "openpilot.system.flexray_logd.flexrayd", flexray_logging,
                 enabled=not PC),
-  FlexrayProcess("cruise_analysis", "openpilot.system.cruise_analysis.analysisd", cruise_analysis_logging, enabled=not PC),
+  AnalysisProcess("cruise_analysis", "openpilot.system.cruise_analysis.analysisd", cruise_analysis_logging, enabled=not PC),
   NativeProcess("loggerd", "openpilot/system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "openpilot/system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "openpilot/system/loggerd", ["./encoderd", "--stream"], or_(livestream, notcar)),
