@@ -9,6 +9,7 @@ from openpilot.cereal import log, custom
 
 from opendbc.car import structs
 from opendbc.car.hyundai.values import HyundaiFlags
+from opendbc.car.landrover.values import LandroverFlags
 from openpilot.common.params import Params
 from openpilot.sunnypilot.mads.helpers import MadsSteeringModeOnBrake, read_steering_mode_param, MADS_NO_ACC_MAIN_BUTTON
 from openpilot.sunnypilot.mads.state import StateMachine, GEARS_ALLOW_PAUSED_SILENT
@@ -36,6 +37,7 @@ class ModularAssistiveDrivingSystem:
     self.lateral_mismatch_counter = 0
     self.allow_always = False
     self.no_main_cruise = False
+    self.lkas_button_only = self.CP.brand == "landrover" and bool(self.CP.flags & LandroverFlags.CRUISE_HUD_BENCH)
     self.selfdrive = selfdrive
     self.selfdrive.enabled_prev = False
     self.state_machine = StateMachine(self)
@@ -163,7 +165,7 @@ class ModularAssistiveDrivingSystem:
         self.events.remove(EventName.pcmEnable)
         self.events.remove(EventName.buttonEnable)
     else:
-      if self.main_enabled_toggle:
+      if self.main_enabled_toggle and not self.lkas_button_only:
         if CS.cruiseState.available and not self.selfdrive.CS_prev.cruiseState.available:
           self.events_sp.add(EventNameSP.lkasEnable)
 
