@@ -181,13 +181,15 @@ def main() -> None:
   signal.signal(signal.SIGTERM, request_stop)
   pm = messaging.PubMaster(['flexray', 'flexrayStatus'])
   telemetry = CaptureStatus(pm)
-  record_source5 = os.environ.get('FLEXRAY_RECORD_SOURCE5', '1') != '0'
+  params = Params()
+  override = os.environ.get('FLEXRAY_RECORD_SOURCE5')
+  record_source5 = not params.get_bool('FlexraySkipSource5Recording') if override is None else override != '0'
   cloudlog.info(f'FlexRay source5 recording enabled={int(record_source5)}')
-  startup = LoggerStartup(pm, Params(), telemetry, record_source5=record_source5)
+  startup = LoggerStartup(pm, params, telemetry, record_source5=record_source5)
   startup.poll()
   inventory = start_usb_inventory()
   receiver = None
-  bus = Params().get('FlexrayDiagnosticBus', return_default=True)
+  bus = params.get('FlexrayDiagnosticBus', return_default=True)
   if bus in range(4):
     try:
       receiver = DiagnosticReceiver(bus)

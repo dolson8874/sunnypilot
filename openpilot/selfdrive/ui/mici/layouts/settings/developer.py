@@ -69,8 +69,13 @@ class DeveloperLayoutMici(NavScroller):
       "record cruise analysis summaries", "CruiseAnalysisEnabled",
       description="Optional diagnostics. Raw CAN and FlexRay recording have separate settings.",
     )
+    self._skip_flexray_source5_toggle = BigParamControl(
+      "skip FlexRay source 5 recording", "FlexraySkipSource5Recording",
+      description="Keep recording sources 4 and 6. Takes effect when capture next starts.",
+    )
     self._scroller.add_widgets([
       self._cruise_analysis_toggle,
+      self._skip_flexray_source5_toggle,
       BigParamControl("cruise analysis raw display", "CruiseAnalysisShow",
                       description="Show candidate raw values while cruise analysis summaries are enabled."),
     ])
@@ -122,8 +127,9 @@ class DeveloperLayoutMici(NavScroller):
       ("ShowDebugInfo", self._debug_mode_toggle),
       ("NavigationEnabled", self._navigation_toggle),
       ("CruiseAnalysisEnabled", self._cruise_analysis_toggle),
+      ("FlexraySkipSource5Recording", self._skip_flexray_source5_toggle),
     )
-    onroad_blocked_toggles = (self._adb_toggle, self._joystick_toggle, self._cruise_analysis_toggle)
+    onroad_blocked_toggles = (self._adb_toggle, self._joystick_toggle, self._cruise_analysis_toggle, self._skip_flexray_source5_toggle)
     release_blocked_toggles = (self._joystick_toggle, self._long_maneuver_toggle, self._lat_maneuver_toggle, self._alpha_long_toggle, self._navigation_toggle)
     engaged_blocked_toggles = (self._long_maneuver_toggle, self._lat_maneuver_toggle, self._alpha_long_toggle)
 

@@ -233,7 +233,7 @@ def test_diagnostic_failure_does_not_stop_spi_publisher(monkeypatch, failure):
     captures.append(not stop())
     handlers[signal.SIGTERM](signal.SIGTERM, None)
 
-  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1))
+  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1, get_bool=lambda key: False))
   monkeypatch.setattr(flexrayd, 'DiagnosticReceiver', BrokenReceiver)
   monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
   monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))
@@ -403,7 +403,7 @@ def test_can_monitor_continues_during_native_retry(monkeypatch):
   def failed_capture(*args, **kwargs):
     raise RuntimeError('native stage=usb_claim failed status 1')
 
-  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1))
+  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: 1, get_bool=lambda key: False))
   monkeypatch.setattr(flexrayd, 'DiagnosticReceiver', Receiver)
   monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
   monkeypatch.setattr(flexrayd, 'run_capture', failed_capture)
@@ -462,7 +462,9 @@ def test_capture_polls_startup_without_optional_observer(tmp_path, monkeypatch):
   assert gate.ready and telemetry.counts[6] > 0 and not gate.queue
 
 
-def test_unexpected_publisher_error_still_closes_startup_buffer(monkeypatch):
+@pytest.mark.parametrize('skip_source5,override,expected', [(False, None, True), (True, None, False),
+                                                           (True, '1', True), (False, '0', False)])
+def test_startup_recording_mode_and_cleanup(monkeypatch, skip_source5, override, expected):
   from openpilot.system.flexray_logd import flexrayd
 
   closed = []
@@ -471,8 +473,16 @@ def test_unexpected_publisher_error_still_closes_startup_buffer(monkeypatch):
   def broken_capture(*args, **kwargs):
     raise LookupError('unexpected capture failure')
 
-  monkeypatch.setattr(flexrayd, 'LoggerStartup', lambda *args, **kwargs: gate)
-  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: -1))
+  def startup(pm, params, telemetry, *, record_source5):
+    assert record_source5 is expected
+    return gate
+
+  if override is None:
+    monkeypatch.delenv('FLEXRAY_RECORD_SOURCE5', raising=False)
+  else:
+    monkeypatch.setenv('FLEXRAY_RECORD_SOURCE5', override)
+  monkeypatch.setattr(flexrayd, 'LoggerStartup', startup)
+  monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: -1, get_bool=lambda key: skip_source5))
   monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
   monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))
   monkeypatch.setattr(flexrayd.signal, 'signal', lambda *args: None)

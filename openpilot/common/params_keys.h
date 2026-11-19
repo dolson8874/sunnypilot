@@ -44,6 +44,7 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"FlexrayDiagnosticBus", {PERSISTENT, INT, "-1"}},  // -1 disables physical CAN diagnostics.
     {"FlexrayLoggerAck", {CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION, STRING}},
     {"FlexrayLoggingEnabled", {PERSISTENT | BACKUP, BOOL, "1"}},
+    {"FlexraySkipSource5Recording", {PERSISTENT, BOOL, "0"}},
     {"CruiseAnalysisEnabled", {PERSISTENT, BOOL, "0"}},
     {"CruiseAnalysisShow", {PERSISTENT | BACKUP, BOOL, "0"}},
     {"FlexrayShowStatus", {PERSISTENT | BACKUP, BOOL, "1"}},

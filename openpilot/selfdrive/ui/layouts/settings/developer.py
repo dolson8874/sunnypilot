@@ -101,6 +101,13 @@ class DeveloperLayout(Widget):
       callback=lambda enabled: self._params.put_bool("CruiseAnalysisEnabled", enabled, block=True),
       enabled=ui_state.is_offroad,
     )
+    self._skip_flexray_source5_toggle = toggle_item(
+      lambda: tr("Skip FlexRay source 5 recording"),
+      description=lambda: tr("Keep recording sources 4 and 6. Takes effect when capture next starts."),
+      initial_state=self._params.get_bool("FlexraySkipSource5Recording"),
+      callback=lambda enabled: self._params.put_bool("FlexraySkipSource5Recording", enabled, block=True),
+      enabled=ui_state.is_offroad,
+    )
 
     self._scroller = Scroller([
       self._adb_toggle,
@@ -112,6 +119,7 @@ class DeveloperLayout(Widget):
       self._alpha_long_toggle,
       self._ui_debug_toggle,
       self._cruise_analysis_toggle,
+      self._skip_flexray_source5_toggle,
       toggle_item(lambda: tr("Cruise analysis raw display"),
                   description=lambda: tr("Show candidate raw values while cruise analysis summaries are enabled."),
                   initial_state=self._params.get_bool("CruiseAnalysisShow"),
@@ -165,6 +173,7 @@ class DeveloperLayout(Widget):
       ("AlphaLongitudinalEnabled", self._alpha_long_toggle),
       ("ShowDebugInfo", self._ui_debug_toggle),
       ("CruiseAnalysisEnabled", self._cruise_analysis_toggle),
+      ("FlexraySkipSource5Recording", self._skip_flexray_source5_toggle),
     ):
       item.action_item.set_state(self._params.get_bool(key))
 
