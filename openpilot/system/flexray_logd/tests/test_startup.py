@@ -1,5 +1,7 @@
 from types import SimpleNamespace
 
+import pytest
+
 from openpilot.cereal import messaging
 from openpilot.system.flexray_logd.startup import LoggerStartup
 from openpilot.system.flexray_logd.status import CaptureStatus
@@ -74,7 +76,8 @@ def test_delayed_ack_flush_keeps_earlier_receive_time_and_new_frames_work():
   assert not gate.queue
 
 
-def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, monkeypatch):
+@pytest.mark.parametrize('record_source5', [True, False])
+def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, monkeypatch, record_source5):
   import signal
   import subprocess
   import time
@@ -93,7 +96,7 @@ def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, mon
     params = Params()
     params.put('FlexrayLoggerAck', '12345', block=True)
     telemetry = CaptureStatus(pm)
-    gate = LoggerStartup(pm, params, telemetry)
+    gate = LoggerStartup(pm, params, telemetry, record_source5=record_source5)
     expected = []
     for index in range(100):
       batch = frames() + [{'address': 0x1f, 'src': 5, 'dat': b'\x1f\x3f' + bytes(range(254)) + b'\x12\x34\x56'}]
@@ -103,7 +106,7 @@ def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, mon
       expected.extend(batch)
       gate.submit(batch)
     gate.poll()
-    assert not gate.ready and gate.buffered_frames == 300
+    assert not gate.ready and gate.buffered_frames == (300 if record_source5 else 200)
     process = subprocess.Popen([str(Path(BASEDIR) / 'openpilot/system/loggerd/loggerd')],
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
@@ -129,8 +132,9 @@ def test_real_logger_starts_after_frames_and_preserves_every_frame(tmp_path, mon
       for path in log_root.glob('*/rlog.zst') for event in LogReader(str(path)) if event.which() == 'can'
       for f in event.can
     ]
-    assert recorded == expected
-    assert telemetry.counts == {4: 120, 5: 120, 6: 120}
+    assert recorded == [frame for frame in expected if record_source5 or frame['src'] != 5]
+    assert telemetry.arrival_counts == {4: 120, 5: 120, 6: 120}
+    assert telemetry.counts == {4: 120, 5: 120 if record_source5 else 0, 6: 120}
 
 
 def test_buffer_flush_does_not_inflate_receive_rate():

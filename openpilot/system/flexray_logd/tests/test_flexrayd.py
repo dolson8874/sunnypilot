@@ -471,7 +471,7 @@ def test_unexpected_publisher_error_still_closes_startup_buffer(monkeypatch):
   def broken_capture(*args, **kwargs):
     raise LookupError('unexpected capture failure')
 
-  monkeypatch.setattr(flexrayd, 'LoggerStartup', lambda *args: gate)
+  monkeypatch.setattr(flexrayd, 'LoggerStartup', lambda *args, **kwargs: gate)
   monkeypatch.setattr(flexrayd, 'Params', lambda: SimpleNamespace(get=lambda *args, **kwargs: -1))
   monkeypatch.setattr(flexrayd, 'start_usb_inventory', lambda: None)
   monkeypatch.setattr(flexrayd.messaging, 'PubMaster', lambda services: SimpleNamespace(send=lambda *args: None))

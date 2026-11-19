@@ -17,9 +17,10 @@ FLUSH_BYTES = 256 * 1024
 
 
 class LoggerStartup:
-  def __init__(self, pm, params, telemetry, clock=time.monotonic, capacity=MAX_STARTUP_BYTES):
+  def __init__(self, pm, params, telemetry, clock=time.monotonic, capacity=MAX_STARTUP_BYTES, *, record_source5=True):
     self.pm, self.params, self.telemetry = pm, params, telemetry
     self.clock, self.capacity = clock, capacity
+    self.record_source5 = record_source5
     self.ready = False
     self.queue = deque()
     self.buffered_bytes = self.buffered_frames = 0
@@ -32,13 +33,18 @@ class LoggerStartup:
   def submit(self, frames):
     if not frames:
       return
+    counts = {src: sum(f['src'] == src for f in frames) for src in (4, 5, 6)}
+    self.telemetry.ingested_counts(counts)
+    if not self.record_source5 and counts[5]:
+      frames = [frame for frame in frames if frame['src'] != 5]
+      counts = {**counts, 5: 0}
+      if not frames:
+        return
     message = messaging.new_message('can', len(frames))
     message.valid = True
     message.can = frames
     data = message.to_bytes()
-    counts = {src: sum(f['src'] == src for f in frames) for src in (4, 5, 6)}
     received_at = self.clock()
-    self.telemetry.ingested_counts(counts)
     if self.ready and not self.queue and self._send(data, counts, received_at):
       return
     if self.buffered_bytes + len(data) > self.capacity:

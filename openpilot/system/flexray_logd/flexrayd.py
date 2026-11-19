@@ -7,6 +7,7 @@ expects channel names to match Event union members. Never publish on 'can':
 pandad owns that channel.
 """
 import json
+import os
 import signal
 import socket
 import subprocess
@@ -180,7 +181,9 @@ def main() -> None:
   signal.signal(signal.SIGTERM, request_stop)
   pm = messaging.PubMaster(['flexray', 'flexrayStatus'])
   telemetry = CaptureStatus(pm)
-  startup = LoggerStartup(pm, Params(), telemetry)
+  record_source5 = os.environ.get('FLEXRAY_RECORD_SOURCE5', '1') != '0'
+  cloudlog.info(f'FlexRay source5 recording enabled={int(record_source5)}')
+  startup = LoggerStartup(pm, Params(), telemetry, record_source5=record_source5)
   startup.poll()
   inventory = start_usb_inventory()
   receiver = None
