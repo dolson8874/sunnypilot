@@ -65,9 +65,14 @@ class DeveloperLayoutMici(NavScroller):
                                    description="Grant SSH access to all public keys in your GitHub settings. Only enter your own username.")
     self._ssh_keys_btn.set_click_callback(ssh_keys_callback)
 
+    self._cruise_analysis_toggle = BigParamControl(
+      "record cruise analysis summaries", "CruiseAnalysisEnabled",
+      description="Optional diagnostics. Raw CAN and FlexRay recording have separate settings.",
+    )
     self._scroller.add_widgets([
+      self._cruise_analysis_toggle,
       BigParamControl("cruise analysis raw display", "CruiseAnalysisShow",
-                      description="Candidate raw values. Recording continues when display is off."),
+                      description="Show candidate raw values while cruise analysis summaries are enabled."),
     ])
 
     # adb, ssh, ssh keys, debug mode, joystick debug mode, longitudinal maneuver mode, ip address
@@ -116,8 +121,9 @@ class DeveloperLayoutMici(NavScroller):
       ("AlphaLongitudinalEnabled", self._alpha_long_toggle),
       ("ShowDebugInfo", self._debug_mode_toggle),
       ("NavigationEnabled", self._navigation_toggle),
+      ("CruiseAnalysisEnabled", self._cruise_analysis_toggle),
     )
-    onroad_blocked_toggles = (self._adb_toggle, self._joystick_toggle)
+    onroad_blocked_toggles = (self._adb_toggle, self._joystick_toggle, self._cruise_analysis_toggle)
     release_blocked_toggles = (self._joystick_toggle, self._long_maneuver_toggle, self._lat_maneuver_toggle, self._alpha_long_toggle, self._navigation_toggle)
     engaged_blocked_toggles = (self._long_maneuver_toggle, self._lat_maneuver_toggle, self._alpha_long_toggle)
 

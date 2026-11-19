@@ -44,12 +44,17 @@ git submodule update --init --recursive
 
 Pulling the separate `lrmaster-SP-flexraylog-v2` branch does not install these WIP changes.
 The WIP branch has host synthetic validation; actual device/FPGA/vehicle validation remains outstanding.
-After updating this branch, restart the device so loggerd, the analysis publisher and UI all
-use the same message-queue sizes. Do not hot-restart only the analysis publisher across this update.
-The optional analysis observer uses a bounded 2MiB transport with a 200000-byte serialized
-snapshot budget. Oversized snapshots are summarized and marked as limited; original CAN/FlexRay
-rlog events remain separate. Observer failures use bounded restart backoff and appear as stale/unavailable
-analysis instead of a driving-process failure; required driving-process monitoring remains enabled.
+This update adds a Params key and requires a device build. If a `prebuilt` marker exists in
+the development checkout, move it to a backup location outside the checkout before restarting.
+The normal startup build refreshes the Params library and keeps loggerd, the observer and the UI
+on the same service settings.
+
+Cruise analysis summaries are **off by default**. Use the full `rlog` for offline analysis of
+raw CAN, FlexRay sources 4/5/6, steering state and commands, model output and IMU data.
+For an on-device diagnostic session, enable **Record cruise analysis summaries** in the Developer
+settings while offroad. **Cruise analysis raw display** controls the optional overlay separately.
+The enabled observer writes bounded summaries to its 2MiB service. When disabled it consumes no
+CAN or FlexRay messages and generates no summaries. Raw FlexRay capture uses **Record FlexRay Data**.
 
 `--recurse-submodules` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.

@@ -98,6 +98,80 @@ def test_optional_observer_retry_backoff(monkeypatch):
   assert proc.failures == 1 and proc.retry_at == clock[0] + 1
 
 
+@pytest.mark.parametrize('enabled', [False, True])
+def test_native_raw_recording_with_observer_opt_in(tmp_path, monkeypatch, enabled):
+  import copy
+  import signal
+  import subprocess
+  import time
+
+  from opendbc.car.structs import car
+  from openpilot.common.params import Params
+  from openpilot.system.manager.process import ensure_running
+  from openpilot.system.manager.process_config import managed_processes
+  from openpilot.tools.lib.logreader import LogReader
+
+  monkeypatch.setenv('PARAMS_ROOT', str(tmp_path / 'params'))
+  monkeypatch.setenv('LOG_ROOT', str(tmp_path / 'logs'))
+  monkeypatch.setenv('LOGGERD_TEST', '1')
+  monkeypatch.setenv('LOGGERD_SEGMENT_LENGTH', '60')
+  with OpenpilotPrefix():
+    params = Params()
+    assert params.get_default_value('CruiseAnalysisEnabled') is False
+    params.put_bool('CruiseAnalysisShow', True, block=True)  # Display alone never starts the worker.
+    if enabled:
+      params.put_bool('CruiseAnalysisEnabled', True, block=True)
+    cp = car.CarParams.new_message(brand='landrover')
+    observer = copy.copy(managed_processes['cruise_analysis'])
+    observer.enabled = True  # Exercise the device process policy on the host.
+    processes = {observer.name: observer}
+    pub = messaging.PubMaster(['can', 'flexray'])
+    logger = subprocess.Popen(['openpilot/system/loggerd/loggerd'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+      for transport in ('can', 'flexray'):
+        assert pub.wait_for_readers_to_update(transport, timeout=10)
+      assert ensure_running(processes.values(), False, params, cp) == []
+      assert observer.proc is None
+      running = ensure_running(processes.values(), True, params, cp)
+      assert running == ([observer] if enabled else [])
+      if enabled:
+        # Publisher startup resets msgq reader slots. Poll so the reader can
+        # register again even if it connected before the publisher.
+        summary_sub = messaging.sub_sock('cruiseAnalysis')
+        deadline = time.monotonic() + 5
+        while summary_sub.receive(non_blocking=True) is None:
+          assert observer.proc is not None and observer.proc.is_alive()
+          assert time.monotonic() < deadline
+          time.sleep(.02)
+      else:
+        assert observer.proc is None
+
+      expected = {}
+      for transport, sources in (('can', (1,)), ('flexray', (4, 5, 6))):
+        event = messaging.new_message('can', len(sources))
+        event.valid = True
+        for index, src in enumerate(sources):
+          event.can[index] = {'src': src, 'address': 0x190 if src == 1 else 0x1f,
+                              'dat': bytes(8) if src == 1 else bytes([4, 1]) + bytes(29)}
+        expected[sources] = event.to_bytes()
+        pub.send(transport, expected[sources])
+        assert pub.wait_for_readers_to_update(transport, timeout=5)
+      if enabled:
+        # Give loggerd a complete publication interval after the live reader
+        # sees a snapshot. It may miss the first snapshot during re-registration.
+        time.sleep(.6)
+    finally:
+      observer.stop()
+      logger.send_signal(signal.SIGINT)
+      logger.wait(timeout=10)
+    assert logger.returncode == 0
+    events = [event for path in (tmp_path / 'logs').glob('*/rlog.zst') for event in LogReader(str(path))]
+    assert any(event.which() == 'cruiseAnalysis' for event in events) is enabled
+    recorded = {tuple(frame.src for frame in event.can): event.as_builder().to_bytes()
+                for event in events if event.which() == 'can'}
+    assert recorded == expected
+
+
 def test_actual_logs_published_and_recorded(tmp_path, monkeypatch):
   import os
   import signal

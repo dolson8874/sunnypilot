@@ -35,7 +35,7 @@ def flexray_logging(started: bool, params: Params, CP: car.CarParams) -> bool:
   return logging(started, params, CP) and params.get_bool("FlexrayLoggingEnabled")
 
 def cruise_analysis_logging(started: bool, params: Params, CP: car.CarParams) -> bool:
-  return logging(started, params, CP) and CP.brand == "landrover"
+  return logging(started, params, CP) and CP.brand == "landrover" and params.get_bool("CruiseAnalysisEnabled")
 
 def ublox_available() -> bool:
   return os.path.exists('/dev/ttyHS0') and not os.path.exists('/persist/comma/use-quectel-gps')
