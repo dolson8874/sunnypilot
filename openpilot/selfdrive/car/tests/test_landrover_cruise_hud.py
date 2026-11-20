@@ -21,8 +21,8 @@ def decode_can(timestamp_ns, frames):
   return can_capnp_to_list([event.to_bytes()])
 
 
-def hud(flags, mode, counter):
-  payload = bytes([flags | counter, mode, 0, 0, 0, 0, 0])
+def hud(flags, mode, counter, set_speed=0):
+  payload = bytes([flags | counter, mode, set_speed, 0, 0, 0, 0])
   return bytes([defender_crc(payload[:4])]) + payload
 
 
@@ -43,13 +43,17 @@ def test_defender_cruise_hud_accepts_card_can_batches(monkeypatch):
   assert not state.canValid
   assert state.canTimeout
 
-  off, on = hud(0x80, 0, 15), hud(0x30, 3, 0)
+  off, on = hud(0x80, 0, 15, 82), hud(0x30, 3, 0, 82)
   state, _ = interface.update(decode_can(1_050_000_000, normal_can + [(0x1FB, off, 1)]))
   assert not state.cruiseState.enabled
+  assert state.cruiseState.speed == 0
   state, _ = interface.update(decode_can(1_100_000_000, normal_can + [(0x1FB, on, 0)]))
   assert not state.cruiseState.enabled
   state, _ = interface.update(decode_can(1_150_000_000, normal_can + [(0x1FB, on, 1)]))
   assert state.cruiseState.enabled
+  assert state.cruiseState.speed == pytest.approx(82 / 3.6)
+  assert state.cruiseState.speedCluster == state.cruiseState.speed
+  assert state.cruiseState.speed != state.vEgoRaw
   assert not state.blockPcmEnable
   assert state.canValid
   assert not state.canTimeout
@@ -64,10 +68,11 @@ def test_defender_requires_fresh_valid_can1_hud(monkeypatch, bad_input):
   interface = CarInterface(cp, cp_sp)
   pt = DEFENDER_CAN0
   interface.update(decode_can(950_000_000, pt))
-  data = hud(0x80, 0, 15)
+  data = hud(0x30, 3, 15, 82)
   state, _ = interface.update(decode_can(1_000_000_000, pt + [(0x1FB, data, 1)]))
   assert state.canValid
-  next_data = hud(0x30, 3, 0)
+  assert state.cruiseState.speed == pytest.approx(82 / 3.6)
+  next_data = hud(0x30, 3, 0, 90)
   reserved = bytearray(next_data)
   reserved[2] |= 0x20
   reserved[0] = defender_crc(reserved[1:5])
@@ -85,9 +90,11 @@ def test_defender_requires_fresh_valid_can1_hud(monkeypatch, bad_input):
   state, _ = interface.update(decode_can(1_200_000_000, pt))
   assert not state.canValid
   assert not state.cruiseState.enabled
+  assert state.cruiseState.speed == 0
   state, _ = interface.update(decode_can(1_250_000_000, pt + [(0x1FB, next_data, 1)]))
   assert state.canValid
   assert state.cruiseState.enabled
+  assert state.cruiseState.speed == pytest.approx(90 / 3.6)
   assert state.blockPcmEnable
 
 
@@ -102,6 +109,22 @@ def test_defender_legacy_cruise_does_not_require_can1(monkeypatch):
   state, _ = interface.update(decode_can(1_000_000_000, DEFENDER_CAN0))
   assert state.canValid
   assert not state.canTimeout
+  assert state.cruiseState.speed == state.vEgoRaw
+
+
+@pytest.mark.parametrize("flags,mode,h", [(0x30, 3, 0), (0x30, 3, 255), (0xC0, 6, 80), (0x30, 4, 80)])
+def test_defender_hud_does_not_publish_unavailable_set_speed(monkeypatch, flags, mode, h):
+  monkeypatch.delenv('LANDROVER_CRUISE_HUD_BENCH', raising=False)
+  monkeypatch.setenv('REPLAY', '1')
+  cp = CarInterface.get_non_essential_params(CAR.LANDROVER_DEFENDER_2023)
+  cp_sp = CarInterface.get_non_essential_params_sp(cp, CAR.LANDROVER_DEFENDER_2023)
+  interface = CarInterface(cp, cp_sp)
+  good = (0x1FB, hud(0x30, 3, 0, 82), 1)
+  invalid = (0x1FB, hud(flags, mode, 1, h), 1)
+  interface.update(decode_can(1_000_000_000, DEFENDER_CAN0 + [good]))
+  state, _ = interface.update(decode_can(1_050_000_000, DEFENDER_CAN0 + [invalid]))
+  assert state.cruiseState.speed == 0
+  assert state.cruiseState.speedCluster == 0
 
 
 def test_defender_can1_hud_and_lkas_button_keep_receive_order(monkeypatch):
