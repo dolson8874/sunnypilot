@@ -140,7 +140,7 @@ For more information, see the [openpilot wiki](https://github.com/commaai/openpi
 
 ### Defender CAN1 radar
 
-Assign [the Defender CAN1 radar DBC](dbc/defender_radar_can1.dbc) to **CAN source 1**
+Assign [the Defender CAN1 radar DBC](dbc/landrover_defender_radar_can1.dbc) to **CAN source 1**
 in **Manage DBCs**. The file defines the seven headers (`0x190`–`0x196`) and
 the six members of each of the 40 radar slots. Each slot's member 2
 (`0x202 + 0x10 × slot`, slot numbers start at zero) exposes both the raw fields
