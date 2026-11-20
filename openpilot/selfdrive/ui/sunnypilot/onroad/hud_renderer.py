@@ -13,7 +13,7 @@ from openpilot.selfdrive.ui.sunnypilot.onroad.road_name import RoadNameRenderer
 from openpilot.selfdrive.ui.sunnypilot.onroad.rocket_fuel import RocketFuel
 from openpilot.selfdrive.ui.sunnypilot.onroad.speed_limit import SpeedLimitRenderer
 from openpilot.selfdrive.ui.sunnypilot.onroad.smart_cruise_control import SmartCruiseControlRenderer
-from openpilot.selfdrive.ui.sunnypilot.onroad.stock_cruise_gap import draw_stock_cruise_gap
+from openpilot.selfdrive.ui.sunnypilot.onroad.stock_cruise_gap import stock_cruise_gap
 from openpilot.selfdrive.ui.sunnypilot.onroad.turn_signal import TurnSignalController
 from openpilot.selfdrive.ui.sunnypilot.onroad.circular_alerts import CircularAlertsRenderer
 from openpilot.selfdrive.ui.sunnypilot.onroad.speed_renderer import SpeedRenderer
@@ -115,17 +115,23 @@ class HudRendererSP(HudRenderer):
       max_color,
     )
 
+    gap = stock_cruise_gap()
     set_speed_text = CRUISE_DISABLED_CHAR if not self.is_cruise_set else str(round(self.set_speed))
-    speed_text_width = measure_text_cached(self._font_bold, set_speed_text, FONT_SIZES.set_speed).x
+    speed_font_size = 78 if gap else FONT_SIZES.set_speed
+    speed_text_width = measure_text_cached(self._font_bold, set_speed_text, speed_font_size).x
     rl.draw_text_ex(
       self._font_bold,
       set_speed_text,
       rl.Vector2(x + (set_speed_width - speed_text_width) / 2, y + 77),
-      FONT_SIZES.set_speed,
+      speed_font_size,
       0,
       set_speed_color,
     )
-    draw_stock_cruise_gap(self._font_semi_bold, x + set_speed_width / 2, y + set_speed_rect.height + 8, 26)
+    if gap:
+      gap_text = tr("Stock GAP {}").format(gap)
+      gap_size = measure_text_cached(self._font_semi_bold, gap_text, 22)
+      gap_pos = rl.Vector2(x + (set_speed_width - gap_size.x) / 2, y + set_speed_rect.height - gap_size.y - 9)
+      rl.draw_text_ex(self._font_semi_bold, gap_text, gap_pos, 22, 0, COLORS.WHITE)
 
   def _draw_current_speed(self, rect: rl.Rectangle) -> None:
     self.speed_renderer.render(rect)

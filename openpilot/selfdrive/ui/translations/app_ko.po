@@ -939,6 +939,6 @@ msgstr "기록 준비 중"
 msgid "Buffered: {} frames"
 msgstr "보관: {}개"
 
-#: openpilot/selfdrive/ui/sunnypilot/onroad/stock_cruise_gap.py
+#: openpilot/selfdrive/ui/sunnypilot/onroad/hud_renderer.py
 msgid "Stock GAP {}"
 msgstr "순정 GAP {}"

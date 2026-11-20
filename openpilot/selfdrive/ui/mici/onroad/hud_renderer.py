@@ -19,7 +19,6 @@ KM_TO_MILE = 0.621371
 CRUISE_DISABLED_CHAR = '–'
 
 SET_SPEED_PERSISTENCE = 2.5  # seconds
-SET_SPEED_DIAMETER = 162
 
 
 @dataclass(frozen=True)
@@ -271,7 +270,7 @@ class HudRenderer(Widget):
     y = rect.y
 
     # draw drop shadow
-    circle_radius = SET_SPEED_DIAMETER // 2
+    circle_radius = 162 // 2
     rl.draw_circle_gradient(rl.Vector2(x + circle_radius, y + circle_radius), circle_radius,
                             rl.Color(0, 0, 0, int(255 / 2 * alpha)), rl.BLANK)
 
