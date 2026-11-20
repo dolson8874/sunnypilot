@@ -141,7 +141,8 @@ For more information, see the [openpilot wiki](https://github.com/commaai/openpi
 ### Defender CAN1 cruise and radar
 
 In **Manage DBCs**, assign `landrover_defender_2023` to **CAN source 1**
-to decode the FPGA cruise HUD report (`0x1FB`). The report is required
+to decode `CRUISE_HUD_FLEXRAY_TO_OP` (`0x1FB`), the FlexRay-derived cruise
+report carried on CAN1. The report is required
 while the Defender uses the CAN1 cruise input.
 
 For radar analysis, assign `landrover_defender_radar_can1` to **CAN source 1**.
