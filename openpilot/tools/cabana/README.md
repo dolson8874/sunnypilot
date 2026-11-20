@@ -138,11 +138,15 @@ the transmission shifts.
 
 For more information, see the [openpilot wiki](https://github.com/commaai/openpilot/wiki/Cabana)
 
-### Defender CAN1 radar
+### Defender CAN1 cruise and radar
 
-Assign [the Defender CAN1 radar DBC](dbc/landrover_defender_radar_can1.dbc) to **CAN source 1**
-in **Manage DBCs**. The file defines the seven headers (`0x190`–`0x196`) and
-the six members of each of the 40 radar slots. Each slot's member 2
+In **Manage DBCs**, assign `landrover_defender_2023` to **CAN source 1**
+to decode the FPGA cruise HUD report (`0x1FB`). The report is required
+while the Defender uses the CAN1 cruise input.
+
+For radar analysis, assign `landrover_defender_radar_can1` to **CAN source 1**.
+Both DBCs are available in the opendbc list. The radar DBC defines seven
+headers (`0x190`–`0x196`) and six members for each of the 40 slots. Each slot's member 2
 (`0x202 + 0x10 × slot`, slot numbers start at zero) exposes both the raw fields
 and estimated values. `RANGE_EST_M` uses 0.10 m/count. `REL_SPEED_EST_MPS` uses
 `(raw − 2048) × 0.05` m/s. These estimates require additional validation.
