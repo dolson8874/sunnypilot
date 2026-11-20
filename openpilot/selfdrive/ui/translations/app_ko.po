@@ -938,3 +938,7 @@ msgstr "기록 준비 중"
 #: openpilot/selfdrive/ui/onroad/flexray_status.py
 msgid "Buffered: {} frames"
 msgstr "보관: {}개"
+
+#: openpilot/selfdrive/ui/sunnypilot/onroad/stock_cruise_gap.py
+msgid "Stock GAP {}"
+msgstr "순정 GAP {}"

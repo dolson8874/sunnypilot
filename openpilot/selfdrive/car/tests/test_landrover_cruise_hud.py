@@ -1,6 +1,7 @@
 import pytest
 
 from openpilot.cereal import messaging
+from openpilot.selfdrive.car.helpers import convert_to_capnp
 from openpilot.selfdrive.pandad import can_capnp_to_list
 from opendbc.car import Bus
 from opendbc.car.landrover.interface import CarInterface
@@ -21,8 +22,8 @@ def decode_can(timestamp_ns, frames):
   return can_capnp_to_list([event.to_bytes()])
 
 
-def hud(flags, mode, counter, set_speed=0):
-  payload = bytes([flags | counter, mode, set_speed, 0, 0, 0, 0])
+def hud(flags, mode, counter, set_speed=0, gap=0):
+  payload = bytes([flags | counter, mode | (gap << 3), set_speed, 0, 0, 0, 0])
   return bytes([defender_crc(payload[:4])]) + payload
 
 
@@ -87,10 +88,11 @@ def test_defender_requires_fresh_valid_can1_hud(monkeypatch, bad_input):
   }
   for elapsed_ms in (50, 100, 150):
     interface.update(decode_can(1_000_000_000 + elapsed_ms * 1_000_000, pt + inputs[bad_input]))
-  state, _ = interface.update(decode_can(1_200_000_000, pt))
+  state, state_sp = interface.update(decode_can(1_200_000_000, pt))
   assert not state.canValid
   assert not state.cruiseState.enabled
   assert state.cruiseState.speed == 0
+  assert state_sp.stockCruiseGap == 0
   state, _ = interface.update(decode_can(1_250_000_000, pt + [(0x1FB, next_data, 1)]))
   assert state.canValid
   assert state.cruiseState.enabled
@@ -125,6 +127,23 @@ def test_defender_hud_does_not_publish_unavailable_set_speed(monkeypatch, flags,
   state, _ = interface.update(decode_can(1_050_000_000, DEFENDER_CAN0 + [invalid]))
   assert state.cruiseState.speed == 0
   assert state.cruiseState.speedCluster == 0
+
+
+@pytest.mark.parametrize("raw,level", [(3, 1), (1, 2), (0, 3), (2, 4)])
+def test_defender_stock_gap_only_in_active_hud(monkeypatch, raw, level):
+  monkeypatch.delenv('LANDROVER_CRUISE_HUD_BENCH', raising=False)
+  monkeypatch.setenv('REPLAY', '1')
+  cp = CarInterface.get_non_essential_params(CAR.LANDROVER_DEFENDER_2023)
+  cp_sp = CarInterface.get_non_essential_params_sp(cp, CAR.LANDROVER_DEFENDER_2023)
+  interface = CarInterface(cp, cp_sp)
+  on = hud(0x30, 3, 1, 82, gap=raw)
+  _, state_sp = interface.update(decode_can(1_000_000_000, DEFENDER_CAN0 + [(0x1FB, on, 1)]))
+  event = messaging.new_message("carStateSP")
+  event.carStateSP = convert_to_capnp(state_sp)
+  assert messaging.log_from_bytes(event.to_bytes()).carStateSP.stockCruiseGap == level
+  off = hud(0xC0, 6, 2, 82)
+  _, state_sp = interface.update(decode_can(1_050_000_000, DEFENDER_CAN0 + [(0x1FB, off, 1)]))
+  assert state_sp.stockCruiseGap == 0
 
 
 def test_defender_can1_hud_and_lkas_button_keep_receive_order(monkeypatch):
