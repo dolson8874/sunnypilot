@@ -145,7 +145,7 @@ in **Manage DBCs**. The file defines the seven headers (`0x190`–`0x196`) and
 the six members of each of the 40 radar slots. Each slot's member 2
 (`0x202 + 0x10 × slot`, slot numbers start at zero) exposes both the raw fields
 and estimated values. `RANGE_EST_M` uses 0.10 m/count. `REL_SPEED_EST_MPS` uses
-`(raw − 2048) × 0.05` m/s. See the signal comments for the evidence and limitations.
+`(raw − 2048) × 0.05` m/s. These estimates require additional validation.
 
 Check the header boundaries, message lengths and common counter before comparing slots
 in one publication. A missing member leaves that slot's corresponding data unknown
