@@ -1,0 +1,3246 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: Radar Observer
+
+BO_ 400 RadarHeader_190: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 401 RadarHeader_191: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 402 RadarHeader_192: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 403 RadarHeader_193: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 404 RadarHeader_194: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 405 RadarHeader_195: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 406 RadarHeader_196: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 512 RadarSlot_00_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 513 RadarSlot_00_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 514 RadarSlot_00_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 515 RadarSlot_00_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 516 RadarSlot_00_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 517 RadarSlot_00_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 528 RadarSlot_01_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 529 RadarSlot_01_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 530 RadarSlot_01_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 531 RadarSlot_01_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 532 RadarSlot_01_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 533 RadarSlot_01_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 544 RadarSlot_02_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 545 RadarSlot_02_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 546 RadarSlot_02_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 547 RadarSlot_02_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 548 RadarSlot_02_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 549 RadarSlot_02_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 560 RadarSlot_03_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 561 RadarSlot_03_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 562 RadarSlot_03_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 563 RadarSlot_03_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 564 RadarSlot_03_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 565 RadarSlot_03_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 576 RadarSlot_04_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 577 RadarSlot_04_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 578 RadarSlot_04_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 579 RadarSlot_04_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 580 RadarSlot_04_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 581 RadarSlot_04_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 592 RadarSlot_05_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 593 RadarSlot_05_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 594 RadarSlot_05_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 595 RadarSlot_05_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 596 RadarSlot_05_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 597 RadarSlot_05_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 608 RadarSlot_06_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 609 RadarSlot_06_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 610 RadarSlot_06_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 611 RadarSlot_06_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 612 RadarSlot_06_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 613 RadarSlot_06_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 624 RadarSlot_07_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 625 RadarSlot_07_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 626 RadarSlot_07_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 627 RadarSlot_07_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 628 RadarSlot_07_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 629 RadarSlot_07_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 640 RadarSlot_08_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 641 RadarSlot_08_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 642 RadarSlot_08_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 643 RadarSlot_08_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 644 RadarSlot_08_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 645 RadarSlot_08_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 656 RadarSlot_09_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 657 RadarSlot_09_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 658 RadarSlot_09_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 659 RadarSlot_09_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 660 RadarSlot_09_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 661 RadarSlot_09_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 672 RadarSlot_10_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 673 RadarSlot_10_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 674 RadarSlot_10_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 675 RadarSlot_10_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 676 RadarSlot_10_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 677 RadarSlot_10_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 688 RadarSlot_11_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 689 RadarSlot_11_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 690 RadarSlot_11_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 691 RadarSlot_11_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 692 RadarSlot_11_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 693 RadarSlot_11_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 704 RadarSlot_12_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 705 RadarSlot_12_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 706 RadarSlot_12_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 707 RadarSlot_12_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 708 RadarSlot_12_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 709 RadarSlot_12_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 720 RadarSlot_13_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 721 RadarSlot_13_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 722 RadarSlot_13_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 723 RadarSlot_13_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 724 RadarSlot_13_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 725 RadarSlot_13_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 736 RadarSlot_14_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 737 RadarSlot_14_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 738 RadarSlot_14_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 739 RadarSlot_14_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 740 RadarSlot_14_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 741 RadarSlot_14_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 752 RadarSlot_15_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 753 RadarSlot_15_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 754 RadarSlot_15_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 755 RadarSlot_15_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 756 RadarSlot_15_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 757 RadarSlot_15_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 768 RadarSlot_16_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 769 RadarSlot_16_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 770 RadarSlot_16_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 771 RadarSlot_16_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 772 RadarSlot_16_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 773 RadarSlot_16_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 784 RadarSlot_17_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 785 RadarSlot_17_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 786 RadarSlot_17_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 787 RadarSlot_17_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 788 RadarSlot_17_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 789 RadarSlot_17_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 800 RadarSlot_18_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 801 RadarSlot_18_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 802 RadarSlot_18_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 803 RadarSlot_18_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 804 RadarSlot_18_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 805 RadarSlot_18_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 816 RadarSlot_19_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 817 RadarSlot_19_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 818 RadarSlot_19_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 819 RadarSlot_19_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 820 RadarSlot_19_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 821 RadarSlot_19_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 832 RadarSlot_20_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 833 RadarSlot_20_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 834 RadarSlot_20_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 835 RadarSlot_20_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 836 RadarSlot_20_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 837 RadarSlot_20_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 848 RadarSlot_21_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 849 RadarSlot_21_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 850 RadarSlot_21_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 851 RadarSlot_21_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 852 RadarSlot_21_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 853 RadarSlot_21_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 864 RadarSlot_22_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 865 RadarSlot_22_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 866 RadarSlot_22_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 867 RadarSlot_22_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 868 RadarSlot_22_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 869 RadarSlot_22_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 880 RadarSlot_23_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 881 RadarSlot_23_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 882 RadarSlot_23_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 883 RadarSlot_23_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 884 RadarSlot_23_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 885 RadarSlot_23_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 896 RadarSlot_24_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 897 RadarSlot_24_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 898 RadarSlot_24_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 899 RadarSlot_24_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 900 RadarSlot_24_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 901 RadarSlot_24_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 912 RadarSlot_25_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 913 RadarSlot_25_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 914 RadarSlot_25_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 915 RadarSlot_25_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 916 RadarSlot_25_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 917 RadarSlot_25_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 928 RadarSlot_26_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 929 RadarSlot_26_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 930 RadarSlot_26_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 931 RadarSlot_26_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 932 RadarSlot_26_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 933 RadarSlot_26_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 944 RadarSlot_27_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 945 RadarSlot_27_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 946 RadarSlot_27_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 947 RadarSlot_27_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 948 RadarSlot_27_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 949 RadarSlot_27_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 960 RadarSlot_28_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 961 RadarSlot_28_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 962 RadarSlot_28_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 963 RadarSlot_28_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 964 RadarSlot_28_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 965 RadarSlot_28_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 976 RadarSlot_29_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 977 RadarSlot_29_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 978 RadarSlot_29_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 979 RadarSlot_29_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 980 RadarSlot_29_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 981 RadarSlot_29_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 992 RadarSlot_30_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 993 RadarSlot_30_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 994 RadarSlot_30_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 995 RadarSlot_30_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 996 RadarSlot_30_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 997 RadarSlot_30_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1008 RadarSlot_31_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1009 RadarSlot_31_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1010 RadarSlot_31_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1011 RadarSlot_31_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1012 RadarSlot_31_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1013 RadarSlot_31_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1024 RadarSlot_32_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1025 RadarSlot_32_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1026 RadarSlot_32_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1027 RadarSlot_32_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1028 RadarSlot_32_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1029 RadarSlot_32_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1040 RadarSlot_33_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1041 RadarSlot_33_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1042 RadarSlot_33_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1043 RadarSlot_33_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1044 RadarSlot_33_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1045 RadarSlot_33_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1056 RadarSlot_34_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1057 RadarSlot_34_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1058 RadarSlot_34_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1059 RadarSlot_34_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1060 RadarSlot_34_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1061 RadarSlot_34_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1072 RadarSlot_35_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1073 RadarSlot_35_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1074 RadarSlot_35_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1075 RadarSlot_35_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1076 RadarSlot_35_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1077 RadarSlot_35_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1088 RadarSlot_36_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1089 RadarSlot_36_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1090 RadarSlot_36_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1091 RadarSlot_36_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1092 RadarSlot_36_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1093 RadarSlot_36_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1104 RadarSlot_37_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1105 RadarSlot_37_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1106 RadarSlot_37_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1107 RadarSlot_37_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1108 RadarSlot_37_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1109 RadarSlot_37_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1120 RadarSlot_38_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1121 RadarSlot_38_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1122 RadarSlot_38_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1123 RadarSlot_38_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1124 RadarSlot_38_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1125 RadarSlot_38_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1136 RadarSlot_39_M0: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1137 RadarSlot_39_M1: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+BO_ 1138 RadarSlot_39_M2: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ RANGE_I28_RAW : 28|11@1+ (1,0) [0|2047] "raw" Observer
+ SG_ RANGE_EST_M : 28|11@1+ (0.1,0) [0|204.7] "m" Observer
+ SG_ RANGE_I27_RAW : 27|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_I39_RAW : 39|12@1+ (1,0) [0|4095] "raw" Observer
+ SG_ REL_SPEED_EST_MPS : 39|12@1+ (0.05,-102.4) [-102.4|102.35] "m/s" Observer
+ SG_ LATERAL_I51_U11_RAW : 51|11@1+ (1,0) [0|2047] "raw" Observer
+
+BO_ 1139 RadarSlot_39_M3: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ M3_I38_RAW : 38|1@1+ (1,0) [0|1] "raw" Observer
+
+BO_ 1140 RadarSlot_39_M4: 7 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ SLOT_INDEX_RAW : 20|6@1+ (1,0) [0|63] "raw" Observer
+
+BO_ 1141 RadarSlot_39_M5: 8 Radar
+ SG_ COUNTER_LOW4_RAW : 0|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE0_HIGH4_RAW : 4|4@1+ (1,0) [0|15] "raw" Observer
+ SG_ BYTE_1_RAW : 8|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_2_RAW : 16|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_3_RAW : 24|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_4_RAW : 32|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_5_RAW : 40|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_6_RAW : 48|8@1+ (1,0) [0|255] "raw" Observer
+ SG_ BYTE_7_RAW : 56|8@1+ (1,0) [0|255] "raw" Observer
+
+CM_ BO_ 400 "Defender CAN1 radar. A complete publication contains headers 0x190 through 0x196 and 40 slots with six members each. Check received addresses, payload lengths, counter and header boundaries in the log. Individual messages do not establish target validity.";
+CM_ SG_ 514 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 514 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 514 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 514 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 515 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 516 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 530 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 530 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 530 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 530 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 531 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 532 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 546 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 546 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 546 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 546 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 547 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 548 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 562 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 562 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 562 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 562 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 563 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 564 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 578 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 578 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 578 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 578 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 579 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 580 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 594 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 594 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 594 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 594 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 595 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 596 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 610 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 610 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 610 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 610 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 611 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 612 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 626 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 626 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 626 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 626 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 627 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 628 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 642 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 642 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 642 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 642 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 643 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 644 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 658 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 658 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 658 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 658 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 659 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 660 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 674 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 674 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 674 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 674 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 675 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 676 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 690 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 690 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 690 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 690 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 691 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 692 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 706 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 706 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 706 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 706 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 707 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 708 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 722 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 722 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 722 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 722 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 723 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 724 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 738 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 738 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 738 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 738 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 739 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 740 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 754 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 754 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 754 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 754 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 755 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 756 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 770 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 770 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 770 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 770 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 771 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 772 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 786 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 786 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 786 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 786 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 787 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 788 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 802 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 802 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 802 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 802 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 803 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 804 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 818 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 818 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 818 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 818 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 819 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 820 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 834 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 834 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 834 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 834 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 835 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 836 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 850 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 850 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 850 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 850 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 851 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 852 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 866 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 866 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 866 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 866 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 867 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 868 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 882 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 882 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 882 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 882 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 883 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 884 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 898 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 898 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 898 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 898 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 899 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 900 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 914 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 914 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 914 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 914 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 915 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 916 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 930 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 930 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 930 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 930 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 931 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 932 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 946 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 946 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 946 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 946 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 947 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 948 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 962 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 962 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 962 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 962 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 963 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 964 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 978 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 978 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 978 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 978 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 979 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 980 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 994 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 994 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 994 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 994 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 995 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 996 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1010 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1010 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1010 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1010 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1011 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1012 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1026 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1026 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1026 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1026 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1027 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1028 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1042 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1042 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1042 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1042 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1043 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1044 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1058 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1058 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1058 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1058 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1059 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1060 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1074 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1074 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1074 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1074 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1075 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1076 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1090 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1090 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1090 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1090 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1091 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1092 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1106 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1106 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1106 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1106 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1107 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1108 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1122 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1122 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1122 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1122 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1123 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1124 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";
+CM_ SG_ 1138 RANGE_EST_M "Estimated radar range at 0.10 m/count. Routes 105 and 107 support the scale for changes in range. The sensor origin, absolute bumper gap and meaning of zero are unresolved.";
+CM_ SG_ 1138 RANGE_I27_RAW "Alternate raw slice. The shared I27 low bit changes with adjacent fields in some captures. A physical 0.05 m resolution is unverified.";
+CM_ SG_ 1138 REL_SPEED_EST_MPS "Estimated relative speed, (raw - 2048) * 0.05 m/s. The route 103 A224 diagnostic comparison at +/-0.10 m/s and route 107/276 video comparisons support raw center 2048 and a common scale of 0.0497619 to 0.0500000 m/s/count. Center 2047 is also possible at +/-0.15 m/s with video half-step tolerance. Stationary slots 1 and 35 in route 276/2 remain counterexamples.";
+CM_ SG_ 1138 LATERAL_I51_U11_RAW "Lateral position candidate. Units, sign, origin and field width are unresolved.";
+CM_ SG_ 1139 M3_I38_RAW "Observed marker bit. Its relationship to an ACC-selected target is unverified.";
+CM_ SG_ 1140 SLOT_INDEX_RAW "Published slot index candidate. An equal value across publications does not establish object identity or validity.";

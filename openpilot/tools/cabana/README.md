@@ -138,6 +138,21 @@ the transmission shifts.
 
 For more information, see the [openpilot wiki](https://github.com/commaai/openpilot/wiki/Cabana)
 
+### Defender CAN1 radar
+
+Assign [the Defender CAN1 radar DBC](dbc/defender_radar_can1.dbc) to **CAN source 1**
+in **Manage DBCs**. The file defines the seven headers (`0x190`–`0x196`) and
+the six members of each of the 40 radar slots. Each slot's member 2
+(`0x202 + 0x10 × slot`, slot numbers start at zero) exposes both the raw fields
+and estimated values. `RANGE_EST_M` uses 0.10 m/count. `REL_SPEED_EST_MPS` uses
+`(raw − 2048) × 0.05` m/s. See the signal comments for the evidence and limitations.
+
+Check the header boundaries, message lengths and common counter before comparing slots
+in one publication. A missing member leaves that slot's corresponding data unknown
+for the publication. The slot index and the M3 marker are raw observations.
+Cabana assigns one DBC to each source, so selecting another DBC for CAN1 replaces
+this assignment.
+
 ### FPGA SPI output and selected original logs
 
 The receiver preserves bulk-read fragments; USB/SPI chunks are not frame boundaries.
