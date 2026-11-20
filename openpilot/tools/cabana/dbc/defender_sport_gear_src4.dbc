@@ -1,0 +1,20 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: Source Observer
+
+BO_ 3 BCM_GearPRND: 31 Source
+ SG_ CYCLE_CLASS M : 8|1@1+ (1,0) [0|1] "" Observer
+ SG_ PRND_POS m0 : 42|3@0+ (1,0) [0|7] "" Observer
+ SG_ SPORT_SELECTED m0 : 43|1@0+ (1,0) [0|1] "" Observer
+ SG_ SPORT_GEAR_DISPLAY_CODE m0 : 53|6@0+ (1,0) [0|63] "" Observer
+ SG_ PRND m0 : 57|2@0+ (1,0) [0|3] "" Observer
+
+CM_ BO_ 3 "Defender FlexRay source 4, 31-byte capture body. Gear signals are present on even cycles.";
+CM_ SG_ 3 SPORT_GEAR_DISPLAY_CODE "Display code. Use only when PRND=3, the low nibble of byte 5 is 8, and both upper bits of byte 6 are clear (zero-based bytes). Code 0 denotes Sport Auto in that context. The code does not measure the mechanically engaged gear.";
+
+VAL_ 3 PRND 0 "PARK" 1 "REVERSE" 2 "NEUTRAL" 3 "DRIVE";
+VAL_ 3 SPORT_GEAR_DISPLAY_CODE 0 "No numbered gear" 1 "S1" 2 "S2" 4 "S3" 8 "S4" 16 "S5" 32 "S6" 33 "S7" 34 "S8";

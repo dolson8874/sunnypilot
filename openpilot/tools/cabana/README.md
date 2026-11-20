@@ -122,6 +122,20 @@ Select either signal to plot only its matching cycles; the message list retains 
 This does not reproduce vehicle-specific exceptions from the old classification table automatically.
 Existing captures with already transformed IDs are not converted back by loading this DBC.
 
+### Defender Sport gear indication
+
+For CAN source 0, use the Defender DBC and inspect `GearPRND` (`0x108`).
+For FlexRay source 4, load [the Defender gear DBC](dbc/defender_sport_gear_src4.dbc)
+through **Manage DBCs** and inspect frame `0x03` on even cycles.
+
+Read `SPORT_GEAR_DISPLAY_CODE` as Sport Auto (`0`) or `S1`–`S8` when
+`PRND` is Drive, the low nibble of the mode byte is `0x08`, and both upper
+bits of the gear byte are clear. These are bytes 3 and 4 in CAN and bytes 5
+and 6 in the captured FlexRay body, counting from zero. Cabana's FlexRay
+multiplexer selects the cycle. Check the Sport condition separately.
+The code describes the indicated gear. Sport Auto leaves it at zero as
+the transmission shifts.
+
 For more information, see the [openpilot wiki](https://github.com/commaai/openpilot/wiki/Cabana)
 
 ### FPGA SPI output and selected original logs
