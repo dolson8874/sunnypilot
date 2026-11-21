@@ -145,6 +145,11 @@ to decode `CRUISE_HUD_FLEXRAY_TO_OP` (`0x1FB`), the FlexRay-derived cruise
 report carried on CAN1. The report is required
 while the Defender uses the CAN1 cruise input.
 
+For the host steering request `LKAS_OP_TO_FLEXRAY` (`0x1F0`), use
+the DBC from the route's software revision. The current calibration is
+`(raw − 9000) × 0.085` degrees. Earlier routes using `0.09` need
+their original DBC for an accurate comparison to the logged target angle.
+
 For radar analysis, assign `landrover_defender_radar_can1` to **CAN source 1**.
 Both DBCs are available in the opendbc list. The radar DBC defines seven
 headers (`0x190`–`0x196`) and six members for each of the 40 slots. Each slot's member 2
