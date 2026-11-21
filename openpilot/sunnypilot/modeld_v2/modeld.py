@@ -27,6 +27,7 @@ from openpilot.cereal.messaging import PubMaster, SubMaster
 from openpilot.cereal.visionipc import VisionStreamType
 from msgq.visionipc import VisionIpcClient, VisionBuf
 from opendbc.car.car_helpers import get_demo_car_params
+from opendbc.car.landrover.values import CAR as LANDROVER
 from openpilot.common.swaglog import cloudlog
 from openpilot.common.params import Params
 from openpilot.common.hardware.usb import cable_connected
@@ -371,7 +372,8 @@ def main(demo=False):
   DH = DesireHelper()
   meta_constants = load_meta_constants()
   RELC = RoadEdgeLaneChangeController()
-  blendful = Blendful()
+  guard_lane_center = CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023
+  blendful = Blendful(guard_lane_center=guard_lane_center)
   blendful_enabled = False
 
   while True:
@@ -491,6 +493,11 @@ def main(demo=False):
       if not sm['carControl'].latActive:
         prev_action.desiredCurvature = sm['controlsState'].curvature
       blendful_active = desire == log.Desire.none and DH.lane_change_state == log.LaneChangeState.off
+      if guard_lane_center:
+        cs = sm['carState']
+        blendful_active = (blendful_active and live_calib_seen and sm.all_checks(['carState', 'carControl', 'extrinsicsCalibration']) and
+                           sm['extrinsicsCalibration'].calStatus == log.ExtrinsicsCalibration.Status.calibrated and
+                           sm['carControl'].latActive and cs.canValid and not (cs.steeringPressed or cs.leftBlinker or cs.rightBlinker))
       action = model.get_action_from_model(model_output, prev_action, lat_action_t, long_action_t, v_ego,
                                            partial(blendful.update, model_output, v_ego, blendful_active, enabled=blendful_enabled))
       prev_action = action
