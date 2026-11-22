@@ -9,6 +9,8 @@ import time
 import pyray as rl
 
 from openpilot.cereal import custom
+from openpilot.selfdrive.ui.sunnypilot.model_info import defender_lane_preference_available, lane_preference_label, save_lane_preference
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialog, BigDialog
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle
 from openpilot.selfdrive.ui.mici.widgets.button import BigButton, BigParamControl
@@ -99,8 +101,11 @@ class ModelsLayoutMici(NavScroller):
                                            description=tr("Adds a gentle nudge toward lane center on top of the model's own steering, stronger when " +
                                                           "lane lines are clear. Yields around obstacles. Not available with the Default model."))
 
+    self.lane_preference = BigButton(tr("Lane position preference"))
+    self.lane_preference.set_click_callback(self._choose_lane_preference)
+
     self.main_items = [self.current_model_info, self.select_model_btn, self.cancel_download_btn, self.refresh_btn, self.clear_cache_btn,
-                       self.blendful_toggle]
+                       self.blendful_toggle, self.lane_preference]
     self._scroller.add_widgets(self.main_items)
 
   @property
@@ -123,6 +128,18 @@ class ModelsLayoutMici(NavScroller):
     scroller = NavScroller()
     scroller._scroller.add_widgets(items)
     gui_app.push_widget(scroller)
+
+  def _choose_lane_preference(self):
+    def choose(level):
+      save_lane_preference(level)
+      self._pop_to_main()
+
+    buttons = []
+    for level in PREFERENCE_LEVELS:
+      btn = BigButton(lane_preference_label(level))
+      btn.set_click_callback(lambda v=level: choose(v))
+      buttons.append(btn)
+    self._push_selection_view(buttons)
 
   def _show_folders(self):
     self.focused_widget = self.select_model_btn
@@ -221,6 +238,14 @@ class ModelsLayoutMici(NavScroller):
     self.cancel_download_btn.set_visible(False)
     self.current_model_info.current_model_header._shimmer = False
     self.current_model_info.info_header._shimmer = False
+
+    available = defender_lane_preference_available()
+    self.lane_preference.set_visible(available)
+    if available:
+      self.lane_preference.set_enabled(ui_state.is_offroad())
+      label = lane_preference_label(ui_state.params.get("DefenderLanePreference", return_default=True))
+      if self.lane_preference.value != label:
+        self.lane_preference.set_value(label)
 
     blendful_allowed = ui_state.active_runner_tinygrad
     if blendful_allowed:

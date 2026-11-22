@@ -339,7 +339,7 @@ def main(demo=False):
   pub_socks = ["modelV2", "drivingModelData", "cameraOdometry", "modelDataV2SP"] + (["chestnutGpuState"] if CHESTNUT else [])
   pm = PubMaster(pub_socks)
   sm = SubMaster(["deviceState", "carState", "narrowRoadCameraState", "extrinsicsCalibration", "driverMonitoringState",
-                  "carControl", "controlsState", "lateralDelay"])
+                  "carControl", "controlsState", "lateralDelay"], frequency=model.constants.MODEL_FREQ)
 
   publish_state = PublishState()
   chestnut_state = ChestnutGpuState(pm, model.chestnut) if CHESTNUT else None
@@ -373,7 +373,8 @@ def main(demo=False):
   meta_constants = load_meta_constants()
   RELC = RoadEdgeLaneChangeController()
   guard_lane_center = CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023
-  blendful = Blendful(guard_lane_center=guard_lane_center)
+  preference = params.get("DefenderLanePreference", return_default=True) if guard_lane_center else 0
+  blendful = Blendful(guard_lane_center=guard_lane_center, preference=preference)
   blendful_enabled = False
 
   while True:
@@ -493,11 +494,21 @@ def main(demo=False):
       if not sm['carControl'].latActive:
         prev_action.desiredCurvature = sm['controlsState'].curvature
       blendful_active = desire == log.Desire.none and DH.lane_change_state == log.LaneChangeState.off
-      if guard_lane_center:
+      input_reason = None
+      if guard_lane_center and blendful_active and blendful_enabled:
         cs = sm['carState']
-        blendful_active = (blendful_active and live_calib_seen and sm.all_checks(['carState', 'carControl', 'extrinsicsCalibration']) and
-                           sm['extrinsicsCalibration'].calStatus == log.ExtrinsicsCalibration.Status.calibrated and
-                           sm['carControl'].latActive and cs.canValid and not (cs.steeringPressed or cs.leftBlinker or cs.rightBlinker))
+        services = ['carState', 'carControl', 'extrinsicsCalibration']
+        if not sm.all_alive(services):
+          input_reason = "inputStale"
+        elif not sm.all_freq_ok(services):
+          input_reason = "inputFrequency"
+        elif not sm.all_valid(services) or not cs.canValid:
+          input_reason = "inputInvalid"
+        elif not live_calib_seen or sm['extrinsicsCalibration'].calStatus != log.ExtrinsicsCalibration.Status.calibrated:
+          input_reason = "uncalibrated"
+        elif not sm['carControl'].latActive or cs.steeringPressed or cs.leftBlinker or cs.rightBlinker:
+          input_reason = "inactive"
+        blendful_active = input_reason is None
       action = model.get_action_from_model(model_output, prev_action, lat_action_t, long_action_t, v_ego,
                                            partial(blendful.update, model_output, v_ego, blendful_active, enabled=blendful_enabled))
       prev_action = action
@@ -517,6 +528,8 @@ def main(demo=False):
       mdv2sp_send.valid = modelv2_send.valid
       mdv2sp_send.modelDataV2SP.laneTurnDirection = DH.lane_turn_direction
       mdv2sp_send.modelDataV2SP.blendfulCurvature = blendful.curvature
+      if guard_lane_center:
+        mdv2sp_send.modelDataV2SP.blendfulReason = input_reason or blendful.reason
       mdv2sp_send.modelDataV2SP.blendfulTrust = float(blendful.trust)
       mdv2sp_send.modelDataV2SP.modelCurvature = float(blendful.model_curvature)
       mdv2sp_send.modelDataV2SP.blendfulGoingAround = bool(blendful.going_around)

@@ -362,6 +362,8 @@ msgstr "IP 주소"
 
 #: system/ui/sunnypilot/widgets/sunnylink_pairing_dialog.py
 msgid "If sponsorship status was not updated, please contact a moderator on the community forum at https://community.sunnypilot.ai"
+msgstr ""
+
 #: openpilot/selfdrive/ui/layouts/settings/toggles.py
 msgid "Initial Max Speed"
 msgstr ""
@@ -942,3 +944,15 @@ msgstr "보관: {}개"
 #: openpilot/selfdrive/ui/sunnypilot/onroad/hud_renderer.py
 msgid "Stock GAP {}"
 msgstr "순정 GAP {}"
+
+msgid "Lane position preference"
+msgstr "차로 내 선호 위치"
+
+msgid "Center"
+msgstr "중앙"
+
+msgid "Left {}"
+msgstr "왼쪽 {}"
+
+msgid "Right {}"
+msgstr "오른쪽 {}"

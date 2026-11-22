@@ -167,3 +167,42 @@ class TestDefenderBlendful(OpenpilotTestCase):
     push = drive(self.bf, 3.0, plan=0.8)
     assert self.bf.going_around
     assert np.all(push == 0.0)
+
+  def test_preference_levels_are_symmetric_and_bounded_in_curves(self):
+    for level in (1, 2, 3):
+      left, right = Blendful(True, -level), Blendful(True, level)
+      a = drive(left, 5.0, k=-0.001, plan=0.17)
+      b = drive(right, 5.0, k=0.001, plan=-0.17)
+      np.testing.assert_allclose(a, -b, atol=1e-12)
+      assert a[-1] < 0 < b[-1]
+      assert np.isclose(right.preferred_offset, level * 0.10 / 3)
+      assert np.isclose(left.preferred_offset, -right.preferred_offset)
+      assert np.max(np.abs(b)) <= 0.10000001
+
+  def test_narrowest_checked_width_limits_preference_and_reacquires_slowly(self):
+    sample = frame(width=3.6)
+    bf = Blendful(True, 3)
+    drive(bf, 2.0)
+    assert bf.preferred_offset == 0.10
+    # The road tapers toward 25 m. Its narrowest width limits the entire target.
+    sample['lane_lines'][0, 2, X >= 21, 0] -= 0.98
+    bf.update(sample, 20.0, True, 0.0)
+    assert np.isclose(bf.preferred_offset, 0.02)
+    assert bf.update(frame(probs=(0.5, 0.99)), 20.0, True, 0.0) == 0.0
+    assert bf.reason == "laneGeometry" and bf.preferred_offset == 0.0
+    assert bf.update(frame(), 20.0, True, 0.0) == 0.0
+    assert 0 < bf.preferred_offset <= 0.05 * DT_MDL
+    assert bf.update(frame(), 20.0, False, 0.0) == 0.0
+    assert bf.reason == "inactive" and bf.preferred_offset == 0.0
+
+  def test_preference_ignores_invalid_level_and_preserves_disabled_and_yield(self):
+    for bf in (Blendful(True, 4), Blendful(False, -3)):
+      drive(bf, 2.0)
+      assert bf.preference == 0 and bf.preferred_offset == 0.0
+    for level in (-3, 3):
+      bf = Blendful(True, level)
+      drive(bf, 6.0)
+      assert np.all(drive(bf, 3.0, plan=0.8) == 0.0)
+      assert bf.going_around and bf.reason == "yielding"
+      assert bf.update(frame(), 20.0, True, 0.0, enabled=False) == 0.0
+      assert bf.reason == "disabled" and bf.preference == level and bf.preferred_offset == 0.0

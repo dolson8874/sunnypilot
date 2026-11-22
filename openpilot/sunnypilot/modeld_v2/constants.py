@@ -1,5 +1,7 @@
 import numpy as np
 
+PREFERENCE_LEVELS = range(-3, 4)  # model y is positive to the driver's right
+
 def index_function(idx, max_val=192, max_idx=32):
   return (max_val) * ((idx/max_idx)**2)
 

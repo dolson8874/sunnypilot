@@ -8,7 +8,7 @@ import numpy as np
 
 from openpilot.common.filter_simple import FirstOrderFilter
 from openpilot.common.realtime import DT_MDL
-from openpilot.sunnypilot.modeld_v2.constants import ModelConstants
+from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, PREFERENCE_LEVELS
 
 LANE_WIDTH_DEFAULT = 3.6  # m
 LANE_WIDTH_CLIP = (2.8, 4.5)  # m
@@ -25,10 +25,19 @@ CENTER_DEADBAND = 0.05  # m
 CENTER_CONFIRM_FRAMES = round(0.5 / DT_MDL)
 CENTER_MAX_LAT_ACCEL = 0.10  # m/s^2, at most one frame of the normal fast release
 
+# Reserve a central corridor for the Defender body and lateral clearance.
+# This design envelope is applied to estimated lane geometry, not measured tire position.
+PREFERENCE_RESERVED_WIDTH = 2.5  # m
+PREFERENCE_MAX_SHIFT = 0.10  # m
+PREFERENCE_BUILD_RATE = 0.05  # m/s
+
 
 class Blendful:
-  def __init__(self, guard_lane_center: bool = False):
+  def __init__(self, guard_lane_center: bool = False, preference: int = 0):
     self.guard_lane_center = guard_lane_center
+    self.preference = preference if guard_lane_center and preference in PREFERENCE_LEVELS else 0
+    self.preferred_offset = 0.0
+    self.reason = "unknown"
     self.guard_was_enabled = False
     self.center_direction = 0
     self.center_frames = 0
@@ -53,15 +62,20 @@ class Blendful:
     self.model_curvature = model_curvature
     if not enabled:
       if self.curvature or self.trust or self.guard_was_enabled:
-        self.__init__(self.guard_lane_center)
+        self.__init__(self.guard_lane_center, self.preference)
+      self.reason = "disabled"
       return 0.0
     fading = not active or v_ego < MIN_SPEED
+    self.reason = "inactive" if not active else "lowSpeed"
     center_errors = None
     if self.guard_lane_center:
       self.guard_was_enabled = True
       if not fading and np.isfinite(v_ego) and np.isfinite(model_curvature):
+        self.reason = "laneGeometry"
         center_errors = self._center_errors(model_output)
       fading = center_errors is None
+      if fading:
+        self.preferred_offset = 0.0
     if fading:
       self.trust = self.line_trust = 0.0
       self.usual_offset.initialized = False
@@ -74,6 +88,7 @@ class Blendful:
       target = float(np.clip(target, lower, upper))
       self.smooth = float(np.clip(self.smooth, lower, upper))
       if not np.isfinite(v_ego) or not np.isfinite(model_curvature):
+        self.reason = "inputInvalid"
         self.curvature = 0.0
         return 0.0
     target = self.smooth = self.smooth + (target - self.smooth) * DT_MDL / (DT_MDL + np.interp(abs(model_curvature) * v_ego ** 2, [0.18, 0.53], [0.5, 0.0]))
@@ -84,10 +99,11 @@ class Blendful:
     if self.guard_lane_center:
       # A stored correction can point away from center after the path changes.
       self.curvature = float(np.clip(self.curvature, lower, upper))
+    if self.guard_lane_center and self.curvature:
+      self.reason = "correcting"
     return self.curvature
 
-  @staticmethod
-  def _center_errors(model_output: dict[str, np.ndarray]) -> np.ndarray | None:
+  def _center_errors(self, model_output: dict[str, np.ndarray]) -> np.ndarray | None:
     probs = model_output['lane_lines_prob'][0, [3, 5]]
     lines = model_output['lane_lines'][0, 1:3, :, 0]
     stds = model_output['lane_lines_stds'][0, 1:3, :, 0]
@@ -104,11 +120,20 @@ class Blendful:
       return None
     if any(np.any(np.interp(CENTER_CHECK_X, X_IDXS, std) > LINE_STD[0]) for std in stds):
       return None
-    return np.interp(CENTER_CHECK_X, plan[:, 0], plan[:, 1]) - (left + right) / 2
+    if self.preference:
+      # Narrowing takes effect immediately. Only expand the bias gradually.
+      spare_half_width = max(0.0, (float(np.min(width)) - PREFERENCE_RESERVED_WIDTH) / 2)
+      desired = abs(self.preference) / 3 * min(PREFERENCE_MAX_SHIFT, spare_half_width / 3)
+      magnitude = min(desired, abs(self.preferred_offset) + PREFERENCE_BUILD_RATE * DT_MDL)
+      self.preferred_offset = magnitude if self.preference > 0 else -magnitude
+    return np.interp(CENTER_CHECK_X, plan[:, 0], plan[:, 1]) - (left + right) / 2 - self.preferred_offset
 
   def _center_limit(self, errors: np.ndarray | None, v_ego: float) -> float:
     direction = 0
+    if errors is not None:
+      self.reason = "yielding" if self.going_around else "lineConfidence"
     if errors is not None and min(self.l_prob, self.r_prob) >= CENTER_MIN_LANE_PROB and not self.going_around:
+      self.reason = "withinBandOrDisagreement"
       if np.all(errors > CENTER_DEADBAND):
         direction = -1
       elif np.all(errors < -CENTER_DEADBAND):
@@ -120,11 +145,13 @@ class Blendful:
     if not direction:
       return 0.0
     self.center_frames = min(self.center_frames + 1, CENTER_CONFIRM_FRAMES)
+    self.reason = "confirming"
     if self.center_frames < CENTER_CONFIRM_FRAMES:
       return 0.0
 
+    self.reason = "fitLimited"
     # Approximate the additional displacement by delta_curvature * distance^2 / 2.
-    # Stay on the original side of center at every checked distance.
+    # Stay on the original side of the preferred position at every checked distance.
     max_curvature = min(CENTER_MAX_LAT_ACCEL / v_ego ** 2, float(np.min(2 * np.abs(errors) / CENTER_CHECK_X ** 2)))
     return direction * max_curvature
 
@@ -176,7 +203,7 @@ class Blendful:
     # Fit curvature to place the plant in center: e ~ dk x^2 / 2
     plan_x = np.interp(x, model_output['plan'][0, :, 0], model_output['plan'][0, :, 1])
     plan_share = np.interp(abs(model_curvature) * lookahead ** 2 / 2, [0.5, 2.0], [0.3, 0.5]) # up to 50% plan y vs curvature parabola in sharp curves
-    error = np.clip(center - ((1 - plan_share) * model_curvature * x ** 2 / 2 + plan_share * plan_x), -1.0, 1.0)
+    error = np.clip(center + self.preferred_offset - ((1 - plan_share) * model_curvature * x ** 2 / 2 + plan_share * plan_x), -1.0, 1.0)
     dk = 2.0 * np.sum(weight * error * x ** 2) / np.sum(weight * x ** 4)
 
     # A model planning to end up further from its usual spot in the lane than the plant is now is likely going around something

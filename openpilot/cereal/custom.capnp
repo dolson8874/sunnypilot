@@ -476,6 +476,25 @@ struct ModelDataV2SP @0xa1680744031fdb2d {
   blendfulLeftProb @7 :Float32;
   blendfulRightProb @8 :Float32;
   blendfulLaneWidth @9 :Float32;
+  blendfulReason @10 :BlendfulReason;
+
+  enum BlendfulReason {
+    unknown @0;
+    disabled @1;
+    inactive @2;
+    inputStale @3;
+    inputFrequency @4;
+    inputInvalid @5;
+    uncalibrated @6;
+    lowSpeed @7;
+    laneGeometry @8;
+    lineConfidence @9;
+    withinBandOrDisagreement @10;
+    confirming @11;
+    yielding @12;
+    fitLimited @13;
+    correcting @14;
+  }
 
   enum TurnDirection {
     none @0;

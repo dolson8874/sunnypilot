@@ -8,7 +8,10 @@ import contextlib
 import os
 import time
 
+from opendbc.car.landrover.values import CAR as LANDROVER
 from openpilot.common.hardware.hw import Paths
+from openpilot.system.ui.lib.multilang import tr
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS
 from openpilot.selfdrive.ui.ui_state import ui_state, ChestnutState
 from openpilot.sunnypilot.models.fetcher import get_cached_bundles
 from openpilot.sunnypilot.models.helpers import get_active_source, get_selected_bundle, resolve_bundle_by_ref
@@ -118,3 +121,19 @@ def refresh_in_progress(started_at: float | None) -> bool:
   if started_at is None or time.monotonic() - started_at > MODEL_SYNC_TIMEOUT:
     return False
   return not all(ui_state.params.get(key) for key in MODEL_SYNC_KEYS)
+
+
+def defender_lane_preference_available() -> bool:
+  return (ui_state.CP is not None and ui_state.CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023 and
+          ui_state.active_runner_tinygrad and ui_state.params.get_bool("Blendful"))
+
+
+def lane_preference_label(level: int) -> str:
+  if level not in PREFERENCE_LEVELS or not level:
+    return tr("Center")
+  return (tr("Left {}") if level < 0 else tr("Right {}")).format(abs(level))
+
+
+def save_lane_preference(level: int) -> None:
+  if level in PREFERENCE_LEVELS and ui_state.is_offroad() and defender_lane_preference_available():
+    ui_state.params.put("DefenderLanePreference", level)
