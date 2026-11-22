@@ -20,34 +20,58 @@ The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 | `lrmaster-SP-flexraylog-v2` | Separate master-based FlexRay capture branch for C3X and C4 |
 | `lrmaster-SP-flexraylog-v2-wip` | This branch: FlexRay source 4/5/6 logging and read-only analysis observations for C3X and C4; clone command below |
 
-### Clone this branch
+### First install on C3X or C4
 
-Back up any existing `/data/openpilot` installation before cloning into that path.
-
-```bash
-cd /data
-git clone --recurse-submodules --branch lrmaster-SP-flexraylog-v2-wip https://github.com/dolson8874/sunnypilot.git openpilot
-cd /data/openpilot
-scons -j8
-```
-
-This branch includes the standalone FlexRay collector and records its frames in normal driving logs.
-
-To update an existing checkout of this WIP branch, first confirm that `git branch --show-current`
-prints `lrmaster-SP-flexraylog-v2-wip` and review `git status`. With no local changes to preserve:
+Run these commands in an offroad device shell with internet access. The device launcher expects the checkout at `/data/openpilot`. If that path already contains an installation you want to keep, back it up before replacing it. For a device already running this WIP branch, use one of the update methods below.
 
 ```bash
-cd /data/openpilot
-git pull --ff-only origin lrmaster-SP-flexraylog-v2-wip
-git submodule update --init --recursive
+cd /data &&
+git clone --branch lrmaster-SP-flexraylog-v2-wip --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot &&
+cd /data/openpilot &&
+git log -1 --oneline --decorate &&
+git submodule status --recursive
 ```
 
-Pulling the separate `lrmaster-SP-flexraylog-v2` branch does not install these WIP changes.
-The WIP branch has host synthetic validation; actual device/FPGA/vehicle validation remains outstanding.
-This update adds a Params key and requires a device build. If a `prebuilt` marker exists in
-the development checkout, move it to a backup location outside the checkout before restarting.
-The normal startup build refreshes the Params library and keeps loggerd, the observer and the UI
-on the same service settings.
+After the clone succeeds, reboot the device while offroad and allow the first startup build to finish. The launcher runs SCons when the checkout has no `prebuilt` marker.
+
+### Update from the device screen
+
+On an existing WIP installation, open **Settings → Software** while offroad and connected to the internet.
+
+1. Check that the target branch is **`lrmaster-SP-flexraylog-v2-wip`** and that the installed repository's `origin` points to `dolson8874/sunnypilot`.
+2. Select **Check for update**. When an update is available, select **Download update** and wait for the install option.
+3. Select **Install** (or **Install now**) and allow the device to reboot and finish its startup build. Check the branch and commit shown in **Software** afterward.
+
+The updater fetches the selected branch, cleans its staging copy and checks out the recorded submodule commits recursively. This also removes an untracked `prebuilt` marker from the staged WIP checkout. The screen update handles these steps without separate shell commands. Back up any local source edits before using it.
+
+If `DisableUpdates` is set to `1`, the updater exits at startup. To use the screen updater, turn off **Disable Updates** where that setting is available and reboot. To keep updates disabled, use the manual method below.
+
+### Update an existing WIP checkout from the shell
+
+While offroad, run `git -C /data/openpilot status --short --branch` and `git -C /data/openpilot remote get-url origin`. Confirm the WIP branch and fork, and preserve any local edits, including edits in submodules, before continuing.
+
+```bash
+cd /data/openpilot &&
+test "$(git branch --show-current)" = "lrmaster-SP-flexraylog-v2-wip" &&
+git pull --ff-only origin lrmaster-SP-flexraylog-v2-wip &&
+git submodule sync --recursive &&
+git submodule update --init --recursive &&
+git log -1 --oneline --decorate &&
+git -C opendbc_repo log -1 --oneline &&
+git submodule status --recursive
+```
+
+A different branch stops the command chain before the pull. If Git reports that a fast-forward is impossible, inspect the local commits with `git status -sb` and `git log --oneline --left-right HEAD...origin/lrmaster-SP-flexraylog-v2-wip`. A leading space in each submodule status line means it matches the recorded commit. A leading `-`, `+` or `U` indicates an uninitialized submodule, a different commit or a conflict respectively.
+
+For a manual update that changes native code, Params keys or message schemas, run the following **after the update succeeds**. The Blendful lane preference update is one such change.
+
+```bash
+cd /data/openpilot && rm -f -- ./prebuilt && sudo reboot
+```
+
+This removes the build-skip marker so the launcher performs its normal incremental build. Quickboot can recreate the marker after startup. A routine source update does not require `scons -c`.
+
+### Cruise analysis and branch integration
 
 Cruise analysis summaries are **off by default**. Use the full `rlog` for offline analysis of
 raw CAN, FlexRay sources 4/5/6, steering state and commands, model output and IMU data.
@@ -168,7 +192,7 @@ https://docs.sunnypilot.ai/ is your one stop shop for everything from features t
 First, check out this list of items you'll need to [get started](https://community.sunnypilot.ai/t/getting-started-using-sunnypilot-in-your-supported-car/251).
 
 ## Installation
-For this Land Rover WIP branch, use [Clone this branch](#clone-this-branch) above. For general upstream setup, refer to the sunnypilot community forum for [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
+For this Land Rover WIP branch, use [First install on C3X or C4](#first-install-on-c3x-or-c4) above. For subsequent updates, use the [device screen](#update-from-the-device-screen) or the [device shell](#update-an-existing-wip-checkout-from-the-shell). For general upstream setup, refer to the sunnypilot community forum for [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
 
 ## 🎆 Pull Requests
 We welcome both pull requests and issues on GitHub. Bug fixes are encouraged.
