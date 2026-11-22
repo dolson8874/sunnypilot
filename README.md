@@ -6,7 +6,7 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`lrmaster-SP-flexraylog-v2-wip`**, the C3X/C4 work-in-progress branch with standalone FlexRay capture, selected DADC original logging (source 5), and read-only cruise/radar analysis observations.
+This README describes **`test/lrmaster-SP-flexraylog-v2-wip`**, the C3X/C4 work-in-progress branch with standalone FlexRay capture, selected DADC original logging (source 5), and read-only cruise/radar analysis observations.
 `lrmaster-SP` supplies the master integration; the release-based FlexRay branch remains separate.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
@@ -18,7 +18,7 @@ The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Separate master-based FlexRay capture branch for C3X and C4 |
-| `lrmaster-SP-flexraylog-v2-wip` | This branch: FlexRay source 4/5/6 logging and read-only analysis observations for C3X and C4; clone command below |
+| `test/lrmaster-SP-flexraylog-v2-wip` | This branch: FlexRay source 4/5/6 logging and read-only analysis observations for C3X and C4; clone command below |
 
 ### First install on C3X or C4
 
@@ -26,7 +26,7 @@ Run these commands in an offroad device shell with internet access. The device l
 
 ```bash
 cd /data &&
-git clone --branch lrmaster-SP-flexraylog-v2-wip --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot &&
+git clone --branch test/lrmaster-SP-flexraylog-v2-wip --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot &&
 cd /data/openpilot &&
 git log -1 --oneline --decorate &&
 git submodule status --recursive
@@ -38,7 +38,7 @@ After the clone succeeds, reboot the device while offroad and allow the first st
 
 On an existing WIP installation, open **Settings → Software** while offroad and connected to the internet.
 
-1. Check that the target branch is **`lrmaster-SP-flexraylog-v2-wip`** and that the installed repository's `origin` points to `dolson8874/sunnypilot`.
+1. Check that the target branch is **`test/lrmaster-SP-flexraylog-v2-wip`** and that the installed repository's `origin` points to `dolson8874/sunnypilot`.
 2. Select **Check for update**. When an update is available, select **Download update** and wait for the install option.
 3. Select **Install** (or **Install now**) and allow the device to reboot and finish its startup build. Check the branch and commit shown in **Software** afterward.
 
@@ -46,14 +46,24 @@ The updater fetches the selected branch, cleans its staging copy and checks out 
 
 If `DisableUpdates` is set to `1`, the updater exits at startup. To use the screen updater, turn off **Disable Updates** where that setting is available and reboot. To keep updates disabled, use the manual method below.
 
+### Switch from the previous WIP branch
+
+On a device still running `lrmaster-SP-flexraylog-v2-wip`, select `test/lrmaster-SP-flexraylog-v2-wip` once as the target branch in **Settings → Software**, then download and install the update. SSH users can switch from a clean checkout and then follow the usual shell update steps.
+
+```bash
+cd /data/openpilot &&
+git fetch origin refs/heads/test/lrmaster-SP-flexraylog-v2-wip:refs/remotes/origin/test/lrmaster-SP-flexraylog-v2-wip &&
+git switch --track origin/test/lrmaster-SP-flexraylog-v2-wip
+```
+
 ### Update an existing WIP checkout from the shell
 
 While offroad, run `git -C /data/openpilot status --short --branch` and `git -C /data/openpilot remote get-url origin`. Confirm the WIP branch and fork, and preserve any local edits, including edits in submodules, before continuing.
 
 ```bash
 cd /data/openpilot &&
-test "$(git branch --show-current)" = "lrmaster-SP-flexraylog-v2-wip" &&
-git pull --ff-only origin lrmaster-SP-flexraylog-v2-wip &&
+test "$(git branch --show-current)" = "test/lrmaster-SP-flexraylog-v2-wip" &&
+git pull --ff-only origin test/lrmaster-SP-flexraylog-v2-wip &&
 git submodule sync --recursive &&
 git submodule update --init --recursive &&
 git log -1 --oneline --decorate &&
@@ -61,7 +71,7 @@ git -C opendbc_repo log -1 --oneline &&
 git submodule status --recursive
 ```
 
-A different branch stops the command chain before the pull. If Git reports that a fast-forward is impossible, inspect the local commits with `git status -sb` and `git log --oneline --left-right HEAD...origin/lrmaster-SP-flexraylog-v2-wip`. A leading space in each submodule status line means it matches the recorded commit. A leading `-`, `+` or `U` indicates an uninitialized submodule, a different commit or a conflict respectively.
+A different branch stops the command chain before the pull. If Git reports that a fast-forward is impossible, inspect the local commits with `git status -sb` and `git log --oneline --left-right HEAD...origin/test/lrmaster-SP-flexraylog-v2-wip`. A leading space in each submodule status line means it matches the recorded commit. A leading `-`, `+` or `U` indicates an uninitialized submodule, a different commit or a conflict respectively.
 
 For a manual update that changes native code, Params keys or message schemas, run the following **after the update succeeds**. The Blendful lane preference update is one such change.
 
