@@ -33,23 +33,31 @@ class TestStarPilotAgnos(unittest.TestCase):
               with self.assertRaises(RuntimeError):
                 starpilot_agnos.require_supported_device()
 
-  def test_tici_support_notice_only_hidden_for_verified_port(self):
-    branch = starpilot_agnos.UPDATE_BRANCH
-    for device, version, channel, hidden in (
-      ('comma tici', '20.5.5', branch, True),
-      ('comma tici', '12.8', branch, False),
-      ('comma tizi', '20.5.5', branch, False),
-      ('comma tici', '20.5.5', 'master', False),
+  def test_tici_wip_onroad_requires_verified_port(self):
+    channel = 'test/lrmaster-SP-tici-wip'
+    self.assertEqual(starpilot_agnos.UPDATE_BRANCH, channel)
+    for device, version, supported in (
+      ('comma tici', '20.5.5', True),
+      ('comma tici', '12.8', False),
+      ('comma tici', '20.6', False),
+      ('comma tizi', '20.5.5', False),
     ):
-      with self.subTest(device=device, version=version, channel=channel), tempfile.TemporaryDirectory() as folder:
+      with self.subTest(device=device, version=version), tempfile.TemporaryDirectory() as folder:
         model = Path(folder) / 'model'
         os_version = Path(folder) / 'version'
         model.write_text(device)
         os_version.write_text(version)
         with patch.multiple(starpilot_agnos, DEVICE_MODEL=model, OS_VERSION=os_version):
-          self.assertEqual(starpilot_agnos.suppress_tici_support_notice(channel), hidden)
+          self.assertEqual(starpilot_agnos.supports_tici_onroad(channel, 'feature'), supported)
           os_version.unlink()
-          self.assertFalse(starpilot_agnos.suppress_tici_support_notice(channel))
+          self.assertFalse(starpilot_agnos.supports_tici_onroad(channel, 'feature'))
+
+  def test_other_tici_channels_use_standard_classification(self):
+    with patch.object(starpilot_agnos, 'require_supported_device', side_effect=AssertionError('unexpected OS check')):
+      self.assertTrue(starpilot_agnos.supports_tici_onroad('release-tici', 'tici'))
+      self.assertFalse(starpilot_agnos.supports_tici_onroad('test/lrmaster-SP-wip-starpilot-agnos', 'feature'))
+      self.assertFalse(starpilot_agnos.supports_tici_onroad('test/lrmaster-SP-wip', 'feature'))
+      self.assertFalse(starpilot_agnos.supports_tici_onroad('test/lrmaster-SP-flexraylog-v2-wip', 'feature'))
 
   def test_app_only_update(self):
     with tempfile.TemporaryDirectory() as folder:

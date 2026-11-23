@@ -18,7 +18,7 @@ from openpilot.common.params import Params
 from openpilot.common.realtime import DT_HW
 from openpilot.selfdrive.selfdrived.alertmanager import set_offroad_alert
 from openpilot.common.hardware import HARDWARE, COMMA_HARDWARE
-from openpilot.common.hardware.comma.starpilot_agnos import suppress_tici_support_notice
+from openpilot.common.hardware.comma.starpilot_agnos import supports_tici_onroad
 from openpilot.common.basedir import BASEDIR
 from openpilot.common.git import get_short_branch
 from openpilot.common.hardware.usb import CHESTNUT_FW_VERSION, CHESTNUT_USB_PRODUCT, get_usb_state, get_usb_topology, is_chestnut_usb_id, set_usb_state
@@ -215,7 +215,10 @@ def hardware_thread(end_event, hw_queue) -> None:
   startup_conditions: dict[str, bool] = {}
   startup_conditions_prev: dict[str, bool] = {}
   build_metadata = get_build_metadata()
-  hide_tici_support_notice = COMMA_HARDWARE and suppress_tici_support_notice(build_metadata.channel)
+  tici_channel_unsupported = (
+    COMMA_HARDWARE and HARDWARE.get_device_type() == "tici"
+    and not supports_tici_onroad(build_metadata.channel, build_metadata.channel_type)
+  )
 
   off_ts: float | None = None
   started_ts: float | None = None
@@ -378,14 +381,9 @@ def hardware_thread(end_event, hw_queue) -> None:
     startup_conditions["not_always_offroad"] = not offroad_mode
     onroad_conditions["not_always_offroad"] = not offroad_mode
 
-    # if an unsupported device and branch is detected, going onroad is blocked
-    # only allow going onroad when:
-    # - TIZI, or
-    # - TICI and channel_type is "tici"
-    is_unsupported_combo = COMMA_HARDWARE and HARDWARE.get_device_type() == "tici" and build_metadata.channel_type != "tici"
-    startup_conditions["not_tici"] = not is_unsupported_combo
-    onroad_conditions["not_tici"] = not is_unsupported_combo
-    set_offroad_alert("Offroad_TiciSupport", is_unsupported_combo and not hide_tici_support_notice, extra_text=build_metadata.channel)
+    startup_conditions["not_tici"] = not tici_channel_unsupported
+    onroad_conditions["not_tici"] = not tici_channel_unsupported
+    set_offroad_alert("Offroad_TiciSupport", tici_channel_unsupported, extra_text=build_metadata.channel)
 
     # if the temperature enters the danger zone, go offroad to cool down
     onroad_conditions["device_temp_good"] = thermal_status < ThermalStatus.critical

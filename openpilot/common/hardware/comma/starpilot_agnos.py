@@ -6,7 +6,7 @@ DEVICE_MODEL = Path('/sys/firmware/devicetree/base/model')
 OS_VERSION = Path('/VERSION')
 REQUIRED_MODEL = 'comma tici'
 REQUIRED_VERSION = '20.5.5'
-UPDATE_BRANCH = 'test/lrmaster-SP-wip-starpilot-agnos'
+UPDATE_BRANCH = 'test/lrmaster-SP-tici-wip'
 POLICY_FILES = (
   'launch_openpilot.sh',
   'launch_env.sh',
@@ -27,9 +27,9 @@ def require_supported_device() -> None:
     raise RuntimeError(f'This branch requires preinstalled StarPilot C3 AGNOS {REQUIRED_VERSION}; detected {version!r}')
 
 
-def suppress_tici_support_notice(channel: str) -> bool:
+def supports_tici_onroad(channel: str, channel_type: str) -> bool:
   if channel != UPDATE_BRANCH:
-    return False
+    return channel_type == 'tici'
   try:
     require_supported_device()
   except (OSError, RuntimeError):
