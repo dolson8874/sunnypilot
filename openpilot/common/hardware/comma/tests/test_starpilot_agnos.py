@@ -33,6 +33,24 @@ class TestStarPilotAgnos(unittest.TestCase):
               with self.assertRaises(RuntimeError):
                 starpilot_agnos.require_supported_device()
 
+  def test_tici_support_notice_only_hidden_for_verified_port(self):
+    branch = starpilot_agnos.UPDATE_BRANCH
+    for device, version, channel, hidden in (
+      ('comma tici', '20.5.5', branch, True),
+      ('comma tici', '12.8', branch, False),
+      ('comma tizi', '20.5.5', branch, False),
+      ('comma tici', '20.5.5', 'master', False),
+    ):
+      with self.subTest(device=device, version=version, channel=channel), tempfile.TemporaryDirectory() as folder:
+        model = Path(folder) / 'model'
+        os_version = Path(folder) / 'version'
+        model.write_text(device)
+        os_version.write_text(version)
+        with patch.multiple(starpilot_agnos, DEVICE_MODEL=model, OS_VERSION=os_version):
+          self.assertEqual(starpilot_agnos.suppress_tici_support_notice(channel), hidden)
+          os_version.unlink()
+          self.assertFalse(starpilot_agnos.suppress_tici_support_notice(channel))
+
   def test_app_only_update(self):
     with tempfile.TemporaryDirectory() as folder:
       current = Path(folder) / 'current'

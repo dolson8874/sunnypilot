@@ -27,6 +27,16 @@ def require_supported_device() -> None:
     raise RuntimeError(f'This branch requires preinstalled StarPilot C3 AGNOS {REQUIRED_VERSION}; detected {version!r}')
 
 
+def suppress_tici_support_notice(channel: str) -> bool:
+  if channel != UPDATE_BRANCH:
+    return False
+  try:
+    require_supported_device()
+  except (OSError, RuntimeError):
+    return False
+  return True
+
+
 def require_app_update(current: Path, candidate: Path) -> None:
   for path in POLICY_FILES:
     old, new = current / path, candidate / path
