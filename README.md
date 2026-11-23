@@ -6,7 +6,7 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration and Blendful lane position settings.
+This README describes **`test/lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration and Blendful lane position settings.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
 `lrmaster-SP-tici` is the separate C3 branch.
@@ -14,26 +14,26 @@ The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 | Published branch | Purpose |
 | --- | --- |
 | `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
-| `lrmaster-SP-wip` | Defender WIP with CAN logging |
+| `test/lrmaster-SP-wip` | Defender WIP with CAN logging |
 | `test/lrmaster-SP-flexraylog-v2-wip` | Defender WIP with the standalone FlexRay capture path |
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture for C3X and C4 |
 
-### Clone this branch
+### Open this local test branch
 
-Back up any existing `/data/openpilot` installation before cloning into that path.
+From an existing sunnypilot checkout that contains the branch, create a worktree at a new path.
 
 ```bash
-cd /data
-git clone --recurse-submodules --branch lrmaster-SP-wip https://github.com/dolson8874/sunnypilot.git openpilot
-cd /data/openpilot
+git worktree add ../sunnypilot-can-wip test/lrmaster-SP-wip
+cd ../sunnypilot-can-wip
+git submodule update --init --recursive
 scons -j8
 ```
 
 This branch records physical CAN through pandad and loggerd. Enable **Record cruise analysis summaries** in Developer settings to collect optional CAN and radar summaries. The Defender CAN1 cruise and radar inputs still require the compatible FPGA setup. Use `test/lrmaster-SP-flexraylog-v2-wip` for USB/SPI FlexRay capture and live FlexRay analysis in Cabana.
 
-`--recurse-submodules` checks out the exact submodule commits recorded by this branch.
+`git submodule update --init --recursive` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.
 When integrating an upstream release, merge and publish the forked `panda` and `opendbc_repo`
 commits first, then record their new pointers here. The commits must be reachable from the URLs in `.gitmodules`.
