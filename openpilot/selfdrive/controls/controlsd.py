@@ -23,6 +23,7 @@ from openpilot.selfdrive.controls.lib.longcontrol import LongControl
 from openpilot.selfdrive.modeld.modeld import LAT_SMOOTH_SECONDS
 from openpilot.selfdrive.locationd.helpers import PoseCalibrator, Pose
 
+from openpilot.sunnypilot.livedelay.helpers import get_lat_delay
 from openpilot.sunnypilot.selfdrive.controls.controlsd_ext import ControlsExt
 
 State = log.SelfdriveState.OpenpilotState
@@ -91,6 +92,8 @@ class Controls(ControlsExt):
     steer_angle_without_offset = math.radians(CS.steeringAngleDeg - lp.angleOffsetDeg)
     self.curvature = -self.VM.calc_curvature(steer_angle_without_offset, CS.vEgo, lp.roll)
 
+    lat_delay = get_lat_delay(self.params, self.sm["lateralDelay"].lateralDelay)
+
     # Update Torque Params
     if self.CP.lateralTuning.which() == 'torque':
       torque_params = self.sm['lateralTorqueParameters']
@@ -102,7 +105,7 @@ class Controls(ControlsExt):
 
       self.LaC.extension.update_model_v2(self.sm['modelV2'])
 
-      self.LaC.extension.update_lateral_lag(self.lat_delay)
+      self.LaC.extension.update_lateral_lag(lat_delay)
 
     long_plan = self.sm['longitudinalPlan']
     model_v2 = self.sm['modelV2']
@@ -142,12 +145,10 @@ class Controls(ControlsExt):
     # Reset desired curvature to current to avoid violating the limits on engage
     new_desired_curvature, self.lateral_plan_mono_time = select_lateral_plan(self.sm, self.params, CC.latActive, self.curvature)
     self.desired_curvature, curvature_limited = clip_curvature(CS.vEgo, self.desired_curvature, new_desired_curvature, lp.roll)
-    lat_delay = self.sm["lateralDelay"].lateralDelay + LAT_SMOOTH_SECONDS
-
     actuators.curvature = self.desired_curvature
     steer, lateral_output, lac_log = self.LaC.update(CC.latActive, CS, self.VM, lp,
                                                      self.steer_limited_by_safety, self.desired_curvature,
-                                                     self.calibrated_pose, curvature_limited, lat_delay)
+                                                     self.calibrated_pose, curvature_limited, lat_delay + LAT_SMOOTH_SECONDS)
     actuators.torque = float(steer)
     if self.CP.steerControlType == car.CarParams.SteerControlType.curvature:
       actuators.curvature = float(lateral_output)
@@ -247,7 +248,7 @@ class Controls(ControlsExt):
       self.update()
       CC, lac_log = self.state_control()
       self.publish(CC, lac_log)
-      self.get_params_sp(self.sm)
+      self.get_params_sp()
       self.run_ext(self.sm, self.pm)
       rk.monitor_time()
 
