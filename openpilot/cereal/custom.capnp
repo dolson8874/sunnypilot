@@ -454,6 +454,7 @@ struct BackupManagerSP @0xf98d843bfd7004a3 {
 struct CarStateSP @0xb86e6369214c01c8 {
   speedLimit @0 :Float32;
   stockCruiseGap @1 :UInt8;  # 0 when unavailable, 1–4 for the stock ACC setting.
+  stockCruiseSetSpeedKph @2 :Float32;  # 0 when unavailable.
 }
 
 struct LiveMapDataSP @0xf416ec09499d9d19 {

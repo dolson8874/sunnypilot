@@ -39,7 +39,7 @@ Land Rover uses safety model **39** because upstream uses **35 for BYD**, **36 f
 Regenerate CarParams using the normal startup/fingerprinting process; do not reuse legacy Land Rover safety ID 35.
 Pandad rejects a legacy Land Rover configuration that would otherwise select BYD safety.
 
-This branch carries the matched Defender WIP host and safety implementation in its pinned `opendbc_repo` commit.
+The pinned `opendbc_repo` retains the Defender WIP implementation and adds Range Rover Vogue 2017. Select **Land Rover Range Rover Vogue 2017** in Vehicle settings if automatic detection is unavailable. The Range Rover uses stock ACC and supports a vehicle-specific MADS toggle. Setting the following distance to 4 disengages steering. The Range Rover port is for offroad verification and has pending vehicle validation.
 The release integration branches are retained locally for comparison and rollback;
 they are not published clone targets on GitHub.
 

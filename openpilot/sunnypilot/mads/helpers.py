@@ -7,6 +7,7 @@ See the LICENSE.md file in the root directory for more details.
 
 from openpilot.common.params import Params
 from opendbc.car import structs
+from opendbc.car.landrover.values import CAR as LANDROVER, LandroverFlags
 from opendbc.safety import ALTERNATIVE_EXPERIENCE
 from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP, HyundaiSafetyFlagsSP
 from opendbc.sunnypilot.car.tesla.values import MadsScreenButtonType, TeslaFlagsSP
@@ -42,6 +43,15 @@ def read_steering_mode_param(CP: structs.CarParams, CP_SP: structs.CarParamsSP, 
 
 def set_alternative_experience(CP: structs.CarParams, CP_SP: structs.CarParamsSP, params: Params):
   enabled = params.get_bool("Mads")
+  if CP.carFingerprint == LANDROVER.RANGEROVER_VOGUE_2017:
+    for config in CP.safetyConfigs:
+      if config.safetyModel == structs.CarParams.SafetyModel.landrover:
+        config.safetyParam &= ~LandroverFlags.RR2017_MADS.value
+        if enabled and params.get("RR2017Mads", return_default=True):
+          CP.alternativeExperience |= ALTERNATIVE_EXPERIENCE.ENABLE_MADS
+          config.safetyParam |= LandroverFlags.RR2017_MADS.value
+    return
+
   steering_mode = read_steering_mode_param(CP, CP_SP, params)
 
   if enabled:
