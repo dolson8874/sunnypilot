@@ -4,71 +4,35 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 source "$DIR/launch_env.sh"
 
-function agnos_init {
-  # TODO: move this to agnos
-  sudo rm -f /data/etc/NetworkManager/system-connections/*.nmmeta
-  rm -f /data/scons_cache/config.lock
-
-  # set success flag for current boot slot
-  sudo abctl --set_success
-
-  # TODO: do this without udev in AGNOS
-  # udev does this, but sometimes we startup faster
-  sudo chgrp gpu /dev/adsprpc-smd /dev/ion /dev/kgsl-3d0
-  sudo chmod 660 /dev/adsprpc-smd /dev/ion /dev/kgsl-3d0
-
-  # Check if AGNOS update is required
-  if [ "$(< /VERSION)" != "$AGNOS_VERSION" ]; then
-    AGNOS_PY="$DIR/openpilot/common/hardware/comma/agnos.py"
-    MANIFEST="$DIR/openpilot/system/hardware/comma/agnos.json"
-    if "$AGNOS_PY" --verify "$MANIFEST"; then
-      sudo reboot
-    fi
-    while true; do
-      "$DIR/openpilot/common/hardware/comma/updater" "$AGNOS_PY" "$MANIFEST"
-    done
-  fi
-}
+POLICY="$DIR/openpilot/common/hardware/comma/starpilot_agnos.py"
 
 function launch {
+  python3 "$POLICY" || return 1
+
   # Remove orphaned git lock if it exists on boot
   [ -f "$DIR/.git/index.lock" ] && rm -f "$DIR/.git/index.lock"
 
-  # Check to see if there's a valid overlay-based update available. Conditions
-  # are as follows:
-  #
-  # 1. The DIR init file has to exist, with a newer modtime than anything in
-  #    the DIR Git repo. This checks for local development work or the user
-  #    switching branches/forks, which should not be overwritten.
-  # 2. The FINALIZED consistent file has to exist, indicating there's an update
-  #    that completed successfully and synced to disk.
-
-  if [ -f "${DIR}/.overlay_init" ]; then
-    find "${DIR}/.git" -newer "${DIR}/.overlay_init" | grep -q '.' 2> /dev/null
-    if [ $? -eq 0 ]; then
-      echo "${DIR} has been modified, skipping overlay update installation"
-    else
-      if [ -f "${STAGING_ROOT}/finalized/.overlay_consistent" ]; then
-        if [ ! -d /data/safe_staging/old_openpilot ]; then
-          echo "Valid overlay update found, installing"
-          LAUNCHER_LOCATION="${BASH_SOURCE[0]}"
-
-          mv "$DIR" /data/safe_staging/old_openpilot
-          mv "${STAGING_ROOT}/finalized" "$DIR"
-          cd "$DIR"
-          # releases before the openpilot/ move can't swap AGNOS on newer AGNOS, use ours
-          [ ! -L system/hardware/tici/agnos.json ] && /data/safe_staging/old_openpilot/openpilot/common/hardware/comma/agnos.py --verify system/hardware/tici/agnos.json && sudo reboot
-
-          echo "Restarting launch script ${LAUNCHER_LOCATION}"
-          unset AGNOS_VERSION
-          exec "${LAUNCHER_LOCATION}"
-        else
-          echo "openpilot backup found, not updating"
-          # TODO: restore backup? This means the updater didn't start after swapping
-        fi
+  # Only apply a consistent app update whose AGNOS policy matches this checkout.
+  local finalized="$STAGING_ROOT/finalized"
+  local backup="$STAGING_ROOT/old_openpilot"
+  if [ -f "$DIR/.overlay_init" ] && [ -f "$finalized/.overlay_consistent" ]; then
+    if find "$DIR/.git" -newer "$DIR/.overlay_init" | grep -q .; then
+      echo "$DIR has been modified, skipping overlay update installation"
+    elif [ -e "$backup" ] || [ -L "$backup" ]; then
+      echo "openpilot backup found, not updating"
+    elif python3 "$POLICY" --app-update "$DIR" "$finalized"; then
+      echo "Installing verified sunnypilot app update"
+      mv -- "$DIR" "$backup" || return 1
+      if ! mv -- "$finalized" "$DIR"; then
+        mv -- "$backup" "$DIR"
+        return 1
       fi
+      cd "$DIR" || return 1
+      exec "$DIR/launch_chffrplus.sh"
     fi
   fi
+
+  cd "$DIR" || return 1
 
   # handle pythonpath
   ln -sfn "$(pwd)" /data/pythonpath
@@ -81,11 +45,6 @@ function launch {
   ln -sfn rednose_repo/rednose rednose
   ln -sfn teleoprtc_repo/teleoprtc teleoprtc
   ln -sfn tinygrad_repo/tinygrad tinygrad
-
-  # hardware specific init
-  if [ -f /AGNOS ]; then
-    agnos_init
-  fi
 
   # write tmux scrollback to a file
   tmux capture-pane -pq -S-1000 > /tmp/launch_log

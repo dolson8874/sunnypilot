@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import os
-import re
 import datetime
 import subprocess
 import shutil
 import signal
 import fcntl
 import threading
-from collections import defaultdict
 from pathlib import Path
 
 from openpilot.common.basedir import BASEDIR
@@ -16,11 +14,11 @@ from openpilot.common.time_helpers import system_time_valid
 from openpilot.common.markdown import parse_markdown
 from openpilot.common.swaglog import cloudlog
 from openpilot.selfdrive.selfdrived.alertmanager import set_offroad_alert
-from openpilot.common.hardware import AGNOS, HARDWARE
-from openpilot.common.version import get_build_metadata, SP_BRANCH_MIGRATIONS
+from openpilot.common.hardware.comma.starpilot_agnos import UPDATE_BRANCH, require_app_update, require_supported_device
+from openpilot.common.version import get_build_metadata
 
 LOCK_FILE = os.getenv("UPDATER_LOCK_FILE", "/tmp/safe_staging_overlay.lock")
-STAGING_ROOT = os.getenv("UPDATER_STAGING_ROOT", "/data/safe_staging")
+STAGING_ROOT = os.getenv("UPDATER_STAGING_ROOT", "/data/safe_staging_starpilot")
 
 OVERLAY_UPPER = os.path.join(STAGING_ROOT, "upper")
 OVERLAY_METADATA = os.path.join(STAGING_ROOT, "metadata")
@@ -192,33 +190,10 @@ def finalize_update() -> None:
   cloudlog.info("done finalizing overlay")
 
 
-def handle_agnos_update() -> None:
-  from openpilot.common.hardware.comma.agnos import flash_agnos_update, get_target_slot_number
-
-  cur_version = HARDWARE.get_os_version()
-  updated_version = run(["bash", "-c", r"unset AGNOS_VERSION && source launch_env.sh && \
-                          echo -n $AGNOS_VERSION"], OVERLAY_MERGED).strip()
-
-  cloudlog.info(f"AGNOS version check: {cur_version} vs {updated_version}")
-  if cur_version == updated_version:
-    return
-
-  # prevent an openpilot getting swapped in with a mismatched or partially downloaded agnos
-  set_consistent_flag(False)
-
-  cloudlog.info(f"Beginning background installation for AGNOS {updated_version}")
-
-  manifest_path = os.path.join(OVERLAY_MERGED, "openpilot/system/hardware/comma/agnos.json")
-  if not os.path.isfile(manifest_path):  # releases before the openpilot/ move
-    manifest_path = os.path.join(OVERLAY_MERGED, "system/hardware/tici/agnos.json")
-  target_slot_number = get_target_slot_number()
-  flash_agnos_update(manifest_path, target_slot_number, cloudlog)
-
-
 class Updater:
   def __init__(self):
     self.params = Params()
-    self.branches = defaultdict(str)
+    self.branches: dict[str, str] = {}
     self._has_internet: bool = False
 
   @property
@@ -227,16 +202,12 @@ class Updater:
 
   @property
   def target_branch(self) -> str:
-    b: str | None = self.params.get("UpdaterTargetBranch")
-    if b is None:
-      b = self.get_branch(BASEDIR)
-    b = SP_BRANCH_MIGRATIONS.get((HARDWARE.get_device_type(), b), b)
-    return b
+    return UPDATE_BRANCH
 
   @property
   def update_ready(self) -> bool:
     consistent_file = Path(os.path.join(FINALIZED, ".overlay_consistent"))
-    if consistent_file.is_file():
+    if self.target_branch in self.branches and consistent_file.is_file():
       hash_mismatch = self.get_commit_hash(BASEDIR) != self.branches[self.target_branch]
       branch_mismatch = self.get_branch(BASEDIR) != self.target_branch
       on_target_branch = self.get_branch(FINALIZED) == self.target_branch
@@ -245,7 +216,7 @@ class Updater:
 
   @property
   def update_available(self) -> bool:
-    if os.path.isdir(OVERLAY_MERGED) and len(self.branches) > 0:
+    if self.target_branch in self.branches and os.path.isdir(OVERLAY_MERGED):
       hash_mismatch = self.get_commit_hash(OVERLAY_MERGED) != self.branches[self.target_branch]
       branch_mismatch = self.get_branch(OVERLAY_MERGED) != self.target_branch
       return hash_mismatch or branch_mismatch
@@ -262,8 +233,7 @@ class Updater:
     self.params.put("UpdaterTargetBranch", self.target_branch, block=True)
 
     self.params.put_bool("UpdaterFetchAvailable", self.update_available, block=True)
-    if len(self.branches):
-      self.params.put("UpdaterAvailableBranches", ','.join(self.branches.keys()), block=True)
+    self.params.put("UpdaterAvailableBranches", ','.join(self.branches.keys()), block=True)
 
     last_uptime_onroad = self.params.get("UptimeOnroad", return_default=True)
     last_route_count = self.params.get("RouteCount", return_default=True)
@@ -330,8 +300,6 @@ class Updater:
   def check_for_update(self) -> None:
     cloudlog.info("checking for updates")
 
-    excluded_branches = ('release2', 'release2-staging')
-
     try:
       run(["git", "ls-remote", "origin", "HEAD"], OVERLAY_MERGED)
       self._has_internet = True
@@ -339,14 +307,16 @@ class Updater:
       self._has_internet = False
 
     setup_git_options(OVERLAY_MERGED)
-    output = run(["git", "ls-remote", "--heads"], OVERLAY_MERGED)
-
+    ref = f"refs/heads/{self.target_branch}"
+    output = run(["git", "ls-remote", "--heads", "origin", ref], OVERLAY_MERGED)
     self.branches.clear()
-    for line in output.split('\n'):
-      ls_remotes_re = r'(?P<commit_sha>\b[0-9a-f]{5,40}\b)(\s+)(refs\/heads\/)(?P<branch_name>.*$)'
-      x = re.fullmatch(ls_remotes_re, line.strip())
-      if x is not None and x.group('branch_name') not in excluded_branches:
-        self.branches[x.group('branch_name')] = x.group('commit_sha')
+    if not output.strip():
+      cloudlog.info(f"No published app updates for {self.target_branch}")
+      return
+    commit, remote_ref = output.strip().split()
+    if remote_ref != ref:
+      raise RuntimeError(f"Unexpected update reference: {remote_ref}")
+    self.branches[self.target_branch] = commit
 
     cur_branch = self.get_branch(OVERLAY_MERGED)
     cur_commit = self.get_commit_hash(OVERLAY_MERGED)
@@ -387,9 +357,7 @@ class Updater:
     r = [run(cmd, OVERLAY_MERGED) for cmd in cmds]
     cloudlog.info("git reset success: %s", '\n'.join(r))
 
-    # TODO: show agnos download progress
-    if AGNOS:
-      handle_agnos_update()
+    require_app_update(Path(BASEDIR), Path(OVERLAY_MERGED))
 
     # Create the finalized, ready-to-swap update
     self.params.put("UpdaterState", "finalizing update...", block=True)
@@ -398,6 +366,7 @@ class Updater:
 
 
 def main() -> None:
+  require_supported_device()
   params = Params()
 
   if params.get_bool("DisableUpdates"):
@@ -459,8 +428,8 @@ def main() -> None:
         user_requested_fetch = wait_helper.user_request == UserRequest.FETCH
         if params.get_bool("NetworkMetered") and not timed_out and not user_requested_fetch:
           cloudlog.info("skipping fetch, connection metered")
-        elif wait_helper.user_request == UserRequest.CHECK:
-          cloudlog.info("skipping fetch, only checking")
+        elif wait_helper.user_request == UserRequest.CHECK or updater.target_branch not in updater.branches:
+          cloudlog.info("skipping fetch, no app download requested or available")
         else:
           updater.fetch_update()
           write_time_to_param(params, "UpdaterLastFetchTime")

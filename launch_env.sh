@@ -15,8 +15,5 @@ export VECLIB_MAXIMUM_THREADS=1
 # headroom for this until ui is moved to the CPU.
 export QCOM_PRIORITY=12
 
-if [ -z "$AGNOS_VERSION" ]; then
-  export AGNOS_VERSION="19.9"
-fi
-
-export STAGING_ROOT="/data/safe_staging"
+export STAGING_ROOT="/data/safe_staging_starpilot"
+export UPDATER_STAGING_ROOT="$STAGING_ROOT"

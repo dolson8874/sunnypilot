@@ -345,28 +345,8 @@ function op_docs() {
 }
 
 function op_check_agnos_update() {
-  if [[ ! -f "/AGNOS" ]]; then
-    return 0
-  fi
-
-  local choice current_version target_version
-  current_version="$(< /VERSION)"
-  target_version="$(unset AGNOS_VERSION; source "$OPENPILOT_ROOT/launch_env.sh"; echo "$AGNOS_VERSION")"
-
-  if [[ "$current_version" == "$target_version" ]]; then
-    return 0
-  fi
-
-  echo -e "${BOLD}AGNOS update available:${NC} $current_version → $target_version"
-  if read -r -p "Install it now? [y/N] " choice && [[ "$choice" =~ ^[Yy]$ ]]; then
-    op_run_command "$OPENPILOT_ROOT/openpilot/common/hardware/comma/agnos.py" --swap \
-      "$OPENPILOT_ROOT/openpilot/common/hardware/comma/agnos.json"
-
-    if read -r -p "Reboot now to apply the update? [y/N] " choice && [[ "$choice" =~ ^[Yy]$ ]]; then
-      op_run_command sudo reboot
-    else
-      echo "Reboot before starting openpilot to apply the AGNOS update."
-    fi
+  if [[ -f "/AGNOS" ]]; then
+    python3 "$OPENPILOT_ROOT/openpilot/common/hardware/comma/starpilot_agnos.py"
   fi
 }
 

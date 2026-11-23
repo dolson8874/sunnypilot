@@ -10,6 +10,11 @@ from collections.abc import Generator
 
 import requests
 
+if __package__:
+  from .starpilot_agnos import refuse_firmware_change
+else:
+  from starpilot_agnos import refuse_firmware_change
+
 SPARSE_CHUNK_FMT = struct.Struct('H2xI4x')
 
 AGNOS_MANIFEST_FILE = "openpilot/system/hardware/comma/agnos.json"
@@ -114,7 +119,7 @@ def get_raw_hash(path: str, partition_size: int) -> str:
   raw_hash = hashlib.sha256()
   pos, chunk_size = 0, 1024 * 1024
 
-  with open(path, 'rb+') as out:
+  with open(path, 'rb') as out:
     while pos < partition_size:
       n = min(chunk_size, partition_size - pos)
       raw_hash.update(out.read(n))
@@ -140,12 +145,13 @@ def verify_partition(target_slot_number: int, partition: dict[str, str | int], f
   if full_check:
     return get_raw_hash(path, partition_size) == partition_hash.lower()
   else:
-    with open(path, 'rb+') as out:
+    with open(path, 'rb') as out:
       out.seek(partition_size)
       return out.read(64) == partition_hash.lower().encode()
 
 
 def clear_partition_hash(target_slot_number: int, partition: dict) -> None:
+  refuse_firmware_change()
   path = get_partition_path(target_slot_number, partition)
   with open(path, 'wb+') as out:
     partition_size = partition['size']
@@ -156,6 +162,7 @@ def clear_partition_hash(target_slot_number: int, partition: dict) -> None:
 
 
 def extract_compressed_image(target_slot_number: int, partition: dict, cloudlog):
+  refuse_firmware_change()
   path = get_partition_path(target_slot_number, partition)
   downloader = StreamingDecompressor(partition['url'])
 
@@ -185,6 +192,7 @@ def extract_compressed_image(target_slot_number: int, partition: dict, cloudlog)
 
 
 def flash_partition(target_slot_number: int, partition: dict, cloudlog, standalone=False):
+  refuse_firmware_change()
   cloudlog.info(f"Downloading and writing {partition['name']}")
 
   if verify_partition(target_slot_number, partition):
@@ -208,6 +216,7 @@ def flash_partition(target_slot_number: int, partition: dict, cloudlog, standalo
 
 
 def swap(manifest_path: str, target_slot_number: int, cloudlog) -> None:
+  refuse_firmware_change()
   update = json.load(open(manifest_path))
   for partition in update:
     if not partition.get('full_check', False):
@@ -223,6 +232,7 @@ def swap(manifest_path: str, target_slot_number: int, cloudlog) -> None:
 
 
 def flash_agnos_update(manifest_path: str, target_slot_number: int, cloudlog, standalone=False) -> None:
+  refuse_firmware_change()
   update = json.load(open(manifest_path))
 
   cloudlog.info(f"Target slot {target_slot_number}")
@@ -258,30 +268,16 @@ def verify_agnos_update(manifest_path: str, target_slot_number: int) -> bool:
 
 if __name__ == "__main__":
   import argparse
-  import logging
 
-  parser = argparse.ArgumentParser(description="Flash and verify AGNOS update",
+  parser = argparse.ArgumentParser(description="AGNOS is managed separately from the StarPilot C3 application",
                                    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
   parser.add_argument("--verify", action="store_true", help="Verify and perform swap if update ready")
   parser.add_argument("--swap", action="store_true", help="Verify and perform swap, downloads if necessary")
   parser.add_argument("manifest", help="Manifest json")
-  args = parser.parse_args()
+  parser.parse_args()
 
-  logging.basicConfig(level=logging.INFO)
-
-  target_slot_number = get_target_slot_number()
-  if args.verify:
-    if verify_agnos_update(args.manifest, target_slot_number):
-      swap(args.manifest, target_slot_number, logging)
-      exit(0)
-    exit(1)
-  elif args.swap:
-    while not verify_agnos_update(args.manifest, target_slot_number):
-      logging.error("Verification failed. Flashing AGNOS")
-      flash_agnos_update(args.manifest, target_slot_number, logging, standalone=True)
-
-    logging.warning(f"Verification succeeded. Swapping to slot {target_slot_number}")
-    swap(args.manifest, target_slot_number, logging)
-  else:
-    flash_agnos_update(args.manifest, target_slot_number, logging, standalone=True)
+  try:
+    refuse_firmware_change()
+  except PermissionError as exc:
+    parser.exit(1, f"{exc}\n")

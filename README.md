@@ -6,55 +6,19 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`test/lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration and Blendful lane position settings.
-The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
-(sunnypilot **2026.003.000**, openpilot **0.11.3**).
-The [C3 TICI WIP](https://github.com/dolson8874/sunnypilot/tree/test/lrmaster-SP-tici-wip) has its own installation instructions.
+This README describes **`test/lrmaster-SP-wip-starpilot-agnos`**, a local C3 compatibility experiment based on `test/lrmaster-SP-wip`.
 
-| Published branch | Purpose |
-| --- | --- |
-| `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
-| `test/lrmaster-SP-wip` | Defender WIP with CAN logging |
-| `test/lrmaster-SP-flexraylog-v2-wip` | Defender WIP with the standalone FlexRay capture path |
-| `test/lrmaster-SP-tici-wip` | C3 WIP with Range Rover Vogue 2017 support |
-| `lrmaster-SP-tici` | C3 base branch |
-| `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
-| `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture for C3X and C4 |
+### C3 compatibility test
 
-### First install on C3X or C4
+This branch expects a **comma three (TICI) with a completed StarPilot C3 AGNOS 20.5.5 installation**. Install and verify the operating system separately on a spare C3 before testing this checkout offroad. Use the [StarPilot documentation](https://wiki.firestar.link/software/starpilot/) for its installation procedure. The source branch stays local until device compatibility is verified.
 
-This branch targets **C3X or C4** with **AGNOS 19.9**. Run the commands in an offroad device shell with internet access. The device launcher uses `/data/openpilot`. Back up and move an existing installation out of that path before cloning. For an existing checkout of this WIP, use the update steps below.
+The launcher checks the device model and OS version before starting sunnypilot. The updater stages only this branch's application updates in `/data/safe_staging_starpilot`. An update that changes the AGNOS retention policy requires a separately verified checkout. Firmware updates and boot-slot changes are managed by the OS installation tools.
+
+To check the prerequisite from the repository root after staging the checkout:
 
 ```bash
-cd /data &&
-test ! -e openpilot && test ! -L openpilot &&
-git clone --branch test/lrmaster-SP-wip --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot &&
-cd /data/openpilot &&
-git log -1 --oneline --decorate &&
-git submodule status --recursive
+python3 openpilot/common/hardware/comma/starpilot_agnos.py
 ```
-
-After the clone succeeds, reboot while offroad and wait for the startup build. The launcher runs SCons when the checkout has no `prebuilt` marker.
-
-### Update from the device screen
-
-While offroad, open **Settings → Software** on an installation whose Git origin is `dolson8874/sunnypilot`. Select `test/lrmaster-SP-wip` under **Target Branch**, check for an update, download it, and install it. Check the branch and commit after the restart.
-
-### Update an existing WIP checkout from the shell
-
-While offroad, check `git -C /data/openpilot status --short --branch` and `git -C /data/openpilot remote get-url origin`. Preserve local changes, including changes in submodules, before updating. Confirm the checkout is from `dolson8874/sunnypilot`.
-
-```bash
-cd /data/openpilot &&
-test "$(git branch --show-current)" = "test/lrmaster-SP-wip" &&
-git pull --ff-only origin test/lrmaster-SP-wip &&
-git submodule sync --recursive &&
-git submodule update --init --recursive &&
-git log -1 --oneline --decorate &&
-git submodule status --recursive
-```
-
-After a successful shell update, remove `/data/openpilot/prebuilt` before rebooting if native code, Params keys, CAN definitions, or message schemas changed. This lets the launcher rebuild the affected components.
 
 ### CAN logging and branch integration
 
@@ -66,7 +30,7 @@ When integrating an upstream release, merge and publish the forked `panda` and `
 commits first, then record their new pointers here. The commits must be reachable from the URLs in `.gitmodules`.
 This branch integrates upstream master directly; it does not merge the release stabilization history first.
 Source packages now live under `openpilot/`; use the repository root for SCons and dependency setup.
-The upstream default AGNOS version is **19.9**. Actual comma-device and vehicle validation remains required.
+The base WIP defaults to AGNOS 19.9. This test branch requires StarPilot C3 AGNOS 20.5.5 and awaits device and vehicle validation.
 
 Land Rover uses safety model **39** because upstream uses **35 for BYD**, **36 for Volvo**,
 **37 for BMW**, and **38 for MG**. Upgrade the application and Panda firmware together.
