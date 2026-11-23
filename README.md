@@ -10,22 +10,25 @@ This README describes **`test/lrmaster-SP-flexraylog-v2-wip`**, the C3X/C4 work-
 `lrmaster-SP` supplies the master integration; the release-based FlexRay branch remains separate.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
-`lrmaster-SP-tici` is the separate C3 branch.
+The [C3 TICI WIP](https://github.com/dolson8874/sunnypilot/tree/test/lrmaster-SP-tici-wip) has its own installation instructions.
 
 | Published branch | Purpose |
 | --- | --- |
 | `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
-| `lrmaster-SP-tici` | Land Rover branch for C3 |
+| `test/lrmaster-SP-wip` | Defender WIP with CAN logging for C3X and C4 |
+| `test/lrmaster-SP-tici-wip` | C3 WIP with Range Rover Vogue 2017 support |
+| `lrmaster-SP-tici` | C3 base branch |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Separate master-based FlexRay capture branch for C3X and C4 |
 | `test/lrmaster-SP-flexraylog-v2-wip` | This branch: FlexRay source 4/5/6 logging and read-only analysis observations for C3X and C4; clone command below |
 
 ### First install on C3X or C4
 
-Run these commands in an offroad device shell with internet access. The device launcher expects the checkout at `/data/openpilot`. If that path already contains an installation you want to keep, back it up before replacing it. For a device already running this WIP branch, use one of the update methods below.
+This branch targets **C3X or C4** with **AGNOS 19.9**. Run these commands in an offroad device shell with internet access. The device launcher uses `/data/openpilot`. Back up and move an existing installation out of that path before cloning. For an existing checkout of this WIP, use the update methods below.
 
 ```bash
 cd /data &&
+test ! -e openpilot && test ! -L openpilot &&
 git clone --branch test/lrmaster-SP-flexraylog-v2-wip --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot &&
 cd /data/openpilot &&
 git log -1 --oneline --decorate &&
