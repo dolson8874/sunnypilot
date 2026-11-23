@@ -67,6 +67,9 @@ class NavButton(Widget):
     self.panel_type = p_type
     self.panel_info = p_info
 
+  def _layout(self):
+    self.panel_info.button_rect = self._hit_rect
+
   def _render(self, rect):
     is_selected = self.panel_type == self.parent._current_panel
     text_color = OP.TEXT_SELECTED if is_selected else OP.TEXT_NORMAL
@@ -92,9 +95,6 @@ class NavButton(Widget):
     )
     rl.draw_text_ex(self.parent._font_medium, self.panel_info.name, text_pos, 55, 0, text_color)
 
-    # Store button rect for click detection
-    self.panel_info.button_rect = rect
-
 
 class SettingsLayoutSP(OP.SettingsLayout):
   def __init__(self):
@@ -102,7 +102,7 @@ class SettingsLayoutSP(OP.SettingsLayout):
     self._nav_items: list[Widget] = []
 
     # Create sidebar scroller
-    self._sidebar_scroller = Scroller([], spacing=0, line_separator=False, pad_end=False)
+    self._sidebar_scroller = Scroller([], spacing=0, line_separator=False, pad_end=False, cull_offscreen=True)
 
     # Panel configuration
     wifi_manager = WifiManager()

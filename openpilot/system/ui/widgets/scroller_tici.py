@@ -24,12 +24,14 @@ class LineSeparator(Widget):
 
 
 class Scroller(Widget):
-  def __init__(self, items: Sequence[Widget], spacing: int = ITEM_SPACING, line_separator: bool = False, pad_end: bool = True):
+  def __init__(self, items: Sequence[Widget], spacing: int = ITEM_SPACING, line_separator: bool = False, pad_end: bool = True,
+               *, cull_offscreen: bool = False):
     super().__init__()
     self._items: list[Widget] = []
     self._spacing = spacing
     self._line_separator = LineSeparator() if line_separator else None
     self._pad_end = pad_end
+    self._cull_offscreen = cull_offscreen
 
     self.scroll_panel = GuiScrollPanel()
 
@@ -41,7 +43,6 @@ class Scroller(Widget):
     item.set_touch_valid_callback(self.scroll_panel.is_touch_valid)
 
   def _render(self, _):
-    # TODO: don't draw items that are not in the viewport
     visible_items = [item for item in self._items if item.is_visible]
 
     # Add line separator between items
@@ -58,6 +59,8 @@ class Scroller(Widget):
     rl.begin_scissor_mode(int(self._rect.x), int(self._rect.y),
                           int(self._rect.width), int(self._rect.height))
 
+    top = self._rect.y
+    bottom = top + self._rect.height
     cur_height = 0
     for idx, item in enumerate(visible_items):
       if not item.is_visible:
@@ -65,16 +68,23 @@ class Scroller(Widget):
 
       # Nicely lay out items vertically
       x = self._rect.x
-      y = self._rect.y + cur_height + self._spacing * (idx != 0)
+      y = top + cur_height + self._spacing * (idx != 0)
       cur_height += item.rect.height + self._spacing * (idx != 0)
 
       # Consider scroll
       y += scroll
+      in_viewport = y < bottom and y + item.rect.height > top
+      if item is self._line_separator and not in_viewport:
+        continue
 
       # Update item state
       item.set_position(x, y)
       item.set_parent_rect(self._rect)
-      item.render()
+      if self._cull_offscreen and not in_viewport:
+        # Keep layout and touch tracking current for rows with a fixed height.
+        item.render(draw=False)
+      else:
+        item.render()
 
     rl.end_scissor_mode()
 

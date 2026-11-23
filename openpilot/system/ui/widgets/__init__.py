@@ -119,7 +119,7 @@ class Widget(abc.ABC):
       return self._rect
     return rl.get_collision_rec(self._rect, self._parent_rect)
 
-  def render(self, rect: rl.Rectangle | None = None) -> bool | int | None:
+  def render(self, rect: rl.Rectangle | None = None, *, draw: bool = True) -> bool | int | None:
     if rect is not None:
       self.set_rect(rect)
 
@@ -132,9 +132,9 @@ class Widget(abc.ABC):
       return None
 
     self._layout()
-    ret = self._render(self._rect)
+    ret = self._render(self._rect) if draw else None
 
-    if gui_app.show_touches:
+    if draw and gui_app.show_touches:
       self._draw_debug_rect()
 
     # Keep track of whether mouse down started within the widget's rectangle
