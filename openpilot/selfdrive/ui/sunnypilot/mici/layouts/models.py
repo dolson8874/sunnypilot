@@ -9,6 +9,7 @@ import time
 import pyray as rl
 
 from openpilot.cereal import custom
+from openpilot.common.constants import CV
 from openpilot.selfdrive.ui.sunnypilot.model_info import (defender_lane_preference_available, lane_preference_edit_allowed,
                                                            lane_preference_label, lane_preference_status, save_lane_preference)
 from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, read_lane_preference
@@ -83,7 +84,6 @@ class LanePreferencePage(NavWidget):
     self._level = 0
     self._minus = Button("-", click_callback=lambda: self._select(self._level - 1), font_size=36, text_padding=4)
     self._plus = Button("+", click_callback=lambda: self._select(self._level + 1), font_size=36, text_padding=4)
-    self._center = Button(tr("Lane center"), click_callback=lambda: self._select(0), font_size=23, text_padding=8)
 
   def show_event(self):
     super().show_event()
@@ -97,19 +97,20 @@ class LanePreferencePage(NavWidget):
     enabled = self.enabled and not self.is_dismissing and lane_preference_edit_allowed() and defender_lane_preference_available()
     self._minus.set_enabled(enabled and self._level - 1 in PREFERENCE_LEVELS)
     self._plus.set_enabled(enabled and self._level + 1 in PREFERENCE_LEVELS)
-    self._center.set_enabled(enabled and self._level != 0)
     x, y, w = rect.x, rect.y, rect.width
     gui_label(rl.Rectangle(x + 20, y + 26, w - 40, 30), tr("Lane position preference"), 23, alignment=TextAlignment.CENTER)
     if ui_state.is_onroad():
       alert = ui_state.sm["selfdriveState"]
-      if alert.alertType == "belowSteerSpeed/warning":
-        gui_label(rl.Rectangle(x + 20, y + 59, w - 40, 22), alert.alertText1, 16, alignment=TextAlignment.CENTER)
+      if alert.alertType == "belowSteerSpeed/warning" and ui_state.CP is not None:
+        metric = ui_state.is_metric
+        speed = round(ui_state.CP.minSteerSpeed * (CV.MS_TO_KPH if metric else CV.MS_TO_MPH))
+        unit = "km/h" if metric else "mph"
+        notice = tr("Steering unavailable below {}").format(f"{speed} {unit}")
+        gui_label(rl.Rectangle(x + 20, y + 59, w - 40, 22), notice, 16, alignment=TextAlignment.CENTER)
     self._minus.render(rl.Rectangle(x + 24, y + 91, 90, 63))
     gui_label(rl.Rectangle(x + 124, y + 91, w - 248, 63), lane_preference_label(self._level), 29, alignment=TextAlignment.CENTER)
     self._plus.render(rl.Rectangle(x + w - 114, y + 91, 90, 63))
-    self._center.render(rl.Rectangle(x + 24, y + 177, 120, 46))
-    gui_label(rl.Rectangle(x + 154, y + 177, w - 178, 46), lane_preference_status(self._level), 22, alignment=TextAlignment.CENTER)
-
+    gui_label(rl.Rectangle(x + 24, y + 177, w - 48, 46), lane_preference_status(self._level), 22, alignment=TextAlignment.CENTER)
 
 
 class ModelsLayoutMici(NavScroller):
