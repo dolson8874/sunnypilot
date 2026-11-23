@@ -15,8 +15,12 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.sunnypilot.selfdrive.pandad.rivian_long_flasher import flash_rivian_long
 
 
-def get_expected_signature() -> bytes:
-  fn = os.path.join(FW_PATH, McuType.H7.config.app_fn)
+# The internal C3 Panda is behind the SOM USB hub.
+TICI_DOS_USB_PORT = (1, (1, 2))
+
+
+def get_expected_signature(mcu_type: McuType = McuType.H7) -> bytes:
+  fn = os.path.join(FW_PATH, mcu_type.config.app_fn)
   return Panda.get_signature_from_firmware(fn)
 
 def flash_panda(panda_serial: str):
@@ -59,6 +63,35 @@ def flash_panda(panda_serial: str):
 
   panda.close()
 
+def prepare_tici_panda() -> str | None:
+  """Use only the internal DOS USB port for app and bootstub selection."""
+  serials = Panda.usb_list(usb_port=TICI_DOS_USB_PORT)
+  if not serials:
+    dfu_serials = PandaDFU.usb_list(usb_port=TICI_DOS_USB_PORT)
+    if len(dfu_serials) == 1:
+      with PandaDFU(dfu_serials[0], usb_port=TICI_DOS_USB_PORT) as dfu:
+        if dfu.get_mcu_type() != McuType.F4:
+          raise PandaProtocolMismatch("Unexpected MCU on the internal C3 USB port")
+        dfu.recover()
+    return None
+
+  if len(serials) != 1:
+    raise PandaProtocolMismatch("Expected one internal C3 Panda")
+
+  with Panda(serials[0], disable_checks=False, usb_port=TICI_DOS_USB_PORT) as panda:
+    if panda.get_type() != Panda.HW_TYPE_DOS:
+      raise PandaProtocolMismatch("Expected a DOS Panda on the internal C3 USB port")
+    expected_signature = get_expected_signature(McuType.F4)
+    if panda.bootstub or panda.get_signature() != expected_signature:
+      panda.flash(fn=os.path.join(FW_PATH, McuType.F4.config.app_fn))
+    if (panda.bootstub or panda.get_type() != Panda.HW_TYPE_DOS or
+        panda.get_signature() != expected_signature or
+        panda.get_packets_versions() != (Panda.HEALTH_PACKET_VERSION, Panda.CAN_PACKET_VERSION)):
+      raise PandaProtocolMismatch("DOS firmware signature or packet version mismatch")
+    if panda.health()["heartbeat_lost"]:
+      Params().put_bool("PandaHeartbeatLost", True, block=True)
+    return panda.get_usb_serial()
+
 
 def check_panda_support(panda_serials: list[str]) -> list[str]:
   spi_serials = set(Panda.spi_list())
@@ -88,6 +121,22 @@ def main() -> None:
   process = None
   do_exit = False
   signal.signal(signal.SIGINT, signal_handler)
+
+  if HARDWARE.get_device_type() == "tici":
+    while not do_exit:
+      try:
+        serial = prepare_tici_panda()
+        if serial is not None:
+          os.environ["MANAGER_DAEMON"] = "pandad"
+          process = subprocess.Popen(["./pandad", serial], cwd=os.path.join(BASEDIR, "openpilot/selfdrive/pandad"))
+          if do_exit:
+            process.send_signal(signal.SIGINT)
+          process.wait()
+      except Exception:
+        cloudlog.exception("pandad.tici_dos")
+      if not do_exit:
+        time.sleep(1)
+    return
 
   # check health for lost heartbeat
   try:

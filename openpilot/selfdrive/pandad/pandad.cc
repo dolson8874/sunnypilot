@@ -50,8 +50,11 @@ Panda *connect(std::string serial) {
   }
   //panda->enable_deepsleep();
 
-  for (int i = 0; i < PANDA_CAN_CNT; i++) {
-    panda->set_can_fd_auto(i, true);
+  const bool dos = panda->hw_type == cereal::PandaState::PandaType::DOS;
+  if (!dos) {
+    for (int i = 0; i < PANDA_CAN_CNT; i++) {
+      panda->set_can_fd_auto(i, true);
+    }
   }
 
   bool is_supported_panda = std::find(SUPPORTED_PANDA_TYPES.begin(), SUPPORTED_PANDA_TYPES.end(), panda->hw_type) != SUPPORTED_PANDA_TYPES.end();
@@ -61,7 +64,7 @@ Panda *connect(std::string serial) {
     return panda.release();
   }
 
-  if (!panda->up_to_date() && !getenv("BOARDD_SKIP_FW_CHECK")) {
+  if (!panda->up_to_date() && (dos || !getenv("BOARDD_SKIP_FW_CHECK"))) {
     throw std::runtime_error("Panda firmware out of date. Run pandad.py to update.");
   }
 

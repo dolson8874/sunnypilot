@@ -6,25 +6,47 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`test/lrmaster-SP-tici-wip`**, a local C3 compatibility experiment based on `test/lrmaster-SP-wip`.
+This README describes **`test/lrmaster-SP-tici-wip`**, the C3 test branch based on `test/lrmaster-SP-wip`.
 
 The C3 uses **StarPilot AGNOS 20.5.5** as its operating system. The application, UI, model manager, and vehicle integration come from **sunnypilot `test/lrmaster-SP-wip`**. This port also brings StarPilot’s AR0231 camera support into sunnypilot’s camera service.
 
 ### C3 compatibility test
 
-This branch expects a **comma three (TICI) with a completed StarPilot C3 AGNOS 20.5.5 installation**. Install and verify the operating system separately on a spare C3 before testing this checkout offroad. Use the [StarPilot documentation](https://wiki.firestar.link/software/starpilot/) for its installation procedure. The source branch stays local until device compatibility is verified.
+This branch expects a **comma three (TICI) with a completed StarPilot C3 AGNOS 20.5.5 installation**. Install and verify the operating system separately on a spare C3 before testing this checkout offroad. Use the [StarPilot documentation](https://wiki.firestar.link/software/starpilot/) for its installation procedure.
 
-The launcher checks the device model and OS version before starting sunnypilot. The onroad channel check recognizes this branch only on the verified C3 and StarPilot AGNOS combination. All other onroad checks still apply. The updater stages only this branch's application updates in `/data/safe_staging_starpilot`. An update that changes the AGNOS retention policy requires a separately verified checkout. Firmware updates and boot-slot changes are managed by the OS installation tools.
+The launcher checks the device model and OS version before starting sunnypilot. The onroad channel check recognizes this branch only on the verified C3 and StarPilot AGNOS combination. All other onroad checks still apply. The updater stages only this branch's application updates in `/data/safe_staging_starpilot`. An update that changes the AGNOS retention policy requires a separately verified checkout. AGNOS and boot slots are managed by the OS installation tools. This branch builds a matching DOS/F4 Panda image separately.
 
-To check the prerequisite from the repository root after staging the checkout:
+### Install or update the C3 test checkout
 
-```bash
+With the device parked and the vehicle cable disconnected, keep the existing app and create a separate checkout.
+
+```sh
+git clone --recurse-submodules --branch test/lrmaster-SP-tici-wip \
+  https://github.com/dolson8874/sunnypilot.git /data/openpilot-tici-wip
+cd /data/openpilot-tici-wip
 python3 openpilot/common/hardware/comma/starpilot_agnos.py
 ```
 
+Update a checkout that already tracks this branch from its repository root.
+
+```sh
+git branch --show-current
+git pull --ff-only
+git submodule update --init --recursive
+```
+
+The branch command should print `test/lrmaster-SP-tici-wip`. If it prints an older branch name, prepare a separate checkout using the clone command above. The clone and pull steps prepare source; they do not switch the active app. Build the app and the pinned Panda firmware together using the normal SCons build. To build the Panda and pandad targets explicitly, run:
+
+```sh
+scons -u -j2 openpilot/selfdrive/pandad/pandad \
+  panda/board/obj/panda.bin.signed panda/board/obj/bootstub.panda.bin
+```
+
+On C3, pandad selects the internal DOS USB port and checks the matching firmware signature and protocol. The first bench launch may update the internal Panda firmware. Retain a working app and a known-compatible Panda image for rollback.
+
 ### CAN logging and branch integration
 
-This branch records physical CAN through pandad and loggerd. Enable **Record cruise analysis summaries** in Developer settings to collect optional CAN and radar summaries. The Defender CAN1 cruise and radar inputs still require the compatible FPGA setup. Use `test/lrmaster-SP-flexraylog-v2-wip` for USB/SPI FlexRay capture and live FlexRay analysis in Cabana.
+This branch records physical CAN through pandad and loggerd. Enable **Record cruise analysis summaries** in Developer settings to collect optional CAN and radar summaries. The Defender uses Classic CAN on the Panda, including the FPGA link at CAN1 800 kbps. Use the compatible FPGA and harness configuration. Use `test/lrmaster-SP-flexraylog-v2-wip` for USB/SPI FlexRay capture and live FlexRay analysis in Cabana.
 
 `git submodule update --init --recursive` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.

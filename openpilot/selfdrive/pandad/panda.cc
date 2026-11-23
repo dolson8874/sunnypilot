@@ -7,16 +7,25 @@
 #include <vector>
 
 #include "openpilot/cereal/messaging/messaging.h"
+#include "common/hardware/hw.h"
 #include "common/swaglog.h"
 #include "common/util.h"
 
 const bool PANDAD_MAXOUT = getenv("PANDAD_MAXOUT") != nullptr;
 
 Panda::Panda(std::string serial) {
-  handle = std::make_unique<PandaSpiHandle>(serial);
-  LOGW("connected to %s over SPI", serial.c_str());
-
-  hw_type = get_hw_type();
+  if (Hardware::get_device_type() == cereal::InitData::DeviceType::TICI) {
+    handle = std::make_unique<PandaUsbHandle>(serial);
+    hw_type = get_hw_type();
+    if (hw_type != cereal::PandaState::PandaType::DOS) {
+      throw std::runtime_error("Expected a DOS Panda on the internal C3 USB port");
+    }
+    LOGW("connected to %s over USB", serial.c_str());
+  } else {
+    handle = std::make_unique<PandaSpiHandle>(serial);
+    hw_type = get_hw_type();
+    LOGW("connected to %s over SPI", serial.c_str());
+  }
   can_reset_communications();
 }
 
@@ -33,6 +42,9 @@ std::string Panda::hw_serial() {
 }
 
 std::vector<std::string> Panda::list() {
+  if (Hardware::get_device_type() == cereal::InitData::DeviceType::TICI) {
+    return PandaUsbHandle::list();
+  }
   return PandaSpiHandle::list();
 }
 
@@ -87,13 +99,13 @@ void Panda::set_ir_pwr(uint16_t ir_pwr) {
 std::optional<health_t> Panda::get_state() {
   health_t health {0};
   int err = handle->control_read(0xd2, 0, 0, (unsigned char*)&health, sizeof(health));
-  return err >= 0 ? std::make_optional(health) : std::nullopt;
+  return err == sizeof(health) ? std::make_optional(health) : std::nullopt;
 }
 
 std::optional<can_health_t> Panda::get_can_state(uint16_t can_number) {
   can_health_t can_health {0};
   int err = handle->control_read(0xc2, can_number, 0, (unsigned char*)&can_health, sizeof(can_health));
-  return err >= 0 ? std::make_optional(can_health) : std::nullopt;
+  return err == sizeof(can_health) ? std::make_optional(can_health) : std::nullopt;
 }
 
 void Panda::set_loopback(bool loopback) {
@@ -115,16 +127,13 @@ std::optional<std::string> Panda::get_serial() {
 
 bool Panda::up_to_date() {
 
-  if (auto fw_sig = get_firmware_version()) {
-    for (auto fn : { "panda.bin.signed", "panda_h7.bin.signed" }) {
-      auto content = util::read_file(std::string("../../../panda/board/obj/") + fn);
-      if (content.size() >= fw_sig->size() &&
-          memcmp(content.data() + content.size() - fw_sig->size(), fw_sig->data(), fw_sig->size()) == 0) {
-        return true;
-      }
-    }
-  }
-  return false;
+  const auto fw_sig = get_firmware_version();
+  if (!fw_sig) return false;
+
+  const char *filename = hw_type == cereal::PandaState::PandaType::DOS ? "panda.bin.signed" : "panda_h7.bin.signed";
+  const auto content = util::read_file(std::string("../../../panda/board/obj/") + filename);
+  return content.size() >= fw_sig->size() &&
+         memcmp(content.data() + content.size() - fw_sig->size(), fw_sig->data(), fw_sig->size()) == 0;
 }
 
 void Panda::set_power_saving(bool power_saving) {
@@ -243,7 +252,7 @@ void Panda::can_reset_communications() {
 bool Panda::unpack_can_buffer(uint8_t *data, uint32_t &size, std::vector<can_frame> &out_vec) {
   int pos = 0;
 
-  while (pos <= size - sizeof(can_header)) {
+  while (pos + sizeof(can_header) <= size) {
     can_header header;
     memcpy(&header, &data[pos], sizeof(can_header));
 
