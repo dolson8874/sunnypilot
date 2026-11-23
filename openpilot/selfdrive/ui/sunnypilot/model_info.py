@@ -131,9 +131,9 @@ def defender_lane_preference_available() -> bool:
 
 def lane_preference_label(level: int) -> str:
   if level not in PREFERENCE_LEVELS or not level:
-    return tr("0 · Center")
+    return tr("0 Center")
   percent = abs(level) * 100 // PREFERENCE_MAX_LEVEL
-  return (tr("−{} · Left {}%") if level < 0 else tr("+{} · Right {}%")).format(abs(level), percent)
+  return (tr("-{} Left {}%") if level < 0 else tr("+{} Right {}%")).format(abs(level), percent)
 
 
 def lane_preference_edit_allowed() -> bool:

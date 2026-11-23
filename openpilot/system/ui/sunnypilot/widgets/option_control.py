@@ -22,7 +22,8 @@ class OptionControlSP(ItemAction):
                on_value_changed: Callable[[int], None] | None = None,
                value_map: dict[int, int] | None = None,
                label_width: int = LABEL_WIDTH,
-               use_float_scaling: bool = False, label_callback: Callable[[int], str] | None = None):
+               use_float_scaling: bool = False, label_callback: Callable[[int], str] | None = None,
+               *, read_value: Callable[[], int] | None = None, write_value: Callable[[int], bool] | None = None):
 
     super().__init__(enabled=enabled)
     self.params = Params()
@@ -38,7 +39,10 @@ class OptionControlSP(ItemAction):
     self.use_float_scaling = use_float_scaling
     self.current_value = min_value
     self.label_callback = label_callback
-    if self.value_map:
+    self._write_value = write_value
+    if read_value is not None:
+      self.current_value = read_value()
+    elif self.value_map:
       for key in self.value_map:
         if self.value_map[key] == self.params.get(self.param_key, return_default=True):
           self.current_value = int(key)
@@ -54,6 +58,9 @@ class OptionControlSP(ItemAction):
     self.minus_btn_rect = rl.Rectangle(0, 0, 0, 0)
     self.plus_btn_rect = rl.Rectangle(0, 0, 0, 0)
 
+  def get_width_hint(self) -> float:
+    return (BUTTON_WIDTH + BUTTON_SPACING + CONTAINER_PADDING) * 2 + self.label_width
+
   def get_value(self) -> int:
     """Get the current value of the control"""
     return self.current_value
@@ -64,13 +71,16 @@ class OptionControlSP(ItemAction):
       return
     if value == self.current_value:
       return
-    self.current_value = value
-    if self.value_map:
+    if self._write_value is not None:
+      if not self._write_value(value):
+        return
+    elif self.value_map:
       self.params.put(self.param_key, self.value_map[value])
     elif self.use_float_scaling:
       self.params.put(self.param_key, value / 100.0)
     else:
       self.params.put(self.param_key, value)
+    self.current_value = value
     if self.on_value_changed:
       self.on_value_changed(value)
 
@@ -99,11 +109,10 @@ class OptionControlSP(ItemAction):
     if self._rect.width == 0 or self._rect.height == 0 or not self.is_visible:
       return
 
-    control_width = (BUTTON_WIDTH * 2) + self.label_width + (BUTTON_SPACING * 2)
-    total_width = control_width + (CONTAINER_PADDING * 2)
+    total_width = self.get_width_hint()
     self._rect.width = total_width
 
-    start_x = self._rect.x + self._rect.width - control_width - (CONTAINER_PADDING * 2)
+    start_x = self._rect.x
     component_y = rect.y + (rect.height - BUTTON_HEIGHT) / 2
     self.container_rect = rl.Rectangle(start_x, component_y, total_width, BUTTON_HEIGHT)
 

@@ -81,9 +81,9 @@ class LanePreferencePage(NavWidget):
     super().__init__()
     self.set_rect(rl.Rectangle(0, 0, gui_app.width, gui_app.height))
     self._level = 0
-    self._minus = Button("−", click_callback=lambda: self._select(self._level - 1))
-    self._plus = Button("+", click_callback=lambda: self._select(self._level + 1))
-    self._center = Button(tr("Center"), click_callback=lambda: self._select(0))
+    self._minus = Button("-", click_callback=lambda: self._select(self._level - 1), font_size=36, text_padding=4)
+    self._plus = Button("+", click_callback=lambda: self._select(self._level + 1), font_size=36, text_padding=4)
+    self._center = Button(tr("Lane center"), click_callback=lambda: self._select(0), font_size=23, text_padding=8)
 
   def show_event(self):
     super().show_event()
@@ -98,17 +98,18 @@ class LanePreferencePage(NavWidget):
     self._minus.set_enabled(enabled and self._level - 1 in PREFERENCE_LEVELS)
     self._plus.set_enabled(enabled and self._level + 1 in PREFERENCE_LEVELS)
     self._center.set_enabled(enabled and self._level != 0)
-    x, y, w, h = rect.x, rect.y, rect.width, rect.height
-    gui_label(rl.Rectangle(x, y + h * 0.08, w, h * 0.20), tr("Lane position preference"), 32, alignment=TextAlignment.CENTER)
+    x, y, w = rect.x, rect.y, rect.width
+    gui_label(rl.Rectangle(x + 20, y + 26, w - 40, 30), tr("Lane position preference"), 23, alignment=TextAlignment.CENTER)
     if ui_state.is_onroad():
       alert = ui_state.sm["selfdriveState"]
       if alert.alertType == "belowSteerSpeed/warning":
-        gui_label(rl.Rectangle(x, y + h * 0.28, w, h * 0.10), alert.alertText1, 18, alignment=TextAlignment.CENTER)
-    gui_label(rl.Rectangle(x + w * 0.23, y + h * 0.38, w * 0.54, h * 0.30), lane_preference_label(self._level), 31, alignment=TextAlignment.CENTER)
-    self._minus.render(rl.Rectangle(x + w * 0.09, y + h * 0.39, w * 0.14, h * 0.27))
-    self._plus.render(rl.Rectangle(x + w * 0.77, y + h * 0.39, w * 0.14, h * 0.27))
-    self._center.render(rl.Rectangle(x + w * 0.12, y + h * 0.73, w * 0.34, h * 0.20))
-    gui_label(rl.Rectangle(x + w * 0.50, y + h * 0.73, w * 0.36, h * 0.20), lane_preference_status(self._level), 28, alignment=TextAlignment.CENTER)
+        gui_label(rl.Rectangle(x + 20, y + 59, w - 40, 22), alert.alertText1, 16, alignment=TextAlignment.CENTER)
+    self._minus.render(rl.Rectangle(x + 24, y + 91, 90, 63))
+    gui_label(rl.Rectangle(x + 124, y + 91, w - 248, 63), lane_preference_label(self._level), 29, alignment=TextAlignment.CENTER)
+    self._plus.render(rl.Rectangle(x + w - 114, y + 91, 90, 63))
+    self._center.render(rl.Rectangle(x + 24, y + 177, 120, 46))
+    gui_label(rl.Rectangle(x + 154, y + 177, w - 178, 46), lane_preference_status(self._level), 22, alignment=TextAlignment.CENTER)
+
 
 
 class ModelsLayoutMici(NavScroller):
@@ -279,7 +280,7 @@ class ModelsLayoutMici(NavScroller):
       label = lane_preference_label(level)
       status = lane_preference_status(level)
       if status:
-        label = f"{label} · {status}"
+        label = f"{label}  {status}"
       if self.lane_preference.value != label:
         self.lane_preference.set_value(label)
 

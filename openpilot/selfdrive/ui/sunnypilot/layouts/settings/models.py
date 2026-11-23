@@ -10,7 +10,7 @@ import pyray as rl
 
 from openpilot.cereal import custom
 from openpilot.selfdrive.ui.sunnypilot.model_info import defender_lane_preference_available, lane_preference_label, save_lane_preference
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, read_lane_preference
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_PARAM, read_lane_preference
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle, resolve_bundle_by_ref
 from openpilot.common.constants import CV
 from openpilot.selfdrive.ui.ui_state import device, ui_state
@@ -19,7 +19,6 @@ from openpilot.selfdrive.ui.sunnypilot.model_info import (big_model_state, bundl
 from openpilot.system.ui.lib.multilang import tr
 from openpilot.system.ui.lib.application import gui_app
 from openpilot.system.ui.widgets import DialogResult, Widget
-from openpilot.system.ui.widgets.option_dialog import MultiOptionDialog
 from openpilot.system.ui.widgets.confirm_dialog import alert_dialog, ConfirmDialog
 from openpilot.system.ui.widgets.scroller_tici import Scroller
 from openpilot.system.ui.widgets.toggle import ON_COLOR
@@ -27,6 +26,7 @@ from openpilot.system.ui.widgets.toggle import ON_COLOR
 from openpilot.system.ui.sunnypilot.lib.styles import style
 from openpilot.system.ui.sunnypilot.lib.utils import NoElideButtonAction, ScrollingButtonAction
 from openpilot.system.ui.sunnypilot.widgets.list_view import ListItemSP, toggle_item_sp, option_item_sp
+from openpilot.system.ui.sunnypilot.widgets.option_control import OptionControlSP
 from openpilot.system.ui.sunnypilot.widgets.download_status import download_status_item
 from openpilot.system.ui.sunnypilot.widgets.tree_dialog import TreeOptionDialog, TreeNode, TreeFolder
 
@@ -109,8 +109,12 @@ class ModelsLayout(Widget):
                              " Yields around obstacles. Not available with the Default model.")
     self.blendful_toggle = toggle_item_sp(tr("Blendful (Alpha)"), self._blendful_desc, param="Blendful")
 
-    self.lane_preference = ListItemSP(title=tr("Lane position preference"), action_item=ScrollingButtonAction(tr("SELECT")),
-                                      callback=self._choose_lane_preference)
+    self.lane_preference_control = OptionControlSP(
+      PREFERENCE_PARAM, PREFERENCE_LEVELS.start, PREFERENCE_LEVELS.stop - 1,
+      enabled=ui_state.is_offroad, label_width=500, label_callback=lane_preference_label,
+      read_value=lambda: read_lane_preference(ui_state.params), write_value=save_lane_preference,
+    )
+    self.lane_preference = ListItemSP(title=tr("Lane position preference"), action_item=self.lane_preference_control)
     self.camera_offset = option_item_sp(tr("Adjust Camera Offset"), "CameraOffset", -35, 35,
                                         tr("Virtually shift camera's perspective to move model's center to Left(+ values) or Right (- values)"),
                                         1, None, True, "", style.BUTTON_ACTION_WIDTH, None, True,
@@ -119,17 +123,6 @@ class ModelsLayout(Widget):
     self.items = [self.small_model_item, self.big_model_item, self.cancel_download_item, self.download_item, self.refresh_item, self.clear_cache_item,
                   self.blendful_toggle, self.lane_preference, self.lane_turn_desire_toggle, self.lane_turn_value_control, self.lagd_toggle, self.delay_control,
                   self.camera_offset]
-
-  def _choose_lane_preference(self):
-    options = {lane_preference_label(level): level for level in PREFERENCE_LEVELS}
-    current = lane_preference_label(read_lane_preference(ui_state.params))
-
-    def select(result):
-      if result == DialogResult.CONFIRM:
-        save_lane_preference(options[dialog.selection])
-
-    dialog = MultiOptionDialog(tr("Lane position preference"), list(options), current, callback=select)
-    gui_app.push_widget(dialog)
 
   def _update_lagd_description(self, lagd_toggle: bool):
     desc = tr("Enable this for the car to learn and adapt its steering response time. Disable to use a fixed steering response time. " +
@@ -344,13 +337,7 @@ class ModelsLayout(Widget):
     self.lane_turn_value_control.set_visible(turn_desire and advanced_controls)
     self.lagd_toggle.action_item.set_state(live_delay)
 
-    available = defender_lane_preference_available()
-    self.lane_preference.set_visible(available)
-    if available:
-      self.lane_preference.action_item.set_enabled(ui_state.is_offroad())
-      label = lane_preference_label(read_lane_preference(ui_state.params))
-      if self.lane_preference.action_item.value != label:
-        self.lane_preference.action_item.set_value(label)
+    self.lane_preference.set_visible(defender_lane_preference_available())
 
     blendful_allowed = ui_state.active_runner_tinygrad
     if blendful_allowed:
@@ -405,4 +392,5 @@ class ModelsLayout(Widget):
 
   def show_event(self):
     self._scroller.show_event()
+    self.lane_preference_control.current_value = read_lane_preference(ui_state.params)
     self._last_note = None  # re-expand the failover note every time the page opens
