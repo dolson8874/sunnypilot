@@ -4,12 +4,16 @@ Copyright (c) 2021-, Haibin Wen, sunnypilot, and a number of other contributors.
 This file is part of sunnypilot and is licensed under the MIT License.
 See the LICENSE.md file in the root directory for more details.
 """
+from tempfile import TemporaryDirectory
+
 import numpy as np
+
+from openpilot.common.params import Params
 
 from openpilot.common.realtime import DT_MDL
 from openpilot.common.test import OpenpilotTestCase
 from openpilot.sunnypilot.modeld_v2.blendful import Blendful
-from openpilot.sunnypilot.modeld_v2.constants import ModelConstants
+from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, PREFERENCE_PARAM, read_lane_preference
 
 X = np.array(ModelConstants.X_IDXS)
 BUILD, RELEASE = 0.5, 2.0
@@ -110,3 +114,143 @@ class TestBlendful(OpenpilotTestCase):
     assert self.bf.trust == 0.0
     assert abs(out[0]) < abs(start)
     assert abs(out[-1]) < 1e-6
+
+
+class TestDefenderBlendful(OpenpilotTestCase):
+  def setup_method(self):
+    self.bf = Blendful(guard_lane_center=True)
+
+  def test_centers_in_both_directions_without_crossing(self):
+    for center in (-0.12, 0.12):
+      self.bf = Blendful(guard_lane_center=True)
+      out = drive(self.bf, 5.0, center=center)
+      correction = out[-1] / (20.0 ** 2)
+      assert correction * center > 0
+      assert abs(correction) * 25.0 ** 2 / 2 <= abs(center)
+      assert np.all(np.abs(np.diff(out)) <= BUILD * DT_MDL + 1e-9)
+
+  def test_rejects_original_fit_that_points_away_from_center(self):
+    # The base curvature is straight, but the published plan is left of center.
+    sample = frame(center=-0.2, plan=-0.35)
+    legacy = Blendful()
+    for _ in range(100):
+      assert self.bf.update(sample, 20.0, True, 0.0) == 0.0
+      legacy.update(sample, 20.0, True, 0.0)
+    assert legacy.curvature < 0
+
+  def test_clears_stored_correction_when_offset_reverses(self):
+    previous = drive(self.bf, 5.0, center=0.5)[-1]
+    next_correction = self.bf.update(frame(center=-0.5), 20.0, True, 0.0) * 20.0 ** 2
+    assert previous > 0 and next_correction == 0.0
+    assert previous - next_correction <= RELEASE * DT_MDL + 1e-9
+
+  def test_requires_two_reliable_lines_and_agreement_at_each_distance(self):
+    opposing = frame(center=0.2)
+    opposing['plan'][0, :, 1] = np.interp(X, [0, 15, 20, 25], [0, 0, 0.2, 0.4])
+    invalid = frame(center=0.2)
+    invalid['lane_lines'][0, 1, 12, 0] = np.nan
+    too_short = frame(center=0.2)
+    too_short['plan'][0, :, 0] = np.minimum(X, 24)
+    for sample in (opposing, invalid, too_short, frame(center=0.2, probs=(0.99, 0.5)), frame(center=0.2, stds=(0.1, 0.4))):
+      with self.subTest(sample=sample):
+        assert drive(self.bf, 5.0, center=0.2)[-1] > 0.0
+        for _ in range(30):
+          assert self.bf.update(sample, 20.0, True, 0.0) == 0.0
+
+  def test_override_and_toggle_clear_correction_and_require_new_confirmation(self):
+    sample = frame(center=0.2)
+    assert drive(self.bf, 5.0, center=0.2)[-1] > 0.0
+    assert self.bf.update(sample, 20.0, False, 0.0) == 0.0
+    assert self.bf.update(sample, 20.0, True, 0.0) == 0.0
+    assert self.bf.update(sample, 20.0, True, 0.0, enabled=False) == 0.0
+    assert self.bf.guard_lane_center
+    assert self.bf.update(sample, 20.0, True, 0.0) == 0.0
+
+  def test_yields_to_model_avoidance(self):
+    drive(self.bf, 6.0)
+    push = drive(self.bf, 3.0, plan=0.8)
+    assert self.bf.going_around
+    assert np.all(push == 0.0)
+
+  def test_preference_levels_are_symmetric_and_bounded_in_curves(self):
+    for level in range(1, 11):
+      left, right = Blendful(True, -level), Blendful(True, level)
+      a = drive(left, 5.0, k=-0.001, plan=0.17)
+      b = drive(right, 5.0, k=0.001, plan=-0.17)
+      np.testing.assert_allclose(a, -b, atol=1e-12)
+      assert a[-1] < 0 < b[-1]
+      assert np.isclose(right.preferred_offset, level * 0.10 / 10)
+      assert np.isclose(left.preferred_offset, -right.preferred_offset)
+      assert np.max(np.abs(b)) <= 0.10000001
+
+  def test_narrowest_checked_width_limits_preference_and_reacquires_slowly(self):
+    sample = frame(width=3.6)
+    bf = Blendful(True, 10)
+    drive(bf, 2.0)
+    assert bf.preferred_offset == 0.10
+    # The road tapers toward 25 m. Its narrowest width limits the entire target.
+    sample['lane_lines'][0, 2, X >= 21, 0] -= 0.98
+    bf.update(sample, 20.0, True, 0.0)
+    assert np.isclose(bf.preferred_offset, 0.02)
+    assert bf.update(frame(probs=(0.5, 0.99)), 20.0, True, 0.0) == 0.0
+    assert bf.reason == "laneGeometry" and bf.preferred_offset == 0.0
+    assert bf.update(frame(), 20.0, True, 0.0) == 0.0
+    assert 0 < bf.preferred_offset <= 0.05 * DT_MDL
+    assert bf.update(frame(), 20.0, False, 0.0) == 0.0
+    assert bf.reason == "inactive" and bf.preferred_offset == 0.0
+
+  def test_preference_ignores_invalid_level_and_preserves_disabled_and_yield(self):
+    for bf in (Blendful(True, 11), Blendful(False, -10)):
+      drive(bf, 2.0)
+      assert bf.preference == 0 and bf.preferred_offset == 0.0
+    for level in (-10, 10):
+      bf = Blendful(True, level)
+      drive(bf, 6.0)
+      assert np.all(drive(bf, 3.0, plan=0.8) == 0.0)
+      assert bf.going_around and bf.reason == "yielding"
+      assert bf.update(frame(), 20.0, True, 0.0, enabled=False) == 0.0
+      assert bf.reason == "disabled" and bf.preference == level and bf.preferred_offset == 0.0
+
+  def test_runtime_preference_reversal_passes_through_zero(self):
+    bf = Blendful(True, -7)
+    sample = frame(width=3.4, center=0.2)
+    drive(bf, 4.0, width=3.4, center=0.2)
+    assert bf.preference_ready
+    bf.preference = 7
+    offsets = [bf.preferred_offset]
+    for _ in range(80):
+      bf.update(sample, 20.0, True, 0.0)
+      offsets.append(bf.preferred_offset)
+    assert 0.0 in offsets
+    assert max(np.diff(offsets)) <= 0.05 * DT_MDL + 1e-12
+    assert bf.preference_ready and np.isclose(offsets[-1], 7 / 10 * 0.10)
+
+  def test_runtime_center_clears_offset_and_inactive_state_stays_pending(self):
+    bf = Blendful(True, 7)
+    drive(bf, 4.0, width=3.4)
+    bf.preference = 0
+    sample = frame(width=3.4)
+    bf.update(sample, 20.0, True, 0.0)
+    assert bf.preferred_offset > 0.0 and not bf.preference_ready
+    drive(bf, 2.0, width=3.4)
+    assert bf.preferred_offset == 0.0 and bf.preference_ready
+    bf.preference = -7
+    assert bf.update(sample, 0.0, False, 0.0) == 0.0
+    assert not bf.preference_ready and bf.preferred_offset == 0.0
+    bf.update(sample, 20.0, True, 0.0)
+    assert -0.05 * DT_MDL <= bf.preferred_offset < 0.0 and not bf.preference_ready
+
+
+  def test_read_preference_legacy_mapping_and_explicit_center(self):
+    with TemporaryDirectory() as directory:
+      params = Params(directory)
+      assert read_lane_preference(params) == 0
+      for old, new in enumerate((-10, -7, -3, 0, 3, 7, 10), start=-3):
+        params.put("DefenderLanePreference", old, block=True)
+        assert read_lane_preference(params) == new
+      params.put(PREFERENCE_PARAM, 0, block=True)
+      assert read_lane_preference(params) == 0
+      params.put(PREFERENCE_PARAM, -9, block=True)
+      assert read_lane_preference(params) == -9
+      params.put(PREFERENCE_PARAM, 11, block=True)
+      assert read_lane_preference(params) == 0

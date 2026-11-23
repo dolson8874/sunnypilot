@@ -1,11 +1,13 @@
 import pyray as rl
 from openpilot.cereal import log
 from openpilot.common.filter_simple import FirstOrderFilter
+from openpilot.selfdrive.ui.sunnypilot.onroad.stock_cruise_gap import stock_cruise_gap
 from openpilot.selfdrive.ui.ui_state import ui_state
 from openpilot.system.ui.lib.application import gui_app
 from openpilot.system.ui.widgets import Widget
 
 HIGHLIGHT_TIME = 2.5  # seconds
+DISTANCE_BAR_POSITIONS = (122, 136, 152)
 
 
 class LongIndicator(Widget):
@@ -37,6 +39,10 @@ class LongIndicator(Widget):
       self._personality = None
       self._personality_changed_time = -HIGHLIGHT_TIME
       self._alpha_filter.x = 0.0
+      if self._should_draw and sm['selfdriveState'].alertSize == log.SelfdriveState.AlertSize.none:
+        gap = stock_cruise_gap()
+        if gap:
+          self._draw_stock_distance_bars(rect, gap)
       return
 
     # hidden under alerts and set speed
@@ -59,6 +65,11 @@ class LongIndicator(Widget):
     self._draw_centered(white, rect, 100, white_alpha * alpha)
     self._draw_centered(green, rect, 100, green_alpha * alpha)
 
+  def _draw_stock_distance_bars(self, rect: rl.Rectangle, gap: int) -> None:
+    for i, y in enumerate((*DISTANCE_BAR_POSITIONS, 170)):
+      texture = self._txt_distance[min(i, len(self._txt_distance) - 1)][0]
+      self._draw_centered(texture, rect, y, 0.9 if i < gap else 0.35)
+
   def _draw_distance_bars(self, rect: rl.Rectangle, alpha: float, visible: bool) -> None:
     sm = ui_state.sm
     now = rl.get_time()
@@ -76,7 +87,7 @@ class LongIndicator(Widget):
     blink = 0.35 / 0.9 if overriding and now % 0.375 > 0.1875 else 1.0
 
     count = personality + 1
-    for i, ((white, green), y, (active_f, green_f)) in enumerate(zip(self._txt_distance, (122, 136, 152), self._distance_filters, strict=True)):
+    for i, ((white, green), y, (active_f, green_f)) in enumerate(zip(self._txt_distance, DISTANCE_BAR_POSITIONS, self._distance_filters, strict=True)):
       active = active_f.update(float(i < count))
       green_alpha = green_f.update(float(highlight and i == count - 1))
       # only lit bars blink on override

@@ -1,10 +1,12 @@
 import os
 import operator
 import platform
+import time
 
 from opendbc.car.structs import car
 from openpilot.cereal import custom
 from openpilot.common.params import Params
+from openpilot.common.swaglog import cloudlog
 from openpilot.common.hardware import PC, COMMA_HARDWARE
 from openpilot.system.manager.process import PythonProcess, NativeProcess, DaemonProcess
 from openpilot.common.hardware.hw import Paths
@@ -28,6 +30,9 @@ def iscar(started: bool, params: Params, CP: car.CarParams) -> bool:
 def logging(started: bool, params: Params, CP: car.CarParams) -> bool:
   run = (not CP.notCar) or not params.get_bool("DisableLogging")
   return started and run
+
+def cruise_analysis_logging(started: bool, params: Params, CP: car.CarParams) -> bool:
+  return logging(started, params, CP) and CP.brand == "landrover" and params.get_bool("CruiseAnalysisEnabled")
 
 def ublox_available() -> bool:
   return os.path.exists('/dev/ttyHS0') and not os.path.exists('/persist/comma/use-quectel-gps')
@@ -109,9 +114,30 @@ def or_(*fns):
 def and_(*fns):
   return lambda *args: operator.and_(*(fn(*args) for fn in fns))
 
+class AnalysisProcess(PythonProcess):
+  """Bound retries of the optional observer without delaying manager or capture."""
+  retry_at = 0.0
+  started_at = 0.0
+  failures = 0
+
+  def start(self) -> None:
+    now = time.monotonic()
+    if self.proc is not None and self.proc.exitcode is not None:
+      code = self.proc.exitcode
+      self.failures = self.failures + 1 if now - self.started_at < 60 else 1
+      delay = min(30, 2 ** min(self.failures - 1, 5))
+      self.stop()
+      self.retry_at = now + delay
+      cloudlog.error('cruise_analysis exited code=%s retry=%d delay=%ds', code, self.failures, delay)
+    if self.proc is None and now >= self.retry_at:
+      self.started_at = now
+      super().start()
+
+
 procs = [
   DaemonProcess("manage_athenad", "openpilot.system.athena.manage_athenad", "AthenadPid"),
 
+  AnalysisProcess("cruise_analysis", "openpilot.system.cruise_analysis.analysisd", cruise_analysis_logging, enabled=not PC),
   NativeProcess("loggerd", "openpilot/system/loggerd", ["./loggerd"], logging),
   NativeProcess("encoderd", "openpilot/system/loggerd", ["./encoderd"], only_onroad),
   NativeProcess("stream_encoderd", "openpilot/system/loggerd", ["./encoderd", "--stream"], or_(livestream, notcar)),

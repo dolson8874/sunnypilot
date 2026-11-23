@@ -6,14 +6,16 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`lrmaster-SP`**, the Land Rover upstream-master integration for C3X and C4.
+This README describes **`lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration and Blendful lane position settings.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
 `lrmaster-SP-tici` is the separate C3 branch.
 
 | Published branch | Purpose |
 | --- | --- |
-| `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4; clone command below |
+| `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
+| `lrmaster-SP-wip` | Defender WIP with CAN logging |
+| `test/lrmaster-SP-flexraylog-v2-wip` | Defender WIP with the standalone FlexRay capture path |
 | `lrmaster-SP-tici` | Land Rover branch for C3 |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture for C3X and C4 |
@@ -24,13 +26,12 @@ Back up any existing `/data/openpilot` installation before cloning into that pat
 
 ```bash
 cd /data
-git clone --recurse-submodules --branch lrmaster-SP https://github.com/dolson8874/sunnypilot.git openpilot
+git clone --recurse-submodules --branch lrmaster-SP-wip https://github.com/dolson8874/sunnypilot.git openpilot
 cd /data/openpilot
 scons -j8
 ```
 
-This base branch does not contain the FlexRay collector. For FlexRay v2 testing, select
-`lrmaster-SP-flexraylog-v2` and follow the README on that branch.
+This branch records physical CAN through pandad and loggerd. Enable **Record cruise analysis summaries** in Developer settings to collect optional CAN and radar summaries. The Defender CAN1 cruise and radar inputs still require the compatible FPGA setup. Use `test/lrmaster-SP-flexraylog-v2-wip` for USB/SPI FlexRay capture and live FlexRay analysis in Cabana.
 
 `--recurse-submodules` checks out the exact submodule commits recorded by this branch.
 Do not use `git submodule update --remote` to prepare a matching device checkout.
@@ -45,9 +46,7 @@ Land Rover uses safety model **39** because upstream uses **35 for BYD**, **36 f
 Regenerate CarParams using the normal startup/fingerprinting process; do not reuse legacy Land Rover safety ID 35.
 Pandad rejects a legacy Land Rover configuration that would otherwise select BYD safety.
 
-The existing Land Rover disabled-angle and real-time safety test failures remain deferred.
-This integration preserves the current steering limits and adapts the upstream schema/model APIs;
-it does not apply the separately recorded functional improvements.
+This branch carries the matched Defender WIP host and safety implementation in its pinned `opendbc_repo` commit.
 The release integration branches are retained locally for comparison and rollback;
 they are not published clone targets on GitHub.
 

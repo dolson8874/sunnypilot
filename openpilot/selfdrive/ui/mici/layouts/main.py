@@ -12,6 +12,7 @@ from openpilot.system.ui.widgets.scroller import Scroller
 from openpilot.system.ui.lib.application import gui_app
 
 if gui_app.sunnypilot_ui():
+  from openpilot.selfdrive.ui.sunnypilot.model_info import lane_preference_edit_allowed
   from openpilot.selfdrive.ui.sunnypilot.mici.layouts.settings import SettingsLayoutSP as SettingsLayout
   from openpilot.selfdrive.ui.sunnypilot.mici.layouts.home import MiciHomeLayoutSP as MiciHomeLayout
 
@@ -129,7 +130,12 @@ class MiciMainLayout(Scroller):
 
     # When car leaves standstill, pop nav stack and scroll to onroad
     CS = ui_state.sm["carState"]
-    if not CS.standstill and self._prev_standstill:
+    preference_page_blocked = (gui_app.sunnypilot_ui() and ui_state.started and
+                               gui_app.widget_in_stack(self._settings_layout.lane_preference_page) and
+                               not lane_preference_edit_allowed())
+    if preference_page_blocked:
+      gui_app.pop_widgets_to(self, lambda: self._scroll_to(self._onroad_layout), instant=True)
+    elif not CS.standstill and self._prev_standstill:
       gui_app.pop_widgets_to(self, lambda: self._scroll_to(self._onroad_layout))
     self._prev_standstill = CS.standstill
 

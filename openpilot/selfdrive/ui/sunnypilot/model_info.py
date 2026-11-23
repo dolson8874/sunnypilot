@@ -5,10 +5,14 @@ This file is part of sunnypilot and is licensed under the MIT License.
 See the LICENSE.md file in the root directory for more details.
 """
 import contextlib
+import math
 import os
 import time
 
+from opendbc.car.landrover.values import CAR as LANDROVER
 from openpilot.common.hardware.hw import Paths
+from openpilot.system.ui.lib.multilang import tr
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_MAX_LEVEL, PREFERENCE_PARAM
 from openpilot.selfdrive.ui.ui_state import ui_state, ChestnutState
 from openpilot.sunnypilot.models.fetcher import get_cached_bundles
 from openpilot.sunnypilot.models.helpers import get_active_source, get_selected_bundle, resolve_bundle_by_ref
@@ -118,3 +122,48 @@ def refresh_in_progress(started_at: float | None) -> bool:
   if started_at is None or time.monotonic() - started_at > MODEL_SYNC_TIMEOUT:
     return False
   return not all(ui_state.params.get(key) for key in MODEL_SYNC_KEYS)
+
+
+def defender_lane_preference_available() -> bool:
+  return (ui_state.CP is not None and ui_state.CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023 and
+          ui_state.active_runner_tinygrad and ui_state.params.get_bool("Blendful"))
+
+
+def lane_preference_label(level: int) -> str:
+  if level not in PREFERENCE_LEVELS or not level:
+    return tr("0 Center")
+  percent = abs(level) * 100 // PREFERENCE_MAX_LEVEL
+  return (tr("-{} Left {}%") if level < 0 else tr("+{} Right {}%")).format(abs(level), percent)
+
+
+def lane_preference_edit_allowed() -> bool:
+  if ui_state.is_offroad():
+    return True
+  sm = ui_state.sm
+  now = time.monotonic()
+  for service in ("carState", "selfdriveState"):
+    if not (sm.valid[service] and 0 <= now - sm.recv_time[service] <= 0.25):
+      return False
+  cs, ss = sm["carState"], sm["selfdriveState"]
+  informational = str(ss.alertSize) == "none" or ss.alertType == "belowSteerSpeed/warning"
+  return cs.canValid and cs.standstill and math.isfinite(cs.vEgo) and abs(cs.vEgo) <= 0.1 and informational
+
+
+def lane_preference_status(level: int) -> str:
+  if ui_state.is_offroad():
+    return ""
+  sm = ui_state.sm
+  service = "modelDataV2SP"
+  data = sm[service]
+  if sm.valid[service] and 0 <= time.monotonic() - sm.recv_time[service] <= 0.25:
+    if data.blendfulPreferenceReady and data.blendfulPreference == level:
+      return tr("Applied")
+  return tr("Pending")
+
+
+def save_lane_preference(level: int, *, allow_onroad: bool = False) -> bool:
+  allowed = lane_preference_edit_allowed() if allow_onroad else ui_state.is_offroad()
+  if level not in PREFERENCE_LEVELS or not allowed or not defender_lane_preference_available():
+    return False
+  ui_state.params.put(PREFERENCE_PARAM, level)
+  return True

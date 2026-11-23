@@ -9,6 +9,7 @@ from openpilot.common.parameterized import parameterized
 
 from openpilot.cereal import log, custom
 from opendbc.car import structs
+from opendbc.car.landrover.values import LandroverFlags
 from openpilot.selfdrive.selfdrived.events import Events
 from openpilot.sunnypilot.selfdrive.selfdrived.events import EventsSP
 from openpilot.sunnypilot.mads.helpers import MadsSteeringModeOnBrake, read_steering_mode_param
@@ -45,10 +46,12 @@ def make_params_mock(mocker, values):
   return params
 
 
-def make_mads(mocker, steering_mode):
+def make_mads(mocker, steering_mode, defender_lkas=False):
   sd = mocker.MagicMock()
   sd.CP = structs.CarParams()
-  sd.CP.brand = "hyundai"
+  sd.CP.brand = "landrover" if defender_lkas else "hyundai"
+  if defender_lkas:
+    sd.CP.flags = int(LandroverFlags.CRUISE_HUD_BENCH)
   sd.CP_SP = structs.CarParamsSP()
   sd.params = mocker.MagicMock()
   sd.params.get_bool = mocker.MagicMock(side_effect=lambda k: {
@@ -77,6 +80,33 @@ def run_frames(mads, sd, cs, n=1):
     sd.CS_prev = cs
     sd.events.clear()
     sd.events_sp.clear()
+
+
+class TestDefenderManualLkas(OpenpilotTestCase):
+  def test_pcm_enable_does_not_start_manual_lkas(self, mocker):
+    mads, sd = make_mads(mocker, MadsSteeringModeOnBrake.REMAIN_ACTIVE, defender_lkas=True)
+    mads.unified_engagement_mode = True
+    cs = make_car_state(v_ego=20.0)
+    cs.cruiseState.available = False
+    sd.CS_prev = cs
+
+    sd.events.add(EventName.pcmEnable)
+    mads.update(cs)
+    assert sd.events.has(EventName.pcmEnable)
+    assert not mads.enabled
+    sd.events.clear()
+
+    cs = cs.as_reader().as_builder()
+    cs.cruiseState.available = True
+    cs.buttonEvents = [structs.CarState.ButtonEvent(type=structs.CarState.ButtonEvent.Type.lkas, pressed=True)]
+    run_frames(mads, sd, cs)
+    assert mads.active
+
+    cs = cs.as_reader().as_builder()
+    cs.cruiseState.available = False
+    cs.buttonEvents = []
+    run_frames(mads, sd, cs)
+    assert not mads.enabled
 
 
 # should_silent_lkas_enable across all modes

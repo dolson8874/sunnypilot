@@ -109,6 +109,7 @@ class UIState(UIStateSP):
     self.started: bool = False
     self.ignition: bool = False
     self.recording_audio: bool = False
+    self.cruise_analysis_show = self.params.get_bool("CruiseAnalysisShow") and self.params.get_bool("CruiseAnalysisEnabled")
     self.panda_type: log.PandaState.PandaType = log.PandaState.PandaType.unknown
     self.personality: log.LongitudinalPersonality = log.LongitudinalPersonality.standard
     self.has_longitudinal_control: bool = False
@@ -257,6 +258,7 @@ class UIState(UIStateSP):
         self.has_longitudinal_control = self.CP.openpilotLongitudinalControl
 
     self.recording_audio = self.params.get_bool("RecordAudio") and self.started
+    self.cruise_analysis_show = self.params.get_bool("CruiseAnalysisShow") and self.params.get_bool("CruiseAnalysisEnabled")
     self.is_metric = self.params.get_bool("IsMetric")
     self.initial_cruise_speed = self.params.get("InitialCruiseSpeedKph", return_default=True)
     self.always_on_dm = self.params.get_bool("AlwaysOnDM")

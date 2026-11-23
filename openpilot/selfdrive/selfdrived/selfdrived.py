@@ -17,6 +17,7 @@ from openpilot.common.swaglog import cloudlog
 from openpilot.common.gps import get_gps_location_service
 
 from openpilot.selfdrive.car.car_events import CarEvents
+from openpilot.selfdrive.controls.lib.maneuver_plan import maneuver_message_fresh
 from openpilot.selfdrive.locationd.helpers import PoseCalibrator, Pose
 from openpilot.selfdrive.selfdrived.events import Events, ET
 from openpilot.selfdrive.selfdrived.helpers import ExcessiveActuationCheck
@@ -52,6 +53,11 @@ MonitoringPolicy = log.DriverMonitoringState.MonitoringPolicy
 TurnDirection = custom.ModelDataV2SP.TurnDirection
 
 IGNORED_SAFETY_MODES = (SafetyModel.silent, SafetyModel.noOutput)
+
+
+def driving_processes_missing(not_running):
+  # Only optional map/analysis services are excluded; keep all driving watchdogs.
+  return not_running - {'mapd', 'cruise_analysis'}
 
 
 class SelfdriveD:
@@ -150,8 +156,6 @@ class SelfdriveD:
     self.state_machine = StateMachine()
     self.rk = Ratekeeper(100, print_delay_threshold=None)
 
-    self.ignored_processes = {'mapd', }
-
     # Determine startup event
     is_remote = build_metadata.openpilot.comma_remote or build_metadata.openpilot.sunnypilot_remote
     self.startup_event = EventName.startup if is_remote and build_metadata.tested_channel else EventName.startupMaster
@@ -213,10 +217,10 @@ class SelfdriveD:
     if not self.enabled and not model_unavailable:
       self.big_model_active = False
 
-    if self.sm.recv_frame['lateralManeuverPlan'] > 0:
+    if maneuver_message_fresh(self.sm, 'lateralManeuverPlan') and self.params.get_bool('LateralManeuverMode'):
       self.events.add(EventName.lateralManeuver)
       self.startup_event = None
-    elif self.sm.recv_frame['alertDebug'] > 0:
+    elif maneuver_message_fresh(self.sm, 'alertDebug') and self.params.get_bool('LongitudinalManeuverMode'):
       self.events.add(EventName.longitudinalManeuver)
       self.startup_event = None
 
@@ -404,7 +408,7 @@ class SelfdriveD:
       if not_running != self.not_running_prev:
         cloudlog.event("process_not_running", not_running=not_running, error=True)
       self.not_running_prev = not_running
-    if self.sm.recv_frame['managerState'] and (not_running - self.ignored_processes):
+    if self.sm.recv_frame['managerState'] and driving_processes_missing(not_running):
       self.events.add(EventName.processNotRunning)
     else:
       if not SIMULATION and not self.rk.lagging:

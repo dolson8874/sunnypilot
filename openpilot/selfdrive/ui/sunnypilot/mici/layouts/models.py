@@ -9,6 +9,10 @@ import time
 import pyray as rl
 
 from openpilot.cereal import custom
+from openpilot.common.constants import CV
+from openpilot.selfdrive.ui.sunnypilot.model_info import (defender_lane_preference_available, lane_preference_edit_allowed,
+                                                           lane_preference_label, lane_preference_status, save_lane_preference)
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, read_lane_preference
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialog, BigDialog
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle
 from openpilot.selfdrive.ui.mici.widgets.button import BigButton, BigParamControl
@@ -16,9 +20,12 @@ from openpilot.selfdrive.ui.ui_state import ui_state, device
 from openpilot.selfdrive.ui.sunnypilot.model_info import (active_source, big_model_state, bundles_for_source, carrying_model,
                                                            default_model_name, model_cache_size_mb, model_info, queued_name,
                                                            refresh_in_progress, refresh_model_list)
-from openpilot.system.ui.lib.application import FontWeight, gui_app
+from openpilot.system.ui.lib.application import FontWeight, TextAlignment, gui_app
 from openpilot.system.ui.lib.multilang import tr
 from openpilot.system.ui.widgets import Widget
+from openpilot.system.ui.widgets.nav_widget import NavWidget
+from openpilot.system.ui.widgets.button import Button
+from openpilot.system.ui.widgets.label import gui_label
 from openpilot.system.ui.widgets.label import UnifiedLabel
 from openpilot.system.ui.widgets.scroller import NavScroller
 
@@ -70,6 +77,42 @@ class CurrentModelInfo(Widget):
     self.info_text.set_position(self._rect.x + 20, self._rect.y + 161 - 25)
     self.info_text.render()
 
+class LanePreferencePage(NavWidget):
+  def __init__(self):
+    super().__init__()
+    self.set_rect(rl.Rectangle(0, 0, gui_app.width, gui_app.height))
+    self._level = 0
+    self._minus = Button("-", click_callback=lambda: self._select(self._level - 1), font_size=36, text_padding=4)
+    self._plus = Button("+", click_callback=lambda: self._select(self._level + 1), font_size=36, text_padding=4)
+
+  def show_event(self):
+    super().show_event()
+    self._level = read_lane_preference(ui_state.params)
+
+  def _select(self, level: int):
+    if self.enabled and not self.is_dismissing and save_lane_preference(level, allow_onroad=True):
+      self._level = level
+
+  def _render(self, rect):
+    enabled = self.enabled and not self.is_dismissing and lane_preference_edit_allowed() and defender_lane_preference_available()
+    self._minus.set_enabled(enabled and self._level - 1 in PREFERENCE_LEVELS)
+    self._plus.set_enabled(enabled and self._level + 1 in PREFERENCE_LEVELS)
+    x, y, w = rect.x, rect.y, rect.width
+    gui_label(rl.Rectangle(x + 20, y + 26, w - 40, 30), tr("Lane position preference"), 23, alignment=TextAlignment.CENTER)
+    if ui_state.is_onroad():
+      alert = ui_state.sm["selfdriveState"]
+      if alert.alertType == "belowSteerSpeed/warning" and ui_state.CP is not None:
+        metric = ui_state.is_metric
+        speed = round(ui_state.CP.minSteerSpeed * (CV.MS_TO_KPH if metric else CV.MS_TO_MPH))
+        unit = "km/h" if metric else "mph"
+        notice = tr("Steering unavailable below {}").format(f"{speed} {unit}")
+        gui_label(rl.Rectangle(x + 20, y + 59, w - 40, 22), notice, 16, alignment=TextAlignment.CENTER)
+    self._minus.render(rl.Rectangle(x + 24, y + 91, 90, 63))
+    gui_label(rl.Rectangle(x + 124, y + 91, w - 248, 63), lane_preference_label(self._level), 29, alignment=TextAlignment.CENTER)
+    self._plus.render(rl.Rectangle(x + w - 114, y + 91, 90, 63))
+    gui_label(rl.Rectangle(x + 24, y + 177, w - 48, 46), lane_preference_status(self._level), 22, alignment=TextAlignment.CENTER)
+
+
 class ModelsLayoutMici(NavScroller):
   def __init__(self):
     super().__init__()
@@ -99,8 +142,12 @@ class ModelsLayoutMici(NavScroller):
                                            description=tr("Adds a gentle nudge toward lane center on top of the model's own steering, stronger when " +
                                                           "lane lines are clear. Yields around obstacles. Not available with the Default model."))
 
+    self.lane_preference_page = LanePreferencePage()
+    self.lane_preference = BigButton(tr("Lane position preference"))
+    self.lane_preference.set_click_callback(self._choose_lane_preference)
+
     self.main_items = [self.current_model_info, self.select_model_btn, self.cancel_download_btn, self.refresh_btn, self.clear_cache_btn,
-                       self.blendful_toggle]
+                       self.blendful_toggle, self.lane_preference]
     self._scroller.add_widgets(self.main_items)
 
   @property
@@ -123,6 +170,10 @@ class ModelsLayoutMici(NavScroller):
     scroller = NavScroller()
     scroller._scroller.add_widgets(items)
     gui_app.push_widget(scroller)
+
+  def _choose_lane_preference(self):
+    if defender_lane_preference_available() and lane_preference_edit_allowed():
+      gui_app.push_widget(self.lane_preference_page)
 
   def _show_folders(self):
     self.focused_widget = self.select_model_btn
@@ -221,6 +272,18 @@ class ModelsLayoutMici(NavScroller):
     self.cancel_download_btn.set_visible(False)
     self.current_model_info.current_model_header._shimmer = False
     self.current_model_info.info_header._shimmer = False
+
+    available = defender_lane_preference_available()
+    self.lane_preference.set_visible(available)
+    if available:
+      self.lane_preference.set_enabled(lane_preference_edit_allowed())
+      level = read_lane_preference(ui_state.params)
+      label = lane_preference_label(level)
+      status = lane_preference_status(level)
+      if status:
+        label = f"{label}  {status}"
+      if self.lane_preference.value != label:
+        self.lane_preference.set_value(label)
 
     blendful_allowed = ui_state.active_runner_tinygrad
     if blendful_allowed:

@@ -65,6 +65,16 @@ class DeveloperLayoutMici(NavScroller):
                                    description="Grant SSH access to all public keys in your GitHub settings. Only enter your own username.")
     self._ssh_keys_btn.set_click_callback(ssh_keys_callback)
 
+    self._cruise_analysis_toggle = BigParamControl(
+      "record cruise analysis summaries", "CruiseAnalysisEnabled",
+      description="Optional diagnostics. Raw CAN recording is independent.",
+    )
+    self._scroller.add_widgets([
+      self._cruise_analysis_toggle,
+      BigParamControl("cruise analysis raw display", "CruiseAnalysisShow",
+                      description="Show candidate raw values while cruise analysis summaries are enabled."),
+    ])
+
     # adb, ssh, ssh keys, debug mode, joystick debug mode, longitudinal maneuver mode, ip address
     # ******** Main Scroller ********
     self._adb_toggle = BigCircleParamControl(gui_app.texture("icons_mici/adb_short.png", 82, 82), "AdbEnabled", icon_offset=(0, 12),
@@ -111,8 +121,9 @@ class DeveloperLayoutMici(NavScroller):
       ("AlphaLongitudinalEnabled", self._alpha_long_toggle),
       ("ShowDebugInfo", self._debug_mode_toggle),
       ("NavigationEnabled", self._navigation_toggle),
+      ("CruiseAnalysisEnabled", self._cruise_analysis_toggle),
     )
-    onroad_blocked_toggles = (self._adb_toggle, self._joystick_toggle)
+    onroad_blocked_toggles = (self._adb_toggle, self._joystick_toggle, self._cruise_analysis_toggle)
     release_blocked_toggles = (self._joystick_toggle, self._long_maneuver_toggle, self._lat_maneuver_toggle, self._alpha_long_toggle, self._navigation_toggle)
     engaged_blocked_toggles = (self._long_maneuver_toggle, self._lat_maneuver_toggle, self._alpha_long_toggle)
 

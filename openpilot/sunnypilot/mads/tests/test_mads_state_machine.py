@@ -28,12 +28,14 @@ def make_event(event_types):
   event = {}
   for ev in event_types:
     event[ev] = NormalPermanentAlert("alert")
-  EVENTS_SP[0] = event  # type: ignore[assignment] # ty: ignore[invalid-assignment]
-  return 0
+  test_event = 10_000
+  EVENTS_SP[test_event] = event  # type: ignore[assignment] # ty: ignore[invalid-assignment]
+  return test_event
 
 
 class MockMADS:
   def __init__(self, mocker):
+    self.lkas_button_only = False
     self.selfdrive = mocker.MagicMock()
     self.selfdrive.state_machine = mocker.MagicMock()
     self.selfdrive.events = Events()

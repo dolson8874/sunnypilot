@@ -453,6 +453,7 @@ struct BackupManagerSP @0xf98d843bfd7004a3 {
 
 struct CarStateSP @0xb86e6369214c01c8 {
   speedLimit @0 :Float32;
+  stockCruiseGap @1 :UInt8;  # 0 when unavailable, 1–4 for the stock ACC setting.
 }
 
 struct LiveMapDataSP @0xf416ec09499d9d19 {
@@ -475,6 +476,27 @@ struct ModelDataV2SP @0xa1680744031fdb2d {
   blendfulLeftProb @7 :Float32;
   blendfulRightProb @8 :Float32;
   blendfulLaneWidth @9 :Float32;
+  blendfulReason @10 :BlendfulReason;
+  blendfulPreference @11 :Int8;
+  blendfulPreferenceReady @12 :Bool;
+
+  enum BlendfulReason {
+    unknown @0;
+    disabled @1;
+    inactive @2;
+    inputStale @3;
+    inputFrequency @4;
+    inputInvalid @5;
+    uncalibrated @6;
+    lowSpeed @7;
+    laneGeometry @8;
+    lineConfidence @9;
+    withinBandOrDisagreement @10;
+    confirming @11;
+    yielding @12;
+    fitLimited @13;
+    correcting @14;
+  }
 
   enum TurnDirection {
     none @0;
@@ -483,10 +505,30 @@ struct ModelDataV2SP @0xa1680744031fdb2d {
   }
 }
 
-struct CustomReserved10 @0xcb9fd56c7057593a {
+struct FlexrayStatus @0xcb9fd56c7057593a {
+  state @0 :Text;
+  pid @1 :UInt32;
+  retryCount @2 :UInt32;
+  lastReadMonoTime @3 :UInt64;
+  lastFrameMonoTime @4 :UInt64;
+  src4Frames @5 :UInt64;
+  src6Frames @6 :UInt64;
+  src4Rate @7 :Float32;
+  src6Rate @8 :Float32;
+  lastError @9 :Text;
+  usbDeliveredBytes @10 :UInt64;
+  loggerReady @11 :Bool;
+  startupBufferedFrames @12 :UInt64;
+  startupBufferedBytes @13 :UInt64;
+  startupDroppedFrames @14 :UInt64;
+  startupDroppedBytes @15 :UInt64;
+  src4ReceivedFrames @16 :UInt64;
+  src6ReceivedFrames @17 :UInt64;
 }
 
-struct CustomReserved11 @0xc2243c65e0340384 {
+struct CruiseAnalysis @0xc2243c65e0340384 {
+  version @0 :UInt16;
+  snapshotJson @1 :Text;  # Versioned candidate observation; original raw events remain authoritative.
 }
 
 struct CustomReserved12 @0x9ccdc8676701b412 {

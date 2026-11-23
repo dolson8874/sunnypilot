@@ -29,6 +29,7 @@ class StateMachine:
     self.ss_state_machine = mads.selfdrive.state_machine
     self._events = mads.selfdrive.events
     self._events_sp = mads.selfdrive.events_sp
+    self.lkas_button_only = mads.lkas_button_only
 
     self.state = State.disabled
 
@@ -37,6 +38,8 @@ class StateMachine:
       self.ss_state_machine.current_alert_types.append(alert_type)
 
   def check_contains(self, event_type: str) -> bool:
+    if event_type == ET.ENABLE and self.lkas_button_only:
+      return bool(self._events_sp.contains(event_type))
     return bool(self._events.contains(event_type) or self._events_sp.contains(event_type))
 
   def check_contains_in_list(self) -> bool:

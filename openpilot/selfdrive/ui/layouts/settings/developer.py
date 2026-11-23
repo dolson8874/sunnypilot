@@ -94,6 +94,13 @@ class DeveloperLayout(Widget):
     )
     self._on_enable_ui_debug(self._params.get_bool("ShowDebugInfo"))
 
+    self._cruise_analysis_toggle = toggle_item(
+      lambda: tr("Record cruise analysis summaries"),
+      description=lambda: tr("Optional diagnostics. Raw CAN recording is independent."),
+      initial_state=self._params.get_bool("CruiseAnalysisEnabled"),
+      callback=lambda enabled: self._params.put_bool("CruiseAnalysisEnabled", enabled, block=True),
+      enabled=ui_state.is_offroad,
+    )
     self._scroller = Scroller([
       self._adb_toggle,
       self._ssh_toggle,
@@ -103,6 +110,11 @@ class DeveloperLayout(Widget):
       self._lat_maneuver_toggle,
       self._alpha_long_toggle,
       self._ui_debug_toggle,
+      self._cruise_analysis_toggle,
+      toggle_item(lambda: tr("Cruise analysis raw display"),
+                  description=lambda: tr("Show candidate raw values while cruise analysis summaries are enabled."),
+                  initial_state=self._params.get_bool("CruiseAnalysisShow"),
+                  callback=lambda enabled: self._params.put_bool("CruiseAnalysisShow", enabled)),
     ], line_separator=True, spacing=0)
 
     # Toggles should be not available to change in onroad state
@@ -151,6 +163,7 @@ class DeveloperLayout(Widget):
       ("LateralManeuverMode", self._lat_maneuver_toggle),
       ("AlphaLongitudinalEnabled", self._alpha_long_toggle),
       ("ShowDebugInfo", self._ui_debug_toggle),
+      ("CruiseAnalysisEnabled", self._cruise_analysis_toggle),
     ):
       item.action_item.set_state(self._params.get_bool(key))
 
