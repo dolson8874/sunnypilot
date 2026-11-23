@@ -9,27 +9,54 @@
 This README describes **`test/lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration and Blendful lane position settings.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
-`lrmaster-SP-tici` is the separate C3 branch.
+The [C3 TICI WIP](https://github.com/dolson8874/sunnypilot/tree/test/lrmaster-SP-tici-wip) has its own installation instructions.
 
 | Published branch | Purpose |
 | --- | --- |
 | `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
 | `test/lrmaster-SP-wip` | Defender WIP with CAN logging |
 | `test/lrmaster-SP-flexraylog-v2-wip` | Defender WIP with the standalone FlexRay capture path |
-| `lrmaster-SP-tici` | Land Rover branch for C3 |
+| `test/lrmaster-SP-tici-wip` | C3 WIP with Range Rover Vogue 2017 support |
+| `lrmaster-SP-tici` | C3 base branch |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture for C3X and C4 |
 
-### Open this local test branch
+### First install on C3X or C4
 
-From an existing sunnypilot checkout that contains the branch, create a worktree at a new path.
+This branch targets **C3X or C4** with **AGNOS 19.9**. Run the commands in an offroad device shell with internet access. The device launcher uses `/data/openpilot`. Back up and move an existing installation out of that path before cloning. For an existing checkout of this WIP, use the update steps below.
 
 ```bash
-git worktree add ../sunnypilot-can-wip test/lrmaster-SP-wip
-cd ../sunnypilot-can-wip
-git submodule update --init --recursive
-scons -j8
+cd /data &&
+test ! -e openpilot && test ! -L openpilot &&
+git clone --branch test/lrmaster-SP-wip --recurse-submodules https://github.com/dolson8874/sunnypilot.git openpilot &&
+cd /data/openpilot &&
+git log -1 --oneline --decorate &&
+git submodule status --recursive
 ```
+
+After the clone succeeds, reboot while offroad and wait for the startup build. The launcher runs SCons when the checkout has no `prebuilt` marker.
+
+### Update from the device screen
+
+While offroad, open **Settings → Software** on an installation whose Git origin is `dolson8874/sunnypilot`. Select `test/lrmaster-SP-wip` under **Target Branch**, check for an update, download it, and install it. Check the branch and commit after the restart.
+
+### Update an existing WIP checkout from the shell
+
+While offroad, check `git -C /data/openpilot status --short --branch` and `git -C /data/openpilot remote get-url origin`. Preserve local changes, including changes in submodules, before updating. Confirm the checkout is from `dolson8874/sunnypilot`.
+
+```bash
+cd /data/openpilot &&
+test "$(git branch --show-current)" = "test/lrmaster-SP-wip" &&
+git pull --ff-only origin test/lrmaster-SP-wip &&
+git submodule sync --recursive &&
+git submodule update --init --recursive &&
+git log -1 --oneline --decorate &&
+git submodule status --recursive
+```
+
+After a successful shell update, remove `/data/openpilot/prebuilt` before rebooting if native code, Params keys, CAN definitions, or message schemas changed. This lets the launcher rebuild the affected components.
+
+### CAN logging and branch integration
 
 This branch records physical CAN through pandad and loggerd. Enable **Record cruise analysis summaries** in Developer settings to collect optional CAN and radar summaries. The Defender CAN1 cruise and radar inputs still require the compatible FPGA setup. Use `test/lrmaster-SP-flexraylog-v2-wip` for USB/SPI FlexRay capture and live FlexRay analysis in Cabana.
 
@@ -69,7 +96,7 @@ https://docs.sunnypilot.ai/ is your one stop shop for everything from features t
 First, check out this list of items you'll need to [get started](https://community.sunnypilot.ai/t/getting-started-using-sunnypilot-in-your-supported-car/251).
 
 ## Installation
-Next, refer to the sunnypilot community forum for [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
+Use [First install on C3X or C4](#first-install-on-c3x-or-c4) for this WIP or [the update instructions](#update-from-the-device-screen) for an existing installation. For general sunnypilot setup, see [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
 
 ## 🎆 Pull Requests
 We welcome both pull requests and issues on GitHub. Bug fixes are encouraged.
