@@ -8,6 +8,8 @@
 
 This README describes **`test/lrmaster-SP-wip-starpilot-agnos`**, a local C3 compatibility experiment based on `test/lrmaster-SP-wip`.
 
+The C3 uses **StarPilot AGNOS 20.5.5** as its operating system. The application, UI, model manager, and vehicle integration come from **sunnypilot `test/lrmaster-SP-wip`**. This port also brings StarPilot’s AR0231 camera support into sunnypilot’s camera service.
+
 ### C3 compatibility test
 
 This branch expects a **comma three (TICI) with a completed StarPilot C3 AGNOS 20.5.5 installation**. Install and verify the operating system separately on a spare C3 before testing this checkout offroad. Use the [StarPilot documentation](https://wiki.firestar.link/software/starpilot/) for its installation procedure. The source branch stays local until device compatibility is verified.
