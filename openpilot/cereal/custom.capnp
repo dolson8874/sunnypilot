@@ -477,6 +477,8 @@ struct ModelDataV2SP @0xa1680744031fdb2d {
   blendfulRightProb @8 :Float32;
   blendfulLaneWidth @9 :Float32;
   blendfulReason @10 :BlendfulReason;
+  blendfulPreference @11 :Int8;
+  blendfulPreferenceReady @12 :Bool;
 
   enum BlendfulReason {
     unknown @0;

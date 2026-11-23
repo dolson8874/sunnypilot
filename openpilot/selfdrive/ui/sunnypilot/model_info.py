@@ -5,6 +5,7 @@ This file is part of sunnypilot and is licensed under the MIT License.
 See the LICENSE.md file in the root directory for more details.
 """
 import contextlib
+import math
 import os
 import time
 
@@ -130,10 +131,38 @@ def defender_lane_preference_available() -> bool:
 
 def lane_preference_label(level: int) -> str:
   if level not in PREFERENCE_LEVELS or not level:
-    return tr("Center")
-  return (tr("Left {}") if level < 0 else tr("Right {}")).format(abs(level))
+    return tr("0 · Center")
+  return (tr("−{} · Left") if level < 0 else tr("+{} · Right")).format(abs(level))
 
 
-def save_lane_preference(level: int) -> None:
-  if level in PREFERENCE_LEVELS and ui_state.is_offroad() and defender_lane_preference_available():
-    ui_state.params.put("DefenderLanePreference", level)
+def lane_preference_edit_allowed() -> bool:
+  if ui_state.is_offroad():
+    return True
+  sm = ui_state.sm
+  now = time.monotonic()
+  for service in ("carState", "selfdriveState"):
+    if not (sm.valid[service] and 0 <= now - sm.recv_time[service] <= 0.25):
+      return False
+  cs, ss = sm["carState"], sm["selfdriveState"]
+  informational = str(ss.alertSize) == "none" or ss.alertType == "belowSteerSpeed/warning"
+  return cs.canValid and cs.standstill and math.isfinite(cs.vEgo) and abs(cs.vEgo) <= 0.1 and informational
+
+
+def lane_preference_status(level: int) -> str:
+  if ui_state.is_offroad():
+    return ""
+  sm = ui_state.sm
+  service = "modelDataV2SP"
+  data = sm[service]
+  if sm.valid[service] and 0 <= time.monotonic() - sm.recv_time[service] <= 0.25:
+    if data.blendfulPreferenceReady and data.blendfulPreference == level:
+      return tr("Applied")
+  return tr("Pending")
+
+
+def save_lane_preference(level: int, *, allow_onroad: bool = False) -> bool:
+  allowed = lane_preference_edit_allowed() if allow_onroad else ui_state.is_offroad()
+  if level not in PREFERENCE_LEVELS or not allowed or not defender_lane_preference_available():
+    return False
+  ui_state.params.put("DefenderLanePreference", level)
+  return True

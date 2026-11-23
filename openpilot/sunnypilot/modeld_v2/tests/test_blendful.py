@@ -206,3 +206,32 @@ class TestDefenderBlendful(OpenpilotTestCase):
       assert bf.going_around and bf.reason == "yielding"
       assert bf.update(frame(), 20.0, True, 0.0, enabled=False) == 0.0
       assert bf.reason == "disabled" and bf.preference == level and bf.preferred_offset == 0.0
+
+  def test_runtime_preference_reversal_passes_through_zero(self):
+    bf = Blendful(True, -2)
+    sample = frame(width=3.4, center=0.2)
+    drive(bf, 4.0, width=3.4, center=0.2)
+    assert bf.preference_ready
+    bf.preference = 2
+    offsets = [bf.preferred_offset]
+    for _ in range(80):
+      bf.update(sample, 20.0, True, 0.0)
+      offsets.append(bf.preferred_offset)
+    assert 0.0 in offsets
+    assert max(np.diff(offsets)) <= 0.05 * DT_MDL + 1e-12
+    assert bf.preference_ready and np.isclose(offsets[-1], 2 / 3 * 0.10)
+
+  def test_runtime_center_clears_offset_and_inactive_state_stays_pending(self):
+    bf = Blendful(True, 2)
+    drive(bf, 4.0, width=3.4)
+    bf.preference = 0
+    sample = frame(width=3.4)
+    bf.update(sample, 20.0, True, 0.0)
+    assert bf.preferred_offset > 0.0 and not bf.preference_ready
+    drive(bf, 2.0, width=3.4)
+    assert bf.preferred_offset == 0.0 and bf.preference_ready
+    bf.preference = -2
+    assert bf.update(sample, 0.0, False, 0.0) == 0.0
+    assert not bf.preference_ready and bf.preferred_offset == 0.0
+    bf.update(sample, 20.0, True, 0.0)
+    assert -0.05 * DT_MDL <= bf.preferred_offset < 0.0 and not bf.preference_ready

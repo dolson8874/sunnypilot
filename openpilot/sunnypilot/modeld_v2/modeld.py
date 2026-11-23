@@ -41,8 +41,8 @@ from openpilot.selfdrive.modeld.modeld import ChestnutGpuState
 
 from openpilot.sunnypilot.modeld_v2.fill_model_msg import fill_model_msg, fill_pose_msg, PublishState, get_curvature_from_output
 from openpilot.sunnypilot.modeld_v2.parse_model_outputs import Parser
-from openpilot.sunnypilot.modeld_v2.blendful import Blendful
-from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, Plan
+from openpilot.sunnypilot.modeld_v2.blendful import Blendful, CENTER_MIN_LANE_PROB
+from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, Plan, PREFERENCE_LEVELS
 from openpilot.sunnypilot.modeld_v2.meta_helper import load_meta_constants
 from openpilot.sunnypilot.modeld_v2.camera_offset_helper import CameraOffsetHelper
 from openpilot.sunnypilot.livedelay.helpers import get_lat_delay
@@ -420,6 +420,9 @@ def main(demo=False):
       model.PLANPLUS_CONTROL = params.get("PlanplusControl", return_default=True)
       camera_offset_helper.set_offset(params.get("CameraOffset", return_default=True))
       blendful_enabled = params.get_bool("Blendful")
+      if guard_lane_center:
+        requested = params.get("DefenderLanePreference", return_default=True)
+        blendful.preference = requested if requested in PREFERENCE_LEVELS else 0
     lat_delay = model.lat_delay + model.LAT_SMOOTH_SECONDS
     if sm.updated["extrinsicsCalibration"] and sm.seen['narrowRoadCameraState'] and sm.seen['deviceState']:
       device_from_calib_euler = np.array(sm["extrinsicsCalibration"].rpyCalib, dtype=np.float32)
@@ -530,6 +533,9 @@ def main(demo=False):
       mdv2sp_send.modelDataV2SP.blendfulCurvature = blendful.curvature
       if guard_lane_center:
         mdv2sp_send.modelDataV2SP.blendfulReason = input_reason or blendful.reason
+        mdv2sp_send.modelDataV2SP.blendfulPreference = blendful.preference
+        mdv2sp_send.modelDataV2SP.blendfulPreferenceReady = (blendful.preference_ready and not blendful.going_around and
+                                                             min(blendful.l_prob, blendful.r_prob) >= CENTER_MIN_LANE_PROB)
       mdv2sp_send.modelDataV2SP.blendfulTrust = float(blendful.trust)
       mdv2sp_send.modelDataV2SP.modelCurvature = float(blendful.model_curvature)
       mdv2sp_send.modelDataV2SP.blendfulGoingAround = bool(blendful.going_around)

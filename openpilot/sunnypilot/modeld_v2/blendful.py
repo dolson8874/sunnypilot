@@ -37,6 +37,8 @@ class Blendful:
     self.guard_lane_center = guard_lane_center
     self.preference = preference if guard_lane_center and preference in PREFERENCE_LEVELS else 0
     self.preferred_offset = 0.0
+    self._offset_level = 0
+    self.preference_ready = False
     self.reason = "unknown"
     self.guard_was_enabled = False
     self.center_direction = 0
@@ -58,6 +60,7 @@ class Blendful:
     self.curvature = 0.0
 
   def update(self, model_output: dict[str, np.ndarray], v_ego: float, active: bool, model_curvature: float, enabled: bool = True) -> float:
+    self.preference_ready = False
     self.l_prob = self.r_prob = 0.0
     self.model_curvature = model_curvature
     if not enabled:
@@ -120,12 +123,22 @@ class Blendful:
       return None
     if any(np.any(np.interp(CENTER_CHECK_X, X_IDXS, std) > LINE_STD[0]) for std in stds):
       return None
-    if self.preference:
-      # Narrowing takes effect immediately. Only expand the bias gradually.
+    desired = 0.0
+    if self.preference or self.preferred_offset:
       spare_half_width = max(0.0, (float(np.min(width)) - PREFERENCE_RESERVED_WIDTH) / 2)
-      desired = abs(self.preference) / 3 * min(PREFERENCE_MAX_SHIFT, spare_half_width / 3)
-      magnitude = min(desired, abs(self.preferred_offset) + PREFERENCE_BUILD_RATE * DT_MDL)
-      self.preferred_offset = magnitude if self.preference > 0 else -magnitude
+      limit = min(PREFERENCE_MAX_SHIFT, spare_half_width / 3)
+      desired = self.preference / 3 * limit
+      # Honor shrinking lane clearance immediately, even during a setting change.
+      previous = self.preferred_offset
+      if previous:
+        previous_limit = abs(self._offset_level) / 3 * limit
+        previous = min(previous_limit, max(-previous_limit, previous))
+      target = 0.0 if previous * desired < 0.0 else desired
+      step = PREFERENCE_BUILD_RATE * DT_MDL
+      self.preferred_offset = min(previous + step, max(previous - step, target))
+      if self.preferred_offset == desired or abs(self.preferred_offset) > abs(previous):
+        self._offset_level = self.preference
+    self.preference_ready = self.preferred_offset == desired
     return np.interp(CENTER_CHECK_X, plan[:, 0], plan[:, 1]) - (left + right) / 2 - self.preferred_offset
 
   def _center_limit(self, errors: np.ndarray | None, v_ego: float) -> float:

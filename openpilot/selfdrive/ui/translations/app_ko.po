@@ -956,3 +956,18 @@ msgstr "왼쪽 {}"
 
 msgid "Right {}"
 msgstr "오른쪽 {}"
+
+msgid "0 · Center"
+msgstr "0 · 중앙"
+
+msgid "−{} · Left"
+msgstr "−{} · 왼쪽"
+
+msgid "+{} · Right"
+msgstr "+{} · 오른쪽"
+
+msgid "Applied"
+msgstr "적용 중"
+
+msgid "Pending"
+msgstr "적용 대기"

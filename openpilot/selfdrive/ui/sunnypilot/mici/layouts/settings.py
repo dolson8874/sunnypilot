@@ -47,6 +47,7 @@ class SettingsLayoutSP(OP.SettingsLayout):
     sunnylink_btn.set_click_callback(lambda: gui_app.push_widget(sunnylink_panel))
 
     models_panel = ModelsLayoutMici()
+    self.lane_preference_page = models_panel.lane_preference_page
     models_btn = SettingsBigButton(tr("models"), "", gui_app.texture("../../sunnypilot/selfdrive/assets/offroad/icon_models.png", ICON_SIZE, ICON_SIZE))
     models_btn.set_click_callback(lambda: gui_app.push_widget(models_panel))
 
