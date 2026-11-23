@@ -25,7 +25,7 @@ CENTER_DEADBAND = 0.05  # m
 CENTER_CONFIRM_FRAMES = round(0.5 / DT_MDL)
 CENTER_MAX_LAT_ACCEL = 0.10  # m/s^2, at most one frame of the normal fast release
 
-# Reserve a central corridor for the Defender body and lateral clearance.
+# Reserve a central corridor for the vehicle and lateral clearance.
 # This design envelope is applied to estimated lane geometry, not measured tire position.
 PREFERENCE_RESERVED_WIDTH = 2.5  # m
 PREFERENCE_MAX_SHIFT = 0.10  # m

@@ -372,10 +372,10 @@ def main(demo=False):
   DH = DesireHelper()
   meta_constants = load_meta_constants()
   RELC = RoadEdgeLaneChangeController()
-  guard_lane_center = CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023
-  preference = read_lane_preference(params) if guard_lane_center else 0
-  blendful = Blendful(guard_lane_center=guard_lane_center, preference=preference)
-  blendful_enabled = False
+  use_legacy_defender_preference = CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023
+  blendful_enabled = params.get_bool("Blendful")
+  preference = read_lane_preference(params, use_legacy_defender_preference=use_legacy_defender_preference)
+  blendful = Blendful(guard_lane_center=True, preference=preference)
 
   while True:
     # Keep receiving frames until we are at least 1 frame ahead of previous extra frame
@@ -420,8 +420,7 @@ def main(demo=False):
       model.PLANPLUS_CONTROL = params.get("PlanplusControl", return_default=True)
       camera_offset_helper.set_offset(params.get("CameraOffset", return_default=True))
       blendful_enabled = params.get_bool("Blendful")
-      if guard_lane_center:
-        blendful.preference = read_lane_preference(params)
+      blendful.preference = read_lane_preference(params, use_legacy_defender_preference=use_legacy_defender_preference)
     lat_delay = model.lat_delay + model.LAT_SMOOTH_SECONDS
     if sm.updated["extrinsicsCalibration"] and sm.seen['narrowRoadCameraState'] and sm.seen['deviceState']:
       device_from_calib_euler = np.array(sm["extrinsicsCalibration"].rpyCalib, dtype=np.float32)
@@ -497,7 +496,7 @@ def main(demo=False):
         prev_action.desiredCurvature = sm['controlsState'].curvature
       blendful_active = desire == log.Desire.none and DH.lane_change_state == log.LaneChangeState.off
       input_reason = None
-      if guard_lane_center and blendful_active and blendful_enabled:
+      if blendful_active and blendful_enabled:
         cs = sm['carState']
         services = ['carState', 'carControl', 'extrinsicsCalibration']
         if not sm.all_alive(services):
@@ -530,11 +529,10 @@ def main(demo=False):
       mdv2sp_send.valid = modelv2_send.valid
       mdv2sp_send.modelDataV2SP.laneTurnDirection = DH.lane_turn_direction
       mdv2sp_send.modelDataV2SP.blendfulCurvature = blendful.curvature
-      if guard_lane_center:
-        mdv2sp_send.modelDataV2SP.blendfulReason = input_reason or blendful.reason
-        mdv2sp_send.modelDataV2SP.blendfulPreference = blendful.preference
-        mdv2sp_send.modelDataV2SP.blendfulPreferenceReady = (blendful.preference_ready and not blendful.going_around and
-                                                             min(blendful.l_prob, blendful.r_prob) >= CENTER_MIN_LANE_PROB)
+      mdv2sp_send.modelDataV2SP.blendfulReason = input_reason or blendful.reason
+      mdv2sp_send.modelDataV2SP.blendfulPreference = blendful.preference
+      mdv2sp_send.modelDataV2SP.blendfulPreferenceReady = (blendful.preference_ready and not blendful.going_around and
+                                                         min(blendful.l_prob, blendful.r_prob) >= CENTER_MIN_LANE_PROB)
       mdv2sp_send.modelDataV2SP.blendfulTrust = float(blendful.trust)
       mdv2sp_send.modelDataV2SP.modelCurvature = float(blendful.model_curvature)
       mdv2sp_send.modelDataV2SP.blendfulGoingAround = bool(blendful.going_around)

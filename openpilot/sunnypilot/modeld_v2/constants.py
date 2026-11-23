@@ -7,14 +7,19 @@ if TYPE_CHECKING:
 
 PREFERENCE_MAX_LEVEL = 10
 PREFERENCE_LEVELS = range(-PREFERENCE_MAX_LEVEL, PREFERENCE_MAX_LEVEL + 1)
-PREFERENCE_PARAM = "DefenderLanePreferenceStep"
+PREFERENCE_PARAM = "BlendfulLanePreferenceStep"
 
 
-def read_lane_preference(params: "Params") -> int:
+def read_lane_preference(params: "Params", *, use_legacy_defender_preference: bool = False) -> int:
   level = params.get(PREFERENCE_PARAM)
   if level is not None:
     return level if level in PREFERENCE_LEVELS else 0
-  # An explicit 0 in the new key overrides any previously saved legacy value.
+  # Only the Defender used the old settings in modeld.
+  if not use_legacy_defender_preference:
+    return 0
+  level = params.get("DefenderLanePreferenceStep")
+  if level is not None:
+    return level if level in PREFERENCE_LEVELS else 0
   legacy = params.get("DefenderLanePreference", return_default=True)
   return round(legacy * PREFERENCE_MAX_LEVEL / 3) if legacy in range(-3, 4) else 0
 
