@@ -104,6 +104,7 @@ class HudRenderer(Widget):
     self.is_cruise_available: bool = True
     self.set_speed: float = SET_SPEED_NA
     self._set_speed_changed_time: float = 0
+    self._show_set_speed = False
     self.speed: float = 0.0
     self.v_ego_cluster_seen: bool = False
     self._engaged: bool = False
@@ -145,6 +146,9 @@ class HudRenderer(Widget):
     # whether we're drawing any top icons currently
     return bool(self._set_speed_alpha_filter.x > 1e-2)
 
+  def _cruise_speed_display(self, set_speed: float, engaged: bool) -> tuple[float, bool]:
+    return set_speed, engaged
+
   def _update_state(self) -> None:
     """Update HUD state based on car state and controls state."""
     sm = ui_state.sm
@@ -162,8 +166,10 @@ class HudRenderer(Widget):
       controls_state.deprecated.vCruise if v_cruise_cluster == 0.0 else v_cruise_cluster
     )
     engaged = sm['selfdriveState'].enabled
-    if (set_speed != self.set_speed and engaged) or (engaged and not self._engaged):
+    set_speed, show_set_speed = self._cruise_speed_display(set_speed, engaged)
+    if show_set_speed and (set_speed != self.set_speed or not self._show_set_speed):
       self._set_speed_changed_time = rl.get_time()
+    self._show_set_speed = show_set_speed
     if engaged != self._engaged:
       self._chestnut_fade_time = rl.get_time() if engaged else 0
     self._engaged = engaged
@@ -262,7 +268,7 @@ class HudRenderer(Widget):
   def _draw_set_speed(self, rect: rl.Rectangle) -> None:
     """Draw the MAX speed indicator box."""
     alpha = self._set_speed_alpha_filter.update(0 < rl.get_time() - self._set_speed_changed_time < SET_SPEED_PERSISTENCE and
-                                                self._can_draw_top_icons and self._engaged)
+                                                self._can_draw_top_icons and self._show_set_speed)
     if alpha < 1e-2:
       return
 

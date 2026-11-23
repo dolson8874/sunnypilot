@@ -6,17 +6,16 @@
 <br><br>
 # 🚘 This repository adds LAND ROVER vehicles to sunnypilot.
 
-This README describes **`test/lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration and Blendful lane position settings.
+This README describes **`test/lrmaster-SP-wip`**, the Land Rover development branch for C3X and C4 with Defender CAN1 cruise and radar integration, Range Rover Vogue 2017 support, and Blendful lane position settings.
 The pinned upstream master is **`3d8f211d4b2d7c4a981633783232c8ff8dbe402b`**
 (sunnypilot **2026.003.000**, openpilot **0.11.3**).
-The [C3 TICI WIP](https://github.com/dolson8874/sunnypilot/tree/test/lrmaster-SP-tici-wip) has its own installation instructions.
+The local C3 StarPilot TICI WIP has separate installation requirements.
 
 | Published branch | Purpose |
 | --- | --- |
 | `lrmaster-SP` | Land Rover upstream-master integration for C3X and C4 |
 | `test/lrmaster-SP-wip` | Defender WIP with CAN logging |
 | `test/lrmaster-SP-flexraylog-v2-wip` | Defender WIP with the standalone FlexRay capture path |
-| `test/lrmaster-SP-tici-wip` | C3 WIP with Range Rover Vogue 2017 support |
 | `lrmaster-SP-tici` | C3 base branch |
 | `lrmaster-SP-flexraylog` | Legacy FlexRay implementation integrated with pandad |
 | `lrmaster-SP-flexraylog-v2` | Standalone FlexRay capture for C3X and C4 |
@@ -71,6 +70,8 @@ The upstream default AGNOS version is **19.9**. Actual comma-device and vehicle 
 Land Rover uses safety model **39** because upstream uses **35 for BYD**, **36 for Volvo**,
 **37 for BMW**, and **38 for MG**. Upgrade the application and Panda firmware together.
 Regenerate CarParams using the normal startup/fingerprinting process; do not reuse legacy Land Rover safety ID 35.
+If automatic detection is unavailable, select **Land Rover Range Rover Vogue 2017** in Vehicle settings on C3X or use the **Range Rover 2017** settings page on C4.
+The Range Rover keeps stock ACC and shows its set speed and following distance. Enable MADS and Range Rover MADS to start steering with stock ACC. Selecting following distance 4 releases MADS steering.
 Pandad rejects a legacy Land Rover configuration that would otherwise select BYD safety.
 
 This branch carries the matched Defender WIP host and safety implementation in its pinned `opendbc_repo` commit.

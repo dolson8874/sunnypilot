@@ -8,6 +8,7 @@ import pyray as rl
 
 from openpilot.selfdrive.ui.mici.onroad.hud_renderer import HudRenderer
 from openpilot.selfdrive.ui.sunnypilot.onroad.blind_spot_indicators import BlindSpotIndicators
+from openpilot.selfdrive.ui.sunnypilot.onroad.landrover.stock_cruise import stock_cruise_display_kph
 from openpilot.selfdrive.ui.ui_state import ui_state
 
 
@@ -16,6 +17,12 @@ class HudRendererSP(HudRenderer):
     super().__init__()
     self.blind_spot_indicators = BlindSpotIndicators()
     self._sp_engaged: bool = False
+
+  def _cruise_speed_display(self, set_speed: float, engaged: bool) -> tuple[float, bool]:
+    if (stock := stock_cruise_display_kph(ui_state)) is not None:
+      available, speed_kph = stock
+      return (speed_kph if available else -1.0), available and speed_kph > 0
+    return super()._cruise_speed_display(set_speed, engaged)
 
   def _update_state(self) -> None:
     super()._update_state()

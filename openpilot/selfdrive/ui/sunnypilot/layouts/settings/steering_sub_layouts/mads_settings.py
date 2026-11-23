@@ -7,6 +7,7 @@ See the LICENSE.md file in the root directory for more details.
 from collections.abc import Callable
 import pyray as rl
 
+from opendbc.car.landrover.values import CAR as LANDROVER
 from opendbc.sunnypilot.car.tesla.values import MadsScreenButtonType, TeslaFlagsSP
 from openpilot.selfdrive.ui.ui_state import ui_state
 from openpilot.sunnypilot.mads.helpers import MadsSteeringModeOnBrake
@@ -63,7 +64,13 @@ class MadsSettingsLayout(Widget):
       callback=self._update_steering_mode_description,
     )
 
+    self._rr2017_toggle = toggle_item_sp(
+      title=lambda: tr("Range Rover Vogue 2017 MADS"),
+      description=tr("Engage steering with stock ACC. Set the following distance to 4 to disengage steering."),
+      param="RR2017Mads",
+    )
     self.items = [
+      self._rr2017_toggle,
       self._main_cruise_toggle,
       self._unified_engagement_toggle,
       self._steering_mode,
@@ -112,6 +119,15 @@ class MadsSettingsLayout(Widget):
     self._steering_mode.show_description(True)
 
   def _update_toggles(self):
+    bundle = ui_state.params.get("CarPlatformBundle") if ui_state.is_offroad() else None
+    platform = bundle.get("platform") if bundle else getattr(ui_state.CP, "carFingerprint", None)
+    rr2017 = platform == LANDROVER.RANGEROVER_VOGUE_2017
+    self._rr2017_toggle.set_visible(rr2017)
+    for item in (self._main_cruise_toggle, self._unified_engagement_toggle, self._steering_mode):
+      item.set_visible(not rr2017)
+    if rr2017:
+      return
+
     self._update_steering_mode_description(self._steering_mode.action_item.get_selected_button())
     if self._mads_limited_settings():
       ui_state.params.remove("MadsMainCruiseAllowed")

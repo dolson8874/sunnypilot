@@ -9,7 +9,8 @@ from openpilot.cereal import log, custom
 
 from opendbc.car import structs
 from opendbc.car.hyundai.values import HyundaiFlags
-from opendbc.car.landrover.values import LandroverFlags
+from opendbc.car.landrover.values import CAR as LANDROVER, LandroverFlags
+from opendbc.safety import ALTERNATIVE_EXPERIENCE
 from openpilot.common.params import Params
 from openpilot.sunnypilot.mads.helpers import MadsSteeringModeOnBrake, read_steering_mode_param, MADS_NO_ACC_MAIN_BUTTON
 from openpilot.sunnypilot.mads.state import StateMachine, GEARS_ALLOW_PAUSED_SILENT
@@ -29,6 +30,8 @@ class ModularAssistiveDrivingSystem:
   def __init__(self, selfdrive):
     self.CP = selfdrive.CP
     self.CP_SP = selfdrive.CP_SP
+    self.rr2017 = self.CP.carFingerprint == LANDROVER.RANGEROVER_VOGUE_2017
+    self.rr_acc_off_seen = False
     self.params = selfdrive.params
 
     self.enabled = False
@@ -50,18 +53,21 @@ class ModularAssistiveDrivingSystem:
     if self.CP.brand == "tesla":
       self.allow_always = True
 
-    if self.CP.brand in MADS_NO_ACC_MAIN_BUTTON:
+    if self.rr2017 or self.CP.brand in MADS_NO_ACC_MAIN_BUTTON:
       self.no_main_cruise = True
 
     # read params on init
-    self.enabled_toggle = self.params.get_bool("Mads")
-    self.main_enabled_toggle = self.params.get_bool("MadsMainCruiseAllowed")
-    self.steering_mode_on_brake = read_steering_mode_param(self.CP, self.CP_SP, self.params)
-    self.unified_engagement_mode = self.params.get_bool("MadsUnifiedEngagementMode")
+    if self.rr2017:
+      self.enabled_toggle = bool(self.CP.alternativeExperience & ALTERNATIVE_EXPERIENCE.ENABLE_MADS)
+      self.steering_mode_on_brake = MadsSteeringModeOnBrake.REMAIN_ACTIVE
+    else:
+      self.enabled_toggle = self.params.get_bool("Mads")
+      self.steering_mode_on_brake = read_steering_mode_param(self.CP, self.CP_SP, self.params)
+    self.read_params()
 
   def read_params(self):
-    self.main_enabled_toggle = self.params.get_bool("MadsMainCruiseAllowed")
-    self.unified_engagement_mode = self.params.get_bool("MadsUnifiedEngagementMode")
+    self.main_enabled_toggle = not self.rr2017 and self.params.get_bool("MadsMainCruiseAllowed")
+    self.unified_engagement_mode = self.rr2017 or self.params.get_bool("MadsUnifiedEngagementMode")
 
   def pedal_pressed_non_gas_pressed(self, CS: structs.CarState) -> bool:
     # ignore `pedalPressed` events caused by gas presses
@@ -173,6 +179,11 @@ class ModularAssistiveDrivingSystem:
       if be.type == ButtonType.cancel:
         if not self.selfdrive.enabled and self.selfdrive.enabled_prev:
           self.events_sp.add(EventNameSP.manualLongitudinalRequired)
+      if self.rr2017 and be.type == ButtonType.lkas and be.pressed:
+        if self.active:
+          self.events_sp.remove(EventNameSP.silentLkasDisable)
+          self.events_sp.add(EventNameSP.manualSteeringRequired)
+        continue
       if be.type == ButtonType.lkas and be.pressed and (CS.cruiseState.available or self.allow_always):
         if self.enabled:
           if self.selfdrive.enabled:
@@ -216,6 +227,21 @@ class ModularAssistiveDrivingSystem:
     self.data_sample()
 
     self.update_events(CS)
+
+    if self.rr2017:
+      sm = self.selfdrive.sm
+      gap_service = 'carStateSP'
+      gap_ok = sm.seen[gap_service] and sm.alive[gap_service] and sm.valid[gap_service] and 1 <= sm[gap_service].stockCruiseGap < 4
+      if CS.canValid and not CS.cruiseState.enabled:
+        self.rr_acc_off_seen = True
+      if not gap_ok or not CS.canValid or CS.gasPressed or not self.rr_acc_off_seen:
+        self.events.remove(EventName.pcmEnable)
+        self.events.remove(EventName.buttonEnable)
+        self.events_sp.remove(EventNameSP.lkasEnable)
+        self.events_sp.remove(EventNameSP.silentLkasEnable)
+        if self.enabled:
+          self.events_sp.remove(EventNameSP.silentLkasDisable)
+          self.events_sp.add(EventNameSP.manualSteeringRequired)
 
     if not self.CP.passive and self.selfdrive.initialized:
       self.enabled, self.active = self.state_machine.update()
