@@ -12,7 +12,7 @@ import time
 from opendbc.car.landrover.values import CAR as LANDROVER
 from openpilot.common.hardware.hw import Paths
 from openpilot.system.ui.lib.multilang import tr
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_MAX_LEVEL, PREFERENCE_PARAM
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_MAX_LEVEL, PREFERENCE_PARAM, read_lane_preference
 from openpilot.selfdrive.ui.ui_state import ui_state, ChestnutState
 from openpilot.sunnypilot.models.fetcher import get_cached_bundles
 from openpilot.sunnypilot.models.helpers import get_active_source, get_selected_bundle, resolve_bundle_by_ref
@@ -124,9 +124,13 @@ def refresh_in_progress(started_at: float | None) -> bool:
   return not all(ui_state.params.get(key) for key in MODEL_SYNC_KEYS)
 
 
-def defender_lane_preference_available() -> bool:
-  return (ui_state.CP is not None and ui_state.CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023 and
-          ui_state.active_runner_tinygrad and ui_state.params.get_bool("Blendful"))
+def lane_preference_available() -> bool:
+  return ui_state.active_runner_tinygrad and ui_state.params.get_bool("Blendful")
+
+
+def current_lane_preference() -> int:
+  use_legacy = ui_state.CP is not None and ui_state.CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023
+  return read_lane_preference(ui_state.params, use_legacy_defender_preference=use_legacy)
 
 
 def lane_preference_label(level: int) -> str:
@@ -163,7 +167,7 @@ def lane_preference_status(level: int) -> str:
 
 def save_lane_preference(level: int, *, allow_onroad: bool = False) -> bool:
   allowed = lane_preference_edit_allowed() if allow_onroad else ui_state.is_offroad()
-  if level not in PREFERENCE_LEVELS or not allowed or not defender_lane_preference_available():
+  if level not in PREFERENCE_LEVELS or not allowed or not lane_preference_available():
     return False
   ui_state.params.put(PREFERENCE_PARAM, level)
   return True

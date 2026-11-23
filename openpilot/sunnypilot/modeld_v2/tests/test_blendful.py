@@ -116,7 +116,7 @@ class TestBlendful(OpenpilotTestCase):
     assert abs(out[-1]) < 1e-6
 
 
-class TestDefenderBlendful(OpenpilotTestCase):
+class TestGuardedBlendful(OpenpilotTestCase):
   def setup_method(self):
     self.bf = Blendful(guard_lane_center=True)
 
@@ -247,10 +247,12 @@ class TestDefenderBlendful(OpenpilotTestCase):
       assert read_lane_preference(params) == 0
       for old, new in enumerate((-10, -7, -3, 0, 3, 7, 10), start=-3):
         params.put("DefenderLanePreference", old, block=True)
-        assert read_lane_preference(params) == new
-      params.put(PREFERENCE_PARAM, 0, block=True)
+        assert read_lane_preference(params, use_legacy_defender_preference=True) == new
+        assert read_lane_preference(params) == 0
+      params.put("DefenderLanePreferenceStep", -9, block=True)
+      assert read_lane_preference(params, use_legacy_defender_preference=True) == -9
       assert read_lane_preference(params) == 0
-      params.put(PREFERENCE_PARAM, -9, block=True)
-      assert read_lane_preference(params) == -9
-      params.put(PREFERENCE_PARAM, 11, block=True)
-      assert read_lane_preference(params) == 0
+      for use_legacy in (True, False):
+        for level, expected in ((0, 0), (7, 7), (-9, -9), (11, 0)):
+          params.put(PREFERENCE_PARAM, level, block=True)
+          assert read_lane_preference(params, use_legacy_defender_preference=use_legacy) == expected

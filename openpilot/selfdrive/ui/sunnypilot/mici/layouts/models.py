@@ -10,9 +10,9 @@ import pyray as rl
 
 from openpilot.cereal import custom
 from openpilot.common.constants import CV
-from openpilot.selfdrive.ui.sunnypilot.model_info import (defender_lane_preference_available, lane_preference_edit_allowed,
+from openpilot.selfdrive.ui.sunnypilot.model_info import (current_lane_preference, lane_preference_available, lane_preference_edit_allowed,
                                                            lane_preference_label, lane_preference_status, save_lane_preference)
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, read_lane_preference
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialog, BigDialog
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle
 from openpilot.selfdrive.ui.mici.widgets.button import BigButton, BigParamControl
@@ -87,14 +87,14 @@ class LanePreferencePage(NavWidget):
 
   def show_event(self):
     super().show_event()
-    self._level = read_lane_preference(ui_state.params)
+    self._level = current_lane_preference()
 
   def _select(self, level: int):
     if self.enabled and not self.is_dismissing and save_lane_preference(level, allow_onroad=True):
       self._level = level
 
   def _render(self, rect):
-    enabled = self.enabled and not self.is_dismissing and lane_preference_edit_allowed() and defender_lane_preference_available()
+    enabled = self.enabled and not self.is_dismissing and lane_preference_edit_allowed() and lane_preference_available()
     self._minus.set_enabled(enabled and self._level - 1 in PREFERENCE_LEVELS)
     self._plus.set_enabled(enabled and self._level + 1 in PREFERENCE_LEVELS)
     x, y, w = rect.x, rect.y, rect.width
@@ -172,7 +172,7 @@ class ModelsLayoutMici(NavScroller):
     gui_app.push_widget(scroller)
 
   def _choose_lane_preference(self):
-    if defender_lane_preference_available() and lane_preference_edit_allowed():
+    if lane_preference_available() and lane_preference_edit_allowed():
       gui_app.push_widget(self.lane_preference_page)
 
   def _show_folders(self):
@@ -273,11 +273,11 @@ class ModelsLayoutMici(NavScroller):
     self.current_model_info.current_model_header._shimmer = False
     self.current_model_info.info_header._shimmer = False
 
-    available = defender_lane_preference_available()
+    available = lane_preference_available()
     self.lane_preference.set_visible(available)
     if available:
       self.lane_preference.set_enabled(lane_preference_edit_allowed())
-      level = read_lane_preference(ui_state.params)
+      level = current_lane_preference()
       label = lane_preference_label(level)
       status = lane_preference_status(level)
       if status:

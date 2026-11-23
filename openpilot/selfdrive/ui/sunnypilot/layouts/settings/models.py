@@ -9,8 +9,8 @@ import time
 import pyray as rl
 
 from openpilot.cereal import custom
-from openpilot.selfdrive.ui.sunnypilot.model_info import defender_lane_preference_available, lane_preference_label, save_lane_preference
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_PARAM, read_lane_preference
+from openpilot.selfdrive.ui.sunnypilot.model_info import current_lane_preference, lane_preference_available, lane_preference_label, save_lane_preference
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_PARAM
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle, resolve_bundle_by_ref
 from openpilot.common.constants import CV
 from openpilot.selfdrive.ui.ui_state import device, ui_state
@@ -112,7 +112,7 @@ class ModelsLayout(Widget):
     self.lane_preference_control = OptionControlSP(
       PREFERENCE_PARAM, PREFERENCE_LEVELS.start, PREFERENCE_LEVELS.stop - 1,
       enabled=ui_state.is_offroad, label_width=500, label_callback=lane_preference_label,
-      read_value=lambda: read_lane_preference(ui_state.params), write_value=save_lane_preference,
+      read_value=current_lane_preference, write_value=save_lane_preference,
     )
     self.lane_preference = ListItemSP(title=tr("Lane position preference"), action_item=self.lane_preference_control)
     self.camera_offset = option_item_sp(tr("Adjust Camera Offset"), "CameraOffset", -35, 35,
@@ -337,7 +337,7 @@ class ModelsLayout(Widget):
     self.lane_turn_value_control.set_visible(turn_desire and advanced_controls)
     self.lagd_toggle.action_item.set_state(live_delay)
 
-    self.lane_preference.set_visible(defender_lane_preference_available())
+    self.lane_preference.set_visible(lane_preference_available())
 
     blendful_allowed = ui_state.active_runner_tinygrad
     if blendful_allowed:
@@ -392,5 +392,5 @@ class ModelsLayout(Widget):
 
   def show_event(self):
     self._scroller.show_event()
-    self.lane_preference_control.current_value = read_lane_preference(ui_state.params)
+    self.lane_preference_control.current_value = current_lane_preference()
     self._last_note = None  # re-expand the failover note every time the page opens
