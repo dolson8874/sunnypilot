@@ -1,6 +1,23 @@
+from typing import TYPE_CHECKING
+
 import numpy as np
 
-PREFERENCE_LEVELS = range(-3, 4)  # model y is positive to the driver's right
+if TYPE_CHECKING:
+  from openpilot.common.params import Params
+
+PREFERENCE_MAX_LEVEL = 10
+PREFERENCE_LEVELS = range(-PREFERENCE_MAX_LEVEL, PREFERENCE_MAX_LEVEL + 1)
+PREFERENCE_PARAM = "DefenderLanePreferenceStep"
+
+
+def read_lane_preference(params: "Params") -> int:
+  level = params.get(PREFERENCE_PARAM)
+  if level is not None:
+    return level if level in PREFERENCE_LEVELS else 0
+  # An explicit 0 in the new key overrides any previously saved legacy value.
+  legacy = params.get("DefenderLanePreference", return_default=True)
+  return round(legacy * PREFERENCE_MAX_LEVEL / 3) if legacy in range(-3, 4) else 0
+
 
 def index_function(idx, max_val=192, max_idx=32):
   return (max_val) * ((idx/max_idx)**2)

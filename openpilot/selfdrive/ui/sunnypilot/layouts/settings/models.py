@@ -10,7 +10,7 @@ import pyray as rl
 
 from openpilot.cereal import custom
 from openpilot.selfdrive.ui.sunnypilot.model_info import defender_lane_preference_available, lane_preference_label, save_lane_preference
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, read_lane_preference
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle, resolve_bundle_by_ref
 from openpilot.common.constants import CV
 from openpilot.selfdrive.ui.ui_state import device, ui_state
@@ -122,7 +122,7 @@ class ModelsLayout(Widget):
 
   def _choose_lane_preference(self):
     options = {lane_preference_label(level): level for level in PREFERENCE_LEVELS}
-    current = lane_preference_label(ui_state.params.get("DefenderLanePreference", return_default=True))
+    current = lane_preference_label(read_lane_preference(ui_state.params))
 
     def select(result):
       if result == DialogResult.CONFIRM:
@@ -348,7 +348,7 @@ class ModelsLayout(Widget):
     self.lane_preference.set_visible(available)
     if available:
       self.lane_preference.action_item.set_enabled(ui_state.is_offroad())
-      label = lane_preference_label(ui_state.params.get("DefenderLanePreference", return_default=True))
+      label = lane_preference_label(read_lane_preference(ui_state.params))
       if self.lane_preference.action_item.value != label:
         self.lane_preference.action_item.set_value(label)
 

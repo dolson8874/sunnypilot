@@ -4,12 +4,16 @@ Copyright (c) 2021-, Haibin Wen, sunnypilot, and a number of other contributors.
 This file is part of sunnypilot and is licensed under the MIT License.
 See the LICENSE.md file in the root directory for more details.
 """
+from tempfile import TemporaryDirectory
+
 import numpy as np
+
+from openpilot.common.params import Params
 
 from openpilot.common.realtime import DT_MDL
 from openpilot.common.test import OpenpilotTestCase
 from openpilot.sunnypilot.modeld_v2.blendful import Blendful
-from openpilot.sunnypilot.modeld_v2.constants import ModelConstants
+from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, PREFERENCE_PARAM, read_lane_preference
 
 X = np.array(ModelConstants.X_IDXS)
 BUILD, RELEASE = 0.5, 2.0
@@ -169,19 +173,19 @@ class TestDefenderBlendful(OpenpilotTestCase):
     assert np.all(push == 0.0)
 
   def test_preference_levels_are_symmetric_and_bounded_in_curves(self):
-    for level in (1, 2, 3):
+    for level in range(1, 11):
       left, right = Blendful(True, -level), Blendful(True, level)
       a = drive(left, 5.0, k=-0.001, plan=0.17)
       b = drive(right, 5.0, k=0.001, plan=-0.17)
       np.testing.assert_allclose(a, -b, atol=1e-12)
       assert a[-1] < 0 < b[-1]
-      assert np.isclose(right.preferred_offset, level * 0.10 / 3)
+      assert np.isclose(right.preferred_offset, level * 0.10 / 10)
       assert np.isclose(left.preferred_offset, -right.preferred_offset)
       assert np.max(np.abs(b)) <= 0.10000001
 
   def test_narrowest_checked_width_limits_preference_and_reacquires_slowly(self):
     sample = frame(width=3.6)
-    bf = Blendful(True, 3)
+    bf = Blendful(True, 10)
     drive(bf, 2.0)
     assert bf.preferred_offset == 0.10
     # The road tapers toward 25 m. Its narrowest width limits the entire target.
@@ -196,10 +200,10 @@ class TestDefenderBlendful(OpenpilotTestCase):
     assert bf.reason == "inactive" and bf.preferred_offset == 0.0
 
   def test_preference_ignores_invalid_level_and_preserves_disabled_and_yield(self):
-    for bf in (Blendful(True, 4), Blendful(False, -3)):
+    for bf in (Blendful(True, 11), Blendful(False, -10)):
       drive(bf, 2.0)
       assert bf.preference == 0 and bf.preferred_offset == 0.0
-    for level in (-3, 3):
+    for level in (-10, 10):
       bf = Blendful(True, level)
       drive(bf, 6.0)
       assert np.all(drive(bf, 3.0, plan=0.8) == 0.0)
@@ -208,21 +212,21 @@ class TestDefenderBlendful(OpenpilotTestCase):
       assert bf.reason == "disabled" and bf.preference == level and bf.preferred_offset == 0.0
 
   def test_runtime_preference_reversal_passes_through_zero(self):
-    bf = Blendful(True, -2)
+    bf = Blendful(True, -7)
     sample = frame(width=3.4, center=0.2)
     drive(bf, 4.0, width=3.4, center=0.2)
     assert bf.preference_ready
-    bf.preference = 2
+    bf.preference = 7
     offsets = [bf.preferred_offset]
     for _ in range(80):
       bf.update(sample, 20.0, True, 0.0)
       offsets.append(bf.preferred_offset)
     assert 0.0 in offsets
     assert max(np.diff(offsets)) <= 0.05 * DT_MDL + 1e-12
-    assert bf.preference_ready and np.isclose(offsets[-1], 2 / 3 * 0.10)
+    assert bf.preference_ready and np.isclose(offsets[-1], 7 / 10 * 0.10)
 
   def test_runtime_center_clears_offset_and_inactive_state_stays_pending(self):
-    bf = Blendful(True, 2)
+    bf = Blendful(True, 7)
     drive(bf, 4.0, width=3.4)
     bf.preference = 0
     sample = frame(width=3.4)
@@ -230,8 +234,23 @@ class TestDefenderBlendful(OpenpilotTestCase):
     assert bf.preferred_offset > 0.0 and not bf.preference_ready
     drive(bf, 2.0, width=3.4)
     assert bf.preferred_offset == 0.0 and bf.preference_ready
-    bf.preference = -2
+    bf.preference = -7
     assert bf.update(sample, 0.0, False, 0.0) == 0.0
     assert not bf.preference_ready and bf.preferred_offset == 0.0
     bf.update(sample, 20.0, True, 0.0)
     assert -0.05 * DT_MDL <= bf.preferred_offset < 0.0 and not bf.preference_ready
+
+
+  def test_read_preference_legacy_mapping_and_explicit_center(self):
+    with TemporaryDirectory() as directory:
+      params = Params(directory)
+      assert read_lane_preference(params) == 0
+      for old, new in enumerate((-10, -7, -3, 0, 3, 7, 10), start=-3):
+        params.put("DefenderLanePreference", old, block=True)
+        assert read_lane_preference(params) == new
+      params.put(PREFERENCE_PARAM, 0, block=True)
+      assert read_lane_preference(params) == 0
+      params.put(PREFERENCE_PARAM, -9, block=True)
+      assert read_lane_preference(params) == -9
+      params.put(PREFERENCE_PARAM, 11, block=True)
+      assert read_lane_preference(params) == 0

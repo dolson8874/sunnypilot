@@ -8,7 +8,7 @@ import numpy as np
 
 from openpilot.common.filter_simple import FirstOrderFilter
 from openpilot.common.realtime import DT_MDL
-from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, PREFERENCE_LEVELS
+from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, PREFERENCE_LEVELS, PREFERENCE_MAX_LEVEL
 
 LANE_WIDTH_DEFAULT = 3.6  # m
 LANE_WIDTH_CLIP = (2.8, 4.5)  # m
@@ -127,11 +127,11 @@ class Blendful:
     if self.preference or self.preferred_offset:
       spare_half_width = max(0.0, (float(np.min(width)) - PREFERENCE_RESERVED_WIDTH) / 2)
       limit = min(PREFERENCE_MAX_SHIFT, spare_half_width / 3)
-      desired = self.preference / 3 * limit
+      desired = self.preference / PREFERENCE_MAX_LEVEL * limit
       # Honor shrinking lane clearance immediately, even during a setting change.
       previous = self.preferred_offset
       if previous:
-        previous_limit = abs(self._offset_level) / 3 * limit
+        previous_limit = abs(self._offset_level) / PREFERENCE_MAX_LEVEL * limit
         previous = min(previous_limit, max(-previous_limit, previous))
       target = 0.0 if previous * desired < 0.0 else desired
       step = PREFERENCE_BUILD_RATE * DT_MDL

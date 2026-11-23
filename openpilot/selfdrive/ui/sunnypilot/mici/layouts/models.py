@@ -11,7 +11,7 @@ import pyray as rl
 from openpilot.cereal import custom
 from openpilot.selfdrive.ui.sunnypilot.model_info import (defender_lane_preference_available, lane_preference_edit_allowed,
                                                            lane_preference_label, lane_preference_status, save_lane_preference)
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, read_lane_preference
 from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialog, BigDialog
 from openpilot.sunnypilot.models.helpers import ACTIVE_BUNDLE_KEYS, get_selected_bundle
 from openpilot.selfdrive.ui.mici.widgets.button import BigButton, BigParamControl
@@ -87,9 +87,7 @@ class LanePreferencePage(NavWidget):
 
   def show_event(self):
     super().show_event()
-    self._level = ui_state.params.get("DefenderLanePreference", return_default=True)
-    if self._level not in PREFERENCE_LEVELS:
-      self._level = 0
+    self._level = read_lane_preference(ui_state.params)
 
   def _select(self, level: int):
     if self.enabled and not self.is_dismissing and save_lane_preference(level, allow_onroad=True):
@@ -106,7 +104,7 @@ class LanePreferencePage(NavWidget):
       alert = ui_state.sm["selfdriveState"]
       if alert.alertType == "belowSteerSpeed/warning":
         gui_label(rl.Rectangle(x, y + h * 0.28, w, h * 0.10), alert.alertText1, 18, alignment=TextAlignment.CENTER)
-    gui_label(rl.Rectangle(x + w * 0.23, y + h * 0.38, w * 0.54, h * 0.30), lane_preference_label(self._level), 38, alignment=TextAlignment.CENTER)
+    gui_label(rl.Rectangle(x + w * 0.23, y + h * 0.38, w * 0.54, h * 0.30), lane_preference_label(self._level), 31, alignment=TextAlignment.CENTER)
     self._minus.render(rl.Rectangle(x + w * 0.09, y + h * 0.39, w * 0.14, h * 0.27))
     self._plus.render(rl.Rectangle(x + w * 0.77, y + h * 0.39, w * 0.14, h * 0.27))
     self._center.render(rl.Rectangle(x + w * 0.12, y + h * 0.73, w * 0.34, h * 0.20))
@@ -277,7 +275,7 @@ class ModelsLayoutMici(NavScroller):
     self.lane_preference.set_visible(available)
     if available:
       self.lane_preference.set_enabled(lane_preference_edit_allowed())
-      level = ui_state.params.get("DefenderLanePreference", return_default=True)
+      level = read_lane_preference(ui_state.params)
       label = lane_preference_label(level)
       status = lane_preference_status(level)
       if status:

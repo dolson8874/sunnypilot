@@ -12,7 +12,7 @@ import time
 from opendbc.car.landrover.values import CAR as LANDROVER
 from openpilot.common.hardware.hw import Paths
 from openpilot.system.ui.lib.multilang import tr
-from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS
+from openpilot.sunnypilot.modeld_v2.constants import PREFERENCE_LEVELS, PREFERENCE_MAX_LEVEL, PREFERENCE_PARAM
 from openpilot.selfdrive.ui.ui_state import ui_state, ChestnutState
 from openpilot.sunnypilot.models.fetcher import get_cached_bundles
 from openpilot.sunnypilot.models.helpers import get_active_source, get_selected_bundle, resolve_bundle_by_ref
@@ -132,7 +132,8 @@ def defender_lane_preference_available() -> bool:
 def lane_preference_label(level: int) -> str:
   if level not in PREFERENCE_LEVELS or not level:
     return tr("0 · Center")
-  return (tr("−{} · Left") if level < 0 else tr("+{} · Right")).format(abs(level))
+  percent = abs(level) * 100 // PREFERENCE_MAX_LEVEL
+  return (tr("−{} · Left {}%") if level < 0 else tr("+{} · Right {}%")).format(abs(level), percent)
 
 
 def lane_preference_edit_allowed() -> bool:
@@ -164,5 +165,5 @@ def save_lane_preference(level: int, *, allow_onroad: bool = False) -> bool:
   allowed = lane_preference_edit_allowed() if allow_onroad else ui_state.is_offroad()
   if level not in PREFERENCE_LEVELS or not allowed or not defender_lane_preference_available():
     return False
-  ui_state.params.put("DefenderLanePreference", level)
+  ui_state.params.put(PREFERENCE_PARAM, level)
   return True

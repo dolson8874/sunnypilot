@@ -42,7 +42,7 @@ from openpilot.selfdrive.modeld.modeld import ChestnutGpuState
 from openpilot.sunnypilot.modeld_v2.fill_model_msg import fill_model_msg, fill_pose_msg, PublishState, get_curvature_from_output
 from openpilot.sunnypilot.modeld_v2.parse_model_outputs import Parser
 from openpilot.sunnypilot.modeld_v2.blendful import Blendful, CENTER_MIN_LANE_PROB
-from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, Plan, PREFERENCE_LEVELS
+from openpilot.sunnypilot.modeld_v2.constants import ModelConstants, Plan, read_lane_preference
 from openpilot.sunnypilot.modeld_v2.meta_helper import load_meta_constants
 from openpilot.sunnypilot.modeld_v2.camera_offset_helper import CameraOffsetHelper
 from openpilot.sunnypilot.livedelay.helpers import get_lat_delay
@@ -373,7 +373,7 @@ def main(demo=False):
   meta_constants = load_meta_constants()
   RELC = RoadEdgeLaneChangeController()
   guard_lane_center = CP.carFingerprint == LANDROVER.LANDROVER_DEFENDER_2023
-  preference = params.get("DefenderLanePreference", return_default=True) if guard_lane_center else 0
+  preference = read_lane_preference(params) if guard_lane_center else 0
   blendful = Blendful(guard_lane_center=guard_lane_center, preference=preference)
   blendful_enabled = False
 
@@ -421,8 +421,7 @@ def main(demo=False):
       camera_offset_helper.set_offset(params.get("CameraOffset", return_default=True))
       blendful_enabled = params.get_bool("Blendful")
       if guard_lane_center:
-        requested = params.get("DefenderLanePreference", return_default=True)
-        blendful.preference = requested if requested in PREFERENCE_LEVELS else 0
+        blendful.preference = read_lane_preference(params)
     lat_delay = model.lat_delay + model.LAT_SMOOTH_SECONDS
     if sm.updated["extrinsicsCalibration"] and sm.seen['narrowRoadCameraState'] and sm.seen['deviceState']:
       device_from_calib_euler = np.array(sm["extrinsicsCalibration"].rpyCalib, dtype=np.float32)
