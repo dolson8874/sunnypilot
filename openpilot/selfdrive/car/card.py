@@ -131,7 +131,7 @@ class Car:
     set_car_specific_params(self.CP, self.CP_SP, self.params)
     self.rr_stock_cruise = None
     if self.CP.carFingerprint == LANDROVER.RANGEROVER_VOGUE_2017:
-      self.rr_stock_cruise = RR2017StockCruise(mads_gap_release=bool(self.CP.alternativeExperience & ALTERNATIVE_EXPERIENCE.ENABLE_MADS))
+      self.rr_stock_cruise = RR2017StockCruise(mads_cancel_release=bool(self.CP.alternativeExperience & ALTERNATIVE_EXPERIENCE.ENABLE_MADS))
 
     openpilot_enabled_toggle = self.params.get_bool("OpenpilotEnabledToggle")
     controller_available = self.CI.CC is not None and openpilot_enabled_toggle and not self.CP.dashcamOnly
@@ -203,7 +203,7 @@ class Car:
       stock_speed, stock_gap = self.rr_stock_cruise.update(can_list, now_ns, can_valid=CS.canValid)
       CS_SP.stockCruiseSetSpeedKph = stock_speed
       CS_SP.stockCruiseGap = stock_gap
-      if self.rr_stock_cruise.gap_release_requested:
+      if self.rr_stock_cruise.lkas_release_requested:
         release = structs.CarState.ButtonEvent.new_message(type=structs.CarState.ButtonEvent.Type.lkas, pressed=True)
         CS.buttonEvents = [*CS.buttonEvents, release]
 

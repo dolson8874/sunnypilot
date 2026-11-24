@@ -229,12 +229,9 @@ class ModularAssistiveDrivingSystem:
     self.update_events(CS)
 
     if self.rr2017:
-      sm = self.selfdrive.sm
-      gap_service = 'carStateSP'
-      gap_ok = sm.seen[gap_service] and sm.alive[gap_service] and sm.valid[gap_service] and 1 <= sm[gap_service].stockCruiseGap < 4
       if CS.canValid and not CS.cruiseState.enabled:
         self.rr_acc_off_seen = True
-      if not gap_ok or not CS.canValid or CS.gasPressed or not self.rr_acc_off_seen:
+      if not CS.canValid or CS.gasPressed or not self.rr_acc_off_seen:
         self.events.remove(EventName.pcmEnable)
         self.events.remove(EventName.buttonEnable)
         self.events_sp.remove(EventNameSP.lkasEnable)
