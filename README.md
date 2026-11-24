@@ -10,39 +10,96 @@ This README describes **`test/lrmaster-SP-tici-wip`**, the C3 test branch based 
 
 The C3 uses **StarPilot AGNOS 20.5.5** as its operating system. The application, UI, model manager, and vehicle integration come from **sunnypilot `test/lrmaster-SP-wip`**. This port also brings StarPilot’s AR0231 camera support into sunnypilot’s camera service.
 
-### C3 compatibility test
+### First install on comma three
 
-This branch expects a **comma three (TICI) with a completed StarPilot C3 AGNOS 20.5.5 installation**. Install and verify the operating system separately on a spare C3 before testing this checkout offroad. Use the [StarPilot documentation](https://wiki.firestar.link/software/starpilot/) for its installation procedure.
+Keep the device powered with the vehicle cable disconnected while preparing the app and checking the first boot.
 
-The launcher checks the device model and OS version before starting sunnypilot. The onroad channel check recognizes this branch only on the verified C3 and StarPilot AGNOS combination. All other onroad checks still apply. The updater stages only this branch's application updates in `/data/safe_staging_starpilot`. An update that changes the AGNOS retention policy requires a separately verified checkout. AGNOS and boot slots are managed by the OS installation tools. This branch builds a matching DOS/F4 Panda image separately.
+#### 1. Install or update StarPilot AGNOS
 
-### Install or update the C3 test checkout
+Follow the [StarPilot installation and update instructions for comma three](https://wiki.firestar.link/software/starpilot/) to prepare the operating system. After the OS reboots, connect over SSH and check:
 
-With the device parked and the vehicle cable disconnected, keep the existing app and create a separate checkout.
+```sh
+cat /VERSION
+```
+
+Continue when the output is `20.5.5`. This branch expects that exact C3 version. Check the selected StarPilot release if the output differs. The sunnypilot launcher verifies the device model and OS version before starting the app.
+
+#### 2. Download and activate sunnypilot
+
+Clone to a separate directory and verify the checkout before moving the active app:
 
 ```sh
 git clone --recurse-submodules --branch test/lrmaster-SP-tici-wip \
-  https://github.com/dolson8874/sunnypilot.git /data/openpilot-tici-wip
-cd /data/openpilot-tici-wip
-python3 openpilot/common/hardware/comma/starpilot_agnos.py
+  https://github.com/dolson8874/sunnypilot.git /data/openpilot-tici-wip &&
+cd /data/openpilot-tici-wip &&
+python3 openpilot/common/hardware/comma/starpilot_agnos.py &&
+git submodule status --recursive
 ```
 
-Update a checkout that already tracks this branch from its repository root.
+The submodule status lines should begin with a space, indicating the recorded commits are checked out. Before installing the new checkout at `/data/openpilot`, back up the current app path and startup script:
 
 ```sh
-git branch --show-current
-git pull --ff-only
-git submodule update --init --recursive
+(
+  set -e
+  cd /data
+  test -x openpilot-tici-wip/launch_openpilot.sh
+  backup=$(mktemp -d /data/sunnypilot-backup.XXXXXX)
+  if [ -e continue.sh ] || [ -L continue.sh ]; then
+    cp -a -- continue.sh "$backup/continue.sh"
+  fi
+  if [ -e openpilot ] || [ -L openpilot ]; then
+    mv -T -- openpilot "$backup/openpilot"
+  fi
+  if ! mv -T -- openpilot-tici-wip openpilot; then
+    if [ -e "$backup/openpilot" ] || [ -L "$backup/openpilot" ]; then
+      mv -T -- "$backup/openpilot" openpilot
+    fi
+    exit 1
+  fi
+  printf 'Previous app and startup script backup: %s\n' "$backup"
+)
 ```
 
-The branch command should print `test/lrmaster-SP-tici-wip`. If it prints an older branch name, prepare a separate checkout using the clone command above. The clone and pull steps prepare source; they do not switch the active app. Build the app and the pinned Panda firmware together using the normal SCons build. To build the Panda and pandad targets explicitly, run:
+Keep the printed backup path. The active app now lives at `/data/openpilot`.
+
+#### 3. Check the boot script and first start
+
+AGNOS runs `/data/continue.sh`. A standard script should contain:
+
+```bash
+#!/usr/bin/env bash
+set -e
+cd /data/openpilot
+exec ./launch_openpilot.sh
+```
+
+If an existing script already starts the app this way, keep it. If the standard script is missing or points to another directory, save the example as `/data/continue.sh` and run `chmod +x /data/continue.sh`. If your device uses custom A/B slot conditions or test settings, preserve those and change only the applicable app working directory to `/data/openpilot`. An old path in this script can leave the device on the StarPilot splash screen.
+
+Run `bash -n /data/continue.sh`, then reboot while the vehicle cable is disconnected. The launcher builds the checkout when there is no `prebuilt` marker. Wait for the sunnypilot UI to open. If it stays on the splash, connect over SSH and check the app path, the startup script, and the startup log with `tmux capture-pane -p -t comma -S -100` or `journalctl -u comma.service -b --no-pager`.
+
+On C3, pandad selects the internal DOS USB port and checks the matching firmware signature and protocol. The first bench launch may update the internal Panda firmware. Retain a known-compatible Panda image for rollback as well as the previous app backup.
+
+### Update an existing C3 checkout
+
+From the already active checkout:
+
+```sh
+cd /data/openpilot &&
+test "$(git branch --show-current)" = "test/lrmaster-SP-tici-wip" &&
+git pull --ff-only &&
+git submodule sync --recursive &&
+git submodule update --init --recursive &&
+git submodule status --recursive
+```
+
+If the branch check fails, use the first-install procedure to prepare a separate checkout. A source update on the same active path keeps the boot script in place. For a manual update that changes native code or message schemas, remove the `prebuilt` marker after the update succeeds and reboot while offroad to run the normal build. To build the Panda and pandad targets explicitly, run:
 
 ```sh
 scons -u -j2 openpilot/selfdrive/pandad/pandad \
   panda/board/obj/panda.bin.signed panda/board/obj/bootstub.panda.bin
 ```
 
-On C3, pandad selects the internal DOS USB port and checks the matching firmware signature and protocol. The first bench launch may update the internal Panda firmware. Retain a working app and a known-compatible Panda image for rollback.
+The software updater stages this branch's app updates in `/data/safe_staging_starpilot`. An update that changes the AGNOS retention policy requires a separately verified checkout. The operating system and boot slots are managed through the StarPilot OS installation tools.
 
 ### CAN logging and branch integration
 
@@ -84,7 +141,7 @@ https://docs.sunnypilot.ai/ is your one stop shop for everything from features t
 First, check out this list of items you'll need to [get started](https://community.sunnypilot.ai/t/getting-started-using-sunnypilot-in-your-supported-car/251).
 
 ## Installation
-Use [First install on C3X or C4](#first-install-on-c3x-or-c4) for this WIP or [the update instructions](#update-from-the-device-screen) for an existing installation. For general sunnypilot setup, see [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
+Use [First install on comma three](#first-install-on-comma-three) or [Update an existing C3 checkout](#update-an-existing-c3-checkout) for this WIP. For general sunnypilot setup, see [installation instructions](https://community.sunnypilot.ai/t/read-before-installing-sunnypilot/254), as well as a complete list of [Recommended Branch Installations](https://community.sunnypilot.ai/t/recommended-branch-installations/235).
 
 ## 🎆 Pull Requests
 We welcome both pull requests and issues on GitHub. Bug fixes are encouraged.
