@@ -113,6 +113,7 @@ class MiciMainLayout(Scroller):
     if gui_app.widget_in_stack(self._onboarding_window):
       return
 
+    preference_page = self._settings_layout.lane_preference_page if gui_app.sunnypilot_ui() else None
     if ui_state.started != self._prev_onroad:
       self._prev_onroad = ui_state.started
 
@@ -121,6 +122,9 @@ class MiciMainLayout(Scroller):
       if ui_state.started:
         self._onroad_time_delay = rl.get_time()
       else:
+        self._onroad_time_delay = None
+        if preference_page is not None:
+          preference_page.cancel_drive_return()
         self._scroll_to(self._home_layout)
 
     # FIXME: these two pops can interrupt user interacting in the settings
@@ -130,12 +134,13 @@ class MiciMainLayout(Scroller):
 
     # When car leaves standstill, pop nav stack and scroll to onroad
     CS = ui_state.sm["carState"]
-    preference_page_blocked = (gui_app.sunnypilot_ui() and ui_state.started and
-                               gui_app.widget_in_stack(self._settings_layout.lane_preference_page) and
-                               not lane_preference_edit_allowed())
-    if preference_page_blocked:
-      gui_app.pop_widgets_to(self, lambda: self._scroll_to(self._onroad_layout), instant=True)
-    elif not CS.standstill and self._prev_standstill:
+    preference_page_open = preference_page is not None and gui_app.widget_in_stack(preference_page)
+    if ui_state.started and preference_page_open and (not lane_preference_edit_allowed() or preference_page.drive_return_due()):
+      preference_page.cancel_drive_return()
+      self._onroad_time_delay = None
+      gui_app.pop_widgets_to(self, instant=True)
+      self._scroll_to(self._onroad_layout)
+    elif ui_state.started and not CS.standstill and self._prev_standstill:
       gui_app.pop_widgets_to(self, lambda: self._scroll_to(self._onroad_layout))
     self._prev_standstill = CS.standstill
 

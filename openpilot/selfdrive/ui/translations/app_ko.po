@@ -153,6 +153,10 @@ msgstr "\"add new device\"를 눌러 오른쪽의 QR 코드를 스캔하세요"
 msgid "Close"
 msgstr "닫기"
 
+#: openpilot/selfdrive/ui/sunnypilot/mici/layouts/models.py
+msgid "Done"
+msgstr "완료"
+
 #: openpilot/selfdrive/ui/layouts/settings/software.py
 msgid "Current Version"
 msgstr "현재 버전"

@@ -78,25 +78,45 @@ class CurrentModelInfo(Widget):
     self.info_text.render()
 
 class LanePreferencePage(NavWidget):
+  RETURN_DELAY = 3.0
+
   def __init__(self):
     super().__init__()
     self.set_rect(rl.Rectangle(0, 0, gui_app.width, gui_app.height))
     self._level = 0
+    self._return_at: float | None = None
     self._minus = Button("-", click_callback=lambda: self._select(self._level - 1), font_size=36, text_padding=4)
     self._plus = Button("+", click_callback=lambda: self._select(self._level + 1), font_size=36, text_padding=4)
+    self._done = Button(tr("Done"), click_callback=self._finish, font_size=23, text_padding=4)
 
   def show_event(self):
     super().show_event()
+    self.cancel_drive_return()
     self._level = current_lane_preference()
+
+  def cancel_drive_return(self):
+    self._return_at = None
+
+  def drive_return_due(self) -> bool:
+    return self._return_at is not None and time.monotonic() >= self._return_at
+
+  def _finish(self):
+    if ui_state.is_onroad():
+      self._return_at = time.monotonic()
+    else:
+      self.dismiss()
 
   def _select(self, level: int):
     if self.enabled and not self.is_dismissing and save_lane_preference(level, allow_onroad=True):
       self._level = level
+      if ui_state.is_onroad():
+        self._return_at = time.monotonic() + self.RETURN_DELAY
 
   def _render(self, rect):
     enabled = self.enabled and not self.is_dismissing and lane_preference_edit_allowed() and lane_preference_available()
     self._minus.set_enabled(enabled and self._level - 1 in PREFERENCE_LEVELS)
     self._plus.set_enabled(enabled and self._level + 1 in PREFERENCE_LEVELS)
+    self._done.set_enabled(self.enabled and not self.is_dismissing)
     x, y, w = rect.x, rect.y, rect.width
     gui_label(rl.Rectangle(x + 20, y + 26, w - 40, 30), tr("Lane position preference"), 23, alignment=TextAlignment.CENTER)
     if ui_state.is_onroad():
@@ -110,7 +130,8 @@ class LanePreferencePage(NavWidget):
     self._minus.render(rl.Rectangle(x + 24, y + 91, 90, 63))
     gui_label(rl.Rectangle(x + 124, y + 91, w - 248, 63), lane_preference_label(self._level), 29, alignment=TextAlignment.CENTER)
     self._plus.render(rl.Rectangle(x + w - 114, y + 91, 90, 63))
-    gui_label(rl.Rectangle(x + 24, y + 177, w - 48, 46), lane_preference_status(self._level), 22, alignment=TextAlignment.CENTER)
+    gui_label(rl.Rectangle(x + 24, y + 177, w - 168, 44), lane_preference_status(self._level), 22, alignment=TextAlignment.CENTER)
+    self._done.render(rl.Rectangle(x + w - 132, y + 177, 108, 44))
 
 
 class ModelsLayoutMici(NavScroller):
