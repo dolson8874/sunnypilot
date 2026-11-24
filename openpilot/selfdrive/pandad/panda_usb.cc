@@ -84,8 +84,9 @@ std::vector<std::string> PandaUsbHandle::list() {
   return serials;
 }
 
-void PandaUsbHandle::mark_failed(int error) {
-  LOGE_100("Internal Panda USB transfer failed: %s", libusb_error_name(error));
+void PandaUsbHandle::mark_failed(const char *transfer, uint8_t code, int requested, int transferred, unsigned timeout_ms, int error) {
+  LOGE_100("Internal Panda USB %s failed: code=0x%02x requested=%d transferred=%d timeout=%ums error=%s",
+           transfer, code, requested, transferred, timeout_ms, libusb_error_name(error));
   comms_healthy = false;
   connected = false;
 }
@@ -93,32 +94,40 @@ void PandaUsbHandle::mark_failed(int error) {
 int PandaUsbHandle::control_write(uint8_t request, uint16_t param1, uint16_t param2, unsigned int timeout) {
   if (!connected) return LIBUSB_ERROR_NO_DEVICE;
   constexpr uint8_t request_type = LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE;
-  const int result = libusb_control_transfer(device, request_type, request, param1, param2, nullptr, 0, timeout ? timeout : control_timeout_ms);
-  if (result < 0) mark_failed(result);
+  const unsigned timeout_ms = timeout ? timeout : control_timeout_ms;
+  const int result = libusb_control_transfer(device, request_type, request, param1, param2, nullptr, 0, timeout_ms);
+  if (result < 0) mark_failed("control OUT", request, 0, -1, timeout_ms, result);
   return result;
 }
 
 int PandaUsbHandle::control_read(uint8_t request, uint16_t param1, uint16_t param2, unsigned char *data, uint16_t length, unsigned int timeout) {
   if (!connected) return LIBUSB_ERROR_NO_DEVICE;
   constexpr uint8_t request_type = LIBUSB_ENDPOINT_IN | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE;
-  const int result = libusb_control_transfer(device, request_type, request, param1, param2, data, length, timeout ? timeout : control_timeout_ms);
-  if (result < 0) mark_failed(result);
+  const unsigned timeout_ms = timeout ? timeout : control_timeout_ms;
+  const int result = libusb_control_transfer(device, request_type, request, param1, param2, data, length, timeout_ms);
+  if (result < 0) mark_failed("control IN", request, length, -1, timeout_ms, result);
   return result;
 }
 
 int PandaUsbHandle::bulk_write(unsigned char endpoint, unsigned char *data, int length, unsigned int timeout) {
   if (!connected) return 0;
   int transferred = 0;
-  const int result = libusb_bulk_transfer(device, endpoint, data, length, &transferred, timeout ? timeout : bulk_timeout_ms);
+  const unsigned timeout_ms = timeout ? timeout : bulk_timeout_ms;
+  const int result = libusb_bulk_transfer(device, endpoint, data, length, &transferred, timeout_ms);
   // A partial write may leave an incomplete frame in the firmware parser. Reconnect before sending any more.
-  if (result != 0 || transferred != length) mark_failed(result != 0 ? result : LIBUSB_ERROR_IO);
+  if (result != 0 || transferred != length) {
+    mark_failed("bulk OUT", endpoint, length, transferred, timeout_ms, result != 0 ? result : LIBUSB_ERROR_IO);
+  }
   return transferred;
 }
 
 int PandaUsbHandle::bulk_read(unsigned char endpoint, unsigned char *data, int length, unsigned int timeout) {
   if (!connected) return 0;
   int transferred = 0;
-  const int result = libusb_bulk_transfer(device, endpoint, data, length, &transferred, timeout ? timeout : bulk_timeout_ms);
-  if (result != 0 && result != LIBUSB_ERROR_TIMEOUT) mark_failed(result);
+  const unsigned timeout_ms = timeout ? timeout : bulk_timeout_ms;
+  const int result = libusb_bulk_transfer(device, endpoint, data, length, &transferred, timeout_ms);
+  if (result != 0 && result != LIBUSB_ERROR_TIMEOUT) {
+    mark_failed("bulk IN", endpoint, length, transferred, timeout_ms, result);
+  }
   return transferred;
 }

@@ -44,7 +44,7 @@ private:
   libusb_device_handle *device = nullptr;
   bool claimed = false;
   void cleanup();
-  void mark_failed(int error);
+  void mark_failed(const char *transfer, uint8_t code, int requested, int transferred, unsigned timeout_ms, int error);
 };
 
 class PandaSpiHandle : public PandaCommsHandle {
