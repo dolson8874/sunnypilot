@@ -4,7 +4,9 @@
 
 void PandaSafety::configureSafetyMode(bool is_onroad) {
   if (is_onroad && !safety_configured_) {
-    updateMultiplexingMode();
+    if (!updateMultiplexingMode()) {
+      return;
+    }
 
     auto car_params = fetchCarParams();
     if (!car_params.empty()) {
@@ -20,22 +22,24 @@ void PandaSafety::configureSafetyMode(bool is_onroad) {
   }
 }
 
-void PandaSafety::updateMultiplexingMode() {
-  // Initialize to ELM327 without OBD multiplexing for initial fingerprinting
-  if (!initialized_) {
-    prev_obd_multiplexing_ = false;
-    panda_->set_safety_model(cereal::CarParams::SafetyModel::ELM327, 1U);
+bool PandaSafety::updateMultiplexingMode() {
+  const bool requested = params_.getBool("ObdMultiplexingEnabled");
+  const std::string applied = params_.get("ObdMultiplexingApplied");
+  if (!initialized_ || requested != prev_obd_multiplexing_ || applied != (requested ? "1" : "0")) {
+    if (!initialized_) {
+      params_.remove("ObdMultiplexingApplied");
+    }
+
+    // Publish the actual mode even if this Panda connected while OFF was already requested.
+    const uint16_t safety_param = requested ? 0U : 1U;
+    if (!panda_->set_safety_model(cereal::CarParams::SafetyModel::ELM327, safety_param) ||
+        params_.putBool("ObdMultiplexingApplied", requested) != 0) {
+      return false;
+    }
+    prev_obd_multiplexing_ = requested;
     initialized_ = true;
   }
-
-  // Switch between multiplexing modes based on the OBD multiplexing request
-  bool obd_multiplexing_requested = params_.getBool("ObdMultiplexingEnabled");
-  if (obd_multiplexing_requested != prev_obd_multiplexing_) {
-    const uint16_t safety_param = obd_multiplexing_requested ? 0U : 1U;
-    panda_->set_safety_model(cereal::CarParams::SafetyModel::ELM327, safety_param);
-    prev_obd_multiplexing_ = obd_multiplexing_requested;
-    params_.putBool("ObdMultiplexingChanged", true);
-  }
+  return true;
 }
 
 // TODO-SP: Use structs instead of vector

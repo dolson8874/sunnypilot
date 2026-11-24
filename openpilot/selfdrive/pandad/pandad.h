@@ -25,7 +25,7 @@ public:
   bool getOffroadMode();
 
 private:
-  void updateMultiplexingMode();
+  bool updateMultiplexingMode();
   std::vector<std::string> fetchCarParams();
   void setSafetyMode(const std::vector<std::string> &params_string);
 

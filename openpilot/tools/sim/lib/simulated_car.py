@@ -19,7 +19,6 @@ class SimulatedCar:
     self.cp = self.get_car_can_parser()
     self.idx = 0
     self.params = Params()
-    self.obd_multiplexing = False
 
   @staticmethod
   def get_car_can_parser():
@@ -82,9 +81,9 @@ class SimulatedCar:
   def send_panda_state(self, simulator_state):
     self.sm.update(0)
 
-    if self.params.get_bool("ObdMultiplexingEnabled") != self.obd_multiplexing:
-      self.obd_multiplexing = not self.obd_multiplexing
-      self.params.put_bool("ObdMultiplexingChanged", True, block=True)
+    requested = self.params.get_bool("ObdMultiplexingEnabled")
+    if self.params.get("ObdMultiplexingApplied") != requested:
+      self.params.put_bool("ObdMultiplexingApplied", requested, block=True)
 
     dat = messaging.new_message('pandaStates', 1)
     dat.valid = True

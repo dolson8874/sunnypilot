@@ -48,8 +48,8 @@ std::vector<std::string> Panda::list() {
   return PandaSpiHandle::list();
 }
 
-void Panda::set_safety_model(cereal::CarParams::SafetyModel safety_model, uint16_t safety_param) {
-  handle->control_write(0xdc, (uint16_t)safety_model, safety_param);
+bool Panda::set_safety_model(cereal::CarParams::SafetyModel safety_model, uint16_t safety_param) {
+  return handle->control_write(0xdc, (uint16_t)safety_model, safety_param) == 0;
 }
 
 void Panda::set_alternative_experience(uint16_t alternative_experience, uint16_t safety_param_sp) {

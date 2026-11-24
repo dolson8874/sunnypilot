@@ -40,10 +40,14 @@ def obd_callback(params: Params) -> ObdCallback:
   def set_obd_multiplexing(obd_multiplexing: bool):
     if params.get_bool("ObdMultiplexingEnabled") != obd_multiplexing:
       cloudlog.warning(f"Setting OBD multiplexing to {obd_multiplexing}")
-      params.remove("ObdMultiplexingChanged")
+      params.remove("ObdMultiplexingApplied")
       params.put_bool("ObdMultiplexingEnabled", obd_multiplexing, block=True)
-      params.get_bool("ObdMultiplexingChanged", block=True)
-      cloudlog.warning("OBD multiplexing set successfully")
+
+    deadline = time.monotonic() + 10.0
+    while params.get("ObdMultiplexingApplied") != obd_multiplexing:
+      if time.monotonic() >= deadline:
+        raise TimeoutError(f"Panda did not confirm OBD multiplexing mode {obd_multiplexing}")
+      time.sleep(0.01)
   return set_obd_multiplexing
 
 
