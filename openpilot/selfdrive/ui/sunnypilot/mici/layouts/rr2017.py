@@ -18,8 +18,13 @@ class RangeRoverSettingsMici(NavScroller):
     self._vehicle = BigButton(tr("vehicle selection"))
     self._vehicle.set_click_callback(self._confirm_vehicle_selection)
     self._mads = BigParamControl(tr("MADS"), "Mads")
-    self._rr2017_mads = BigParamControl(tr("Range Rover MADS"), "RR2017Mads",
-                                       description=tr("Engage steering with stock ACC. Set the following distance to 4 to disengage steering."))
+    self._rr2017_mads = BigParamControl(
+      tr("Range Rover MADS"),
+      "RR2017Mads",
+      description=tr(
+        "Stock ACC engages steering. Braking cancels ACC and keeps steering assist. Press CANCEL with ACC off to disengage steering."
+      ),
+    )
 
     for item in (self._vehicle, self._mads, self._rr2017_mads):
       item.set_enabled(ui_state.is_offroad)

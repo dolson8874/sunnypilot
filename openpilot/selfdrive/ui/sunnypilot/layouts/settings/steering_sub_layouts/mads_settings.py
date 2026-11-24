@@ -66,7 +66,7 @@ class MadsSettingsLayout(Widget):
 
     self._rr2017_toggle = toggle_item_sp(
       title=lambda: tr("Range Rover Vogue 2017 MADS"),
-      description=tr("Engage steering with stock ACC. Set the following distance to 4 to disengage steering."),
+      description=tr("Stock ACC engages steering. Braking cancels ACC and keeps steering assist. Press CANCEL with ACC off to disengage steering."),
       param="RR2017Mads",
     )
     self.items = [

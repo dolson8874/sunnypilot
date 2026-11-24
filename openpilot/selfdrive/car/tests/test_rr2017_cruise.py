@@ -1,3 +1,5 @@
+import pytest
+
 from opendbc.can.packer import CANPacker
 from openpilot.selfdrive.car.rr2017_cruise import FRESH_NS, RR2017StockCruise
 
@@ -22,41 +24,56 @@ def test_stock_acc_validity_and_independent_expiry():
   assert decoder.update([], expiry - 1) == (84.25, 0)
 
 
-def test_mads_gap_release_requires_a_button_and_fresh_transition():
+@pytest.mark.parametrize("enabled", [False, True])
+@pytest.mark.parametrize("transition", ["brake", "cancel"])
+def test_mads_cancel_requires_fresh_acc_off_and_new_press(enabled, transition):
+  decoder = RR2017StockCruise(mads_cancel_release=enabled)
   packer = CANPacker('landrover_rangerover_2017')
-  released = packer.make_can_msg('CRUISE_ACC', 0, {'GapBtn1': 0})
-  pressed = packer.make_can_msg('CRUISE_ACC', 0, {'GapBtn1': 1})
-  gap3 = packer.make_can_msg('CR01', 0, {'GAP': 0})
+  released = packer.make_can_msg('CRUISE_ACC', 0, {'CruiseCancelRequestCandidate': 0})
+  pressed = packer.make_can_msg('CRUISE_ACC', 0, {'CruiseCancelRequestCandidate': 1})
+  acc_on = packer.make_can_msg('CRUISE_CONTROL', 0, {'CRUISE_ON': 1})
+  acc_off = packer.make_can_msg('CRUISE_CONTROL', 0, {'DRIVER_BRAKE': transition == "brake"})
   gap4 = packer.make_can_msg('CR01', 0, {'GAP': 2})
   start = 1_000_000_000
   dt = 70_000_000
 
-  for enabled in (False, True):
-    decoder = RR2017StockCruise(mads_gap_release=enabled)
-    for ts, frames, expected in (
-      (start, [gap4, pressed], False),  # startup at Gap 4 with an already held button
-      (start + dt, [gap3, released], False),
-      (start + 2 * dt, [gap4, released], False),  # Gap status alone
-      (start + 3 * dt, [gap3, released], False),
-      (start + 4 * dt, [gap4, pressed], enabled),  # same CAN batch, either frame order
-      (start + 5 * dt, [gap4, pressed], False),
-      (start + 6 * dt, [gap3, released], False),  # leaving Gap 4 emits no request
-    ):
-      decoder.update([(ts, frames)], ts)
-      assert decoder.gap_release_requested is expected
+  for step, frames, expected in (
+    (0, [acc_on, pressed], False),  # Startup with a held button.
+    (1, [acc_on, released], False),
+    (2, [acc_off, gap4, pressed if transition == "cancel" else released], False),
+    (3, [acc_off, pressed if transition == "cancel" else released], False),
+    (4, [acc_off, released], False),
+    (5, [acc_off, (pressed[0], pressed[1], 2)], False),
+    (6, [acc_off, pressed], enabled),
+    (7, [acc_off, pressed], False),
+    (8, [acc_off, released], False),
+  ):
+    stamp = start + step * dt
+    _, gap = decoder.update([(stamp, frames)], stamp)
+    if step == 2:
+      assert gap == 4
+    assert decoder.lkas_release_requested is expected
 
-  for invalidate in ('gap', 'button', 'can'):
-    decoder = RR2017StockCruise(mads_gap_release=True)
-    decoder.update([(start, [gap3, released])], start)
-    decoder.update([(start + dt, [gap3, pressed])], start + dt)
-    if invalidate == 'can':
-      decoder.update([], start + 2 * dt, can_valid=False)
-      stamp = start + 3 * dt
-    else:
-      stamp = start + dt + FRESH_NS
-      for offset in (dt, 2 * dt, 3 * dt):
-        stamp2 = start + dt + offset
-        frames = [pressed] if invalidate == 'gap' else [gap3]
-        decoder.update([(stamp2, frames)], stamp2)
-    decoder.update([(stamp, [gap4])], stamp)
-    assert not decoder.gap_release_requested
+
+@pytest.mark.parametrize("reason", ["stale_acc", "stale_button", "invalid_can"])
+def test_cancel_does_not_use_stale_input(reason):
+  decoder = RR2017StockCruise(mads_cancel_release=True)
+  packer = CANPacker('landrover_rangerover_2017')
+  released = packer.make_can_msg('CRUISE_ACC', 0, {'CruiseCancelRequestCandidate': 0})
+  pressed = packer.make_can_msg('CRUISE_ACC', 0, {'CruiseCancelRequestCandidate': 1})
+  off = packer.make_can_msg('CRUISE_CONTROL', 0, {'CRUISE_ON': 0})
+  start = 1_000_000_000
+  dt = 70_000_000
+  for tick in (0, 1, 2):
+    stamp = start + tick * dt
+    decoder.update([(stamp, [off, released])], stamp)
+  if reason == "stale_button":
+    for tick in range(3, 9):
+      stamp = start + tick * dt
+      decoder.update([(stamp, [off])], stamp)
+  elif reason == "invalid_can":
+    stamp = start + 3 * dt
+    decoder.update([], stamp, can_valid=False)
+  stamp = start + (9 if reason == "stale_button" else 4) * dt
+  decoder.update([(stamp, [pressed])], stamp)
+  assert not decoder.lkas_release_requested

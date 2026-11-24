@@ -885,6 +885,11 @@ msgstr "🔥 파이어호스 모드 🔥"
 msgid "Stock GAP {}"
 msgstr "순정 GAP {}"
 
+#: openpilot/selfdrive/ui/sunnypilot/layouts/settings/steering_sub_layouts/mads_settings.py
+#: openpilot/selfdrive/ui/sunnypilot/mici/layouts/rr2017.py
+msgid "Stock ACC engages steering. Braking cancels ACC and keeps steering assist. Press CANCEL with ACC off to disengage steering."
+msgstr "순정 ACC를 켜면 조향 보조가 시작됩니다. 브레이크를 밟으면 ACC만 해제됩니다. ACC가 꺼진 상태에서 CANCEL을 누르면 조향 보조가 해제됩니다."
+
 msgid "Lane position preference"
 msgstr "차로 내 선호 위치"
 

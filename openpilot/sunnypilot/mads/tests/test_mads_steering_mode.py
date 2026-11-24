@@ -82,6 +82,30 @@ def run_frames(mads, sd, cs, n=1):
     sd.events_sp.clear()
 
 
+class TestRR2017Mads(OpenpilotTestCase):
+  def test_brake_then_cancel_without_gap_status(self, mocker):
+    mads, sd = make_mads(mocker, MadsSteeringModeOnBrake.REMAIN_ACTIVE)
+    mads.rr2017 = True
+    mads.rr_acc_off_seen = True
+    mads.state_machine.state = State.enabled
+    mads.enabled = mads.active = True
+    sd.CP.brand = "landrover"
+    sd.CP.pcmCruise = True
+    sd.CS_prev.cruiseState.enabled = True
+
+    cs = make_car_state(brake_pressed=True, v_ego=22.0)
+    cs.canValid = True
+    sd.events.add(EventName.pcmDisable)
+    sd.events.add(EventName.pedalPressed)
+    run_frames(mads, sd, cs)
+    assert mads.active
+
+    cs.brakePressed = False
+    cs.buttonEvents = [structs.CarState.ButtonEvent(type=structs.CarState.ButtonEvent.Type.lkas, pressed=True)]
+    run_frames(mads, sd, cs)
+    assert not mads.active
+
+
 class TestDefenderManualLkas(OpenpilotTestCase):
   def test_pcm_enable_does_not_start_manual_lkas(self, mocker):
     mads, sd = make_mads(mocker, MadsSteeringModeOnBrake.REMAIN_ACTIVE, defender_lkas=True)
